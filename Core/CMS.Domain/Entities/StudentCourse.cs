@@ -4,7 +4,7 @@ namespace CMS.Domain.Entities;
 
 public class StudentCourse : BaseEntity<Guid>
 {
-    public StudentCourse(Guid id, DateTime registeredDate, DateTime completionDate, Guid studentId, Guid courseId, Guid courseGroupId)
+    public StudentCourse(Guid id, DateTime registeredDate, DateTime completionDate, Guid studentId, Guid courseId, Guid courseGroupId, char status)
         :base(id)
     {
         RegisteredDate = registeredDate;
@@ -12,6 +12,7 @@ public class StudentCourse : BaseEntity<Guid>
         StudentId = studentId;
         CourseId = courseId;
         CourseGroupId = courseGroupId;
+        Status = status;
     }
     public StudentCourse()
     {
@@ -22,6 +23,7 @@ public class StudentCourse : BaseEntity<Guid>
     public Guid StudentId { get; set; }
     public Guid CourseId { get; set; }
     public Guid CourseGroupId { get; set; }
+    public char Status { get; set; }
 
     public virtual Student Student { get; set; }
     public virtual Course Course { get; set; }
