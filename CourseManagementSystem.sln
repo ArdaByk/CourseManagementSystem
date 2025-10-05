@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36518.9 d17.14
+VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMS.Infrastructure", "Infra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMS.Persistence", "Infrastructure\CMS.Persistence\CMS.Persistence.csproj", "{8A82AF43-EC6A-4D08-9D21-A55DE694EA6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMS.Presentation", "Presentation\CMS.Presentation\CMS.Presentation.csproj", "{497DC1A4-A2FB-4379-9900-1D14C0763C6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMS.Presentation", "Presentation\CMS.Presentation\CMS.Presentation.csproj", "{29D8DB1A-60B8-47C1-85E4-EFA2C5C42286}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +43,10 @@ Global
 		{8A82AF43-EC6A-4D08-9D21-A55DE694EA6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A82AF43-EC6A-4D08-9D21-A55DE694EA6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A82AF43-EC6A-4D08-9D21-A55DE694EA6A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{497DC1A4-A2FB-4379-9900-1D14C0763C6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{497DC1A4-A2FB-4379-9900-1D14C0763C6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{497DC1A4-A2FB-4379-9900-1D14C0763C6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{497DC1A4-A2FB-4379-9900-1D14C0763C6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29D8DB1A-60B8-47C1-85E4-EFA2C5C42286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29D8DB1A-60B8-47C1-85E4-EFA2C5C42286}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29D8DB1A-60B8-47C1-85E4-EFA2C5C42286}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29D8DB1A-60B8-47C1-85E4-EFA2C5C42286}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,7 +59,7 @@ Global
 		{0F12BCA5-A366-4667-B108-02DA837F503C} = {E75E2A30-2E07-4A7C-8B19-5FE17A9BEAE0}
 		{FD8F7C9E-2101-452F-8876-6E9A62F7F93E} = {30B9681F-9D66-4CC9-AE0D-AEF1CEEA9714}
 		{8A82AF43-EC6A-4D08-9D21-A55DE694EA6A} = {30B9681F-9D66-4CC9-AE0D-AEF1CEEA9714}
-		{497DC1A4-A2FB-4379-9900-1D14C0763C6D} = {15B1B960-0A14-4C6B-98B1-A81ABADFEFD9}
+		{29D8DB1A-60B8-47C1-85E4-EFA2C5C42286} = {15B1B960-0A14-4C6B-98B1-A81ABADFEFD9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7252A679-76D7-4DCB-BC0A-8CD6EF65D99E}
