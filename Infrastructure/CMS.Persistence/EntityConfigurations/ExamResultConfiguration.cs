@@ -20,6 +20,9 @@ public class ExamResultConfiguration : IEntityTypeConfiguration<ExamResult>
 
         builder.HasQueryFilter(er => !er.DeletedDate.HasValue);
 
+		builder.HasIndex(er => er.ExamId).IsUnique();
+        builder.HasIndex(er => er.StudentId).IsUnique();
+
         builder
            .HasOne(er => er.Exam)
            .WithMany(e => e.ExamResults)
@@ -30,6 +33,6 @@ public class ExamResultConfiguration : IEntityTypeConfiguration<ExamResult>
            .HasOne(er => er.Student)
            .WithMany(s => s.ExamResults)
            .HasForeignKey(er => er.StudentId)
-           .OnDelete(DeleteBehavior.Cascade);
+           .OnDelete(DeleteBehavior.Restrict);
     }
 }

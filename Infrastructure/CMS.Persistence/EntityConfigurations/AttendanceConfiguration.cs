@@ -27,21 +27,27 @@ public class AttendanceConfiguration : IEntityTypeConfiguration<Attendance>
 
         builder.HasQueryFilter(a => !a.DeletedDate.HasValue);
 
-        builder
-            .HasOne(a => a.Student)
-            .WithMany(s => s.Attendances)
-            .HasForeignKey(a => a.StudentId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasIndex(a => a.StudentId).IsUnique();
+        builder.HasIndex(a => a.CourseGroupId).IsUnique();
 
-        builder
-            .HasOne(a => a.Course)
-            .WithMany(c => c.Attendances)
-            .HasForeignKey(a => a.CourseId);
+		builder.Property(a => a.Status).HasMaxLength(1);
 
-        builder
-            .HasOne(a => a.CourseGroup)
-            .WithMany(cg => cg.Attendances)
-            .HasForeignKey(a => a.CourseGroupId)
-            .OnDelete(DeleteBehavior.Restrict);
+		builder
+			.HasOne(a => a.Student)
+			.WithMany(s => s.Attendances)
+			.HasForeignKey(a => a.StudentId)
+			.OnDelete(DeleteBehavior.Restrict);
+
+		builder
+			.HasOne(a => a.Course)
+			.WithMany(c => c.Attendances)
+			.HasForeignKey(a => a.CourseId)
+			.OnDelete(DeleteBehavior.Restrict);
+
+		builder
+			.HasOne(a => a.CourseGroup)
+			.WithMany(cg => cg.Attendances)
+			.HasForeignKey(a => a.CourseGroupId)
+			.OnDelete(DeleteBehavior.Cascade);
     }
 }

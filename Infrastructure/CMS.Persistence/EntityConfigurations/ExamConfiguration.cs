@@ -20,6 +20,8 @@ public class ExamConfiguration : IEntityTypeConfiguration<Exam>
 
         builder.HasQueryFilter(e => !e.DeletedDate.HasValue);
 
+		builder.Property(e => e.ExamName).HasMaxLength(100);
+
         builder
          .HasOne(e => e.Course)
          .WithMany(c => c.Exams)

@@ -19,6 +19,9 @@ public class ClassConfiguration : IEntityTypeConfiguration<Class>
 
         builder.HasQueryFilter(c => !c.DeletedDate.HasValue);
 
+		builder.Property(c => c.ClassName).HasMaxLength(100);
+		builder.Property(c => c.Location).HasMaxLength(100);
+
         builder
             .HasMany(c => c.CourseGroups)
             .WithOne(cg => cg.Class)

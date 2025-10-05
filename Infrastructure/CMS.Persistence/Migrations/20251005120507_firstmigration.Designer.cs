@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS.Persistence.Migrations
 {
     [DbContext(typeof(CMSDbContext))]
-    [Migration("20251004172255_firstmigration")]
+    [Migration("20251005120507_firstmigration")]
     partial class firstmigration
     {
         /// <inheritdoc />
@@ -53,6 +53,7 @@ namespace CMS.Persistence.Migrations
                         .HasColumnName("DeletedDate");
 
                     b.Property<bool>("Status")
+                        .HasMaxLength(1)
                         .HasColumnType("bit")
                         .HasColumnName("Status");
 
@@ -66,11 +67,13 @@ namespace CMS.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseGroupId");
+                    b.HasIndex("CourseGroupId")
+                        .IsUnique();
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentId")
+                        .IsUnique();
 
                     b.ToTable("Attendances", (string)null);
                 });
@@ -88,7 +91,8 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("ClassName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("ClassName");
 
                     b.Property<DateTime>("CreatedDate")
@@ -101,7 +105,8 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("Location");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -122,7 +127,8 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("CourseName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
                         .HasColumnName("CourseName");
 
                     b.Property<DateTime>("CreatedDate")
@@ -135,7 +141,8 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
                         .HasColumnName("Description");
 
                     b.Property<int>("DurationWeeks")
@@ -144,6 +151,7 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasMaxLength(1)
                         .HasColumnType("nvarchar(1)")
                         .HasColumnName("Status");
 
@@ -189,7 +197,8 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("GroupName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("GroupName");
 
                     b.Property<int>("Quota")
@@ -209,6 +218,8 @@ namespace CMS.Persistence.Migrations
                         .HasColumnName("UpdatedDate");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
 
                     b.HasIndex("CourseId");
 
@@ -284,7 +295,8 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("ExamName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("ExamName");
 
                     b.Property<int>("MaxScore")
@@ -340,9 +352,11 @@ namespace CMS.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExamId");
+                    b.HasIndex("ExamId")
+                        .IsUnique();
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentId")
+                        .IsUnique();
 
                     b.ToTable("ExamResults", (string)null);
                 });
@@ -364,12 +378,14 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)")
                         .HasColumnName("Description");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("RoleName");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -377,6 +393,9 @@ namespace CMS.Persistence.Migrations
                         .HasColumnName("UpdatedDate");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleName")
+                        .IsUnique();
 
                     b.ToTable("Roles", (string)null);
                 });
@@ -398,7 +417,8 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("SpecializationName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("SpecializationName");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -406,6 +426,9 @@ namespace CMS.Persistence.Migrations
                         .HasColumnName("UpdatedDate");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SpecializationName")
+                        .IsUnique();
 
                     b.ToTable("Specializations", (string)null);
                 });
@@ -419,7 +442,8 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)")
                         .HasColumnName("Address");
 
                     b.Property<DateTime>("BirthDate")
@@ -436,47 +460,56 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
                         .HasColumnName("Email");
 
                     b.Property<string>("EmergencyContactName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("EmergencyContactName");
 
                     b.Property<string>("EmergencyContactPhone")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
                         .HasColumnName("EmergencyContactPhone");
 
                     b.Property<string>("EmergencyContactRelation")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("EmergencyContactRelation");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("FirstName");
 
                     b.Property<string>("Gender")
                         .IsRequired()
+                        .HasMaxLength(1)
                         .HasColumnType("nvarchar(1)")
                         .HasColumnName("Gender");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("LastName");
 
                     b.Property<string>("NationalId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)")
                         .HasColumnName("NationalId");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
                         .HasColumnName("Phone");
 
                     b.Property<string>("PhotoPath")
@@ -494,6 +527,12 @@ namespace CMS.Persistence.Migrations
                         .HasColumnName("UpdatedDate");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("NationalId")
+                        .IsUnique();
 
                     b.ToTable("Students", (string)null);
                 });
@@ -544,11 +583,13 @@ namespace CMS.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseGroupId");
+                    b.HasIndex("CourseGroupId")
+                        .IsUnique();
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentId")
+                        .IsUnique();
 
                     b.ToTable("StudentCourses", (string)null);
                 });
@@ -570,12 +611,14 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
                         .HasColumnName("Email");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("FirstName");
 
                     b.Property<DateTime>("HiredDate")
@@ -584,12 +627,14 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("LastName");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
                         .HasColumnName("Phone");
 
                     b.Property<float>("SalaryAmount")
@@ -611,6 +656,9 @@ namespace CMS.Persistence.Migrations
                         .HasColumnName("UpdatedDate");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Teachers", (string)null);
                 });
@@ -668,12 +716,14 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
                         .HasColumnName("Email");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
                         .HasColumnName("FullName");
 
                     b.Property<byte[]>("PasswordHash")
@@ -688,7 +738,8 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
                         .HasColumnName("Phone");
 
                     b.Property<Guid>("RoleId")
@@ -701,12 +752,19 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("Username");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.ToTable("Users", (string)null);
                 });
@@ -716,19 +774,19 @@ namespace CMS.Persistence.Migrations
                     b.HasOne("CMS.Domain.Entities.CourseGroup", "CourseGroup")
                         .WithMany("Attendances")
                         .HasForeignKey("CourseGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CMS.Domain.Entities.Course", "Course")
                         .WithMany("Attendances")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CMS.Domain.Entities.Student", "Student")
                         .WithMany("Attendances")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Course");
@@ -742,7 +800,7 @@ namespace CMS.Persistence.Migrations
                 {
                     b.HasOne("CMS.Domain.Entities.Class", "Class")
                         .WithMany("CourseGroups")
-                        .HasForeignKey("CourseId")
+                        .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -798,7 +856,7 @@ namespace CMS.Persistence.Migrations
                     b.HasOne("CMS.Domain.Entities.Student", "Student")
                         .WithMany("ExamResults")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Exam");
@@ -817,13 +875,13 @@ namespace CMS.Persistence.Migrations
                     b.HasOne("CMS.Domain.Entities.Course", "Course")
                         .WithMany("StudentCourses")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CMS.Domain.Entities.Student", "Student")
                         .WithMany("StudentCourses")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Course");

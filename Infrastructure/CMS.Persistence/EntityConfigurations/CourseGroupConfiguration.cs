@@ -23,6 +23,8 @@ public class CourseGroupConfiguration : IEntityTypeConfiguration<CourseGroup>
 
         builder.HasQueryFilter(cg => !cg.DeletedDate.HasValue);
 
+		builder.Property(cg => cg.GroupName).HasMaxLength(100);
+
         builder
             .HasOne(cg => cg.Course)
             .WithMany(c => c.CourseGroups)
@@ -32,7 +34,7 @@ public class CourseGroupConfiguration : IEntityTypeConfiguration<CourseGroup>
         builder
             .HasOne(cg => cg.Class)
             .WithMany(c => c.CourseGroups)
-            .HasForeignKey(cg => cg.CourseId)
+            .HasForeignKey(cg => cg.ClassId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
@@ -50,13 +52,13 @@ public class CourseGroupConfiguration : IEntityTypeConfiguration<CourseGroup>
         builder
             .HasMany(cg => cg.CourseSchedules)
             .WithOne(cs => cs.CourseGroup)
-            .HasForeignKey(cg => cg.CourseGroupId)
+            .HasForeignKey(cs => cs.CourseGroupId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder
             .HasMany(cg => cg.Attendances)
             .WithOne(cs => cs.CourseGroup)
-            .HasForeignKey(cg => cg.CourseGroupId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(a => a.CourseGroupId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

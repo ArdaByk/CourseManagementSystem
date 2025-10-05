@@ -11,7 +11,7 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
         builder.ToTable("Courses").HasKey(c => c.Id);
         builder.Property(c => c.Id).HasColumnName("Id").IsRequired();
         builder.Property(c => c.CourseName).HasColumnName("CourseName").IsRequired();
-        builder.Property(c => c.Description).HasColumnName("Description").IsRequired();
+		builder.Property(c => c.Description).HasColumnName("Description").IsRequired();
         builder.Property(c => c.DurationWeeks).HasColumnName("DurationWeeks").IsRequired();
         builder.Property(c => c.WeeklyHours).HasColumnName("WeeklyHours").IsRequired();
         builder.Property(c => c.Status).HasColumnName("Status").IsRequired();
@@ -20,6 +20,10 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
         builder.Property(c => c.DeletedDate).HasColumnName("DeletedDate");
 
         builder.HasQueryFilter(c => !c.DeletedDate.HasValue);
+
+		builder.Property(c => c.CourseName).HasMaxLength(200);
+		builder.Property(c => c.Description).HasMaxLength(1000);
+		builder.Property(c => c.Status).HasMaxLength(1);
 
         builder
             .HasMany(c => c.CourseGroups)
@@ -37,11 +41,11 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
             .HasMany(c => c.StudentCourses)
             .WithOne(sc => sc.Course)
             .HasForeignKey(sc => sc.CourseId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .HasMany(c => c.Attendances)
             .WithOne(c => c.Course)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -22,17 +22,20 @@ public class StudentCourseConfiguration : IEntityTypeConfiguration<StudentCourse
 
         builder.HasQueryFilter(sc => !sc.DeletedDate.HasValue);
 
+        builder.HasIndex(sc => sc.StudentId).IsUnique();
+        builder.HasIndex(sc => sc.CourseGroupId).IsUnique();
+
         builder
            .HasOne(sc => sc.Student)
            .WithMany(s => s.StudentCourses)
            .HasForeignKey(sc => sc.StudentId)
-           .OnDelete(DeleteBehavior.Cascade);
+           .OnDelete(DeleteBehavior.Restrict);
         
         builder
            .HasOne(sc => sc.Course)
            .WithMany(c => c.StudentCourses)
            .HasForeignKey(sc => sc.CourseId)
-           .OnDelete(DeleteBehavior.Cascade);
+           .OnDelete(DeleteBehavior.Restrict);
         
         builder
            .HasOne(cs => cs.CourseGroup)

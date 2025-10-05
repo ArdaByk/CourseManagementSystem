@@ -11,12 +11,17 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
         builder.ToTable("Roles").HasKey(r => r.Id);
         builder.Property(r => r.Id).HasColumnName("Id").IsRequired();
         builder.Property(r => r.RoleName).HasColumnName("RoleName").IsRequired();
-        builder.Property(r => r.Description).HasColumnName("Description").IsRequired();
+		builder.Property(r => r.Description).HasColumnName("Description").IsRequired();
         builder.Property(r => r.CreatedDate).HasColumnName("CreatedDate").IsRequired();
         builder.Property(r => r.UpdatedDate).HasColumnName("UpdatedDate");
         builder.Property(r => r.DeletedDate).HasColumnName("DeletedDate");
 
         builder.HasQueryFilter(r => !r.DeletedDate.HasValue);
+
+		builder.Property(r => r.RoleName).HasMaxLength(50);
+		builder.Property(r => r.Description).HasMaxLength(300);
+
+		builder.HasIndex(r => r.RoleName).IsUnique();
 
         builder
            .HasMany(r => r.Users)

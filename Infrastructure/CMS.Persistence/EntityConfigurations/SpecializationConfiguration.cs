@@ -17,6 +17,10 @@ public class SpecializationConfiguration : IEntityTypeConfiguration<Specializati
 
         builder.HasQueryFilter(s => !s.DeletedDate.HasValue);
 
+		builder.Property(s => s.SpecializationName).HasMaxLength(100);
+
+		builder.HasIndex(s => s.SpecializationName).IsUnique();
+
         builder
             .HasMany(s => s.TeacherSpecializations)
             .WithOne(ts => ts.Specialization)

@@ -12,12 +12,12 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
         builder.Property(s => s.Id).HasColumnName("Id").IsRequired();
         builder.Property(s => s.FirstName).HasColumnName("FirstName").IsRequired();
         builder.Property(s => s.LastName).HasColumnName("LastName").IsRequired();
-        builder.Property(s => s.NationalId).HasColumnName("NationalId").IsRequired();
-        builder.Property(s => s.Gender).HasColumnName("Gender").IsRequired();
+		builder.Property(s => s.NationalId).HasColumnName("NationalId").IsRequired();
+		builder.Property(s => s.Gender).HasColumnName("Gender").IsRequired();
         builder.Property(s => s.BirthDate).HasColumnName("BirthDate").IsRequired();
-        builder.Property(s => s.Phone).HasColumnName("Phone").IsRequired();
-        builder.Property(s => s.Email).HasColumnName("Email").IsRequired();
-        builder.Property(s => s.Address).HasColumnName("Address").IsRequired();
+		builder.Property(s => s.Phone).HasColumnName("Phone").IsRequired();
+		builder.Property(s => s.Email).HasColumnName("Email").IsRequired();
+		builder.Property(s => s.Address).HasColumnName("Address").IsRequired();
         builder.Property(s => s.EmergencyContactName).HasColumnName("EmergencyContactName").IsRequired();
         builder.Property(s => s.EmergencyContactPhone).HasColumnName("EmergencyContactPhone").IsRequired();
         builder.Property(s => s.EmergencyContactRelation).HasColumnName("EmergencyContactRelation").IsRequired();
@@ -29,22 +29,37 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
 
         builder.HasQueryFilter(s => !s.DeletedDate.HasValue);
 
-        builder
-          .HasMany(s => s.Attendances)
-          .WithOne(a => a.Student)
-          .HasForeignKey(a => a.StudentId)
-          .OnDelete(DeleteBehavior.Cascade);
+		builder.Property(s => s.FirstName).HasMaxLength(50);
+		builder.Property(s => s.LastName).HasMaxLength(50);
+		builder.Property(s => s.NationalId).HasMaxLength(11);
+		builder.Property(s => s.Gender).HasMaxLength(1);
+		builder.Property(s => s.Phone).HasMaxLength(20);
+        builder.Property(s => s.Email).HasMaxLength(150);
+		builder.Property(s => s.Address).HasMaxLength(300);
+		builder.Property(s => s.EmergencyContactName).HasMaxLength(100);
+		builder.Property(s => s.EmergencyContactPhone).HasMaxLength(20);
+		builder.Property(s => s.EmergencyContactRelation).HasMaxLength(50);
 
         builder
-         .HasMany(s => s.StudentCourses)
+		  .HasMany(s => s.Attendances)
+		  .WithOne(a => a.Student)
+		  .HasForeignKey(a => a.StudentId)
+		  .OnDelete(DeleteBehavior.Restrict);
+
+		builder
+		 .HasMany(s => s.StudentCourses)
          .WithOne(sc => sc.Student)
          .HasForeignKey(sc => sc.StudentId)
-         .OnDelete(DeleteBehavior.Cascade);
+         .OnDelete(DeleteBehavior.Restrict);
         
-        builder
-         .HasMany(s => s.ExamResults)
+		builder
+		 .HasMany(s => s.ExamResults)
          .WithOne(er => er.Student)
          .HasForeignKey(er => er.StudentId)
-         .OnDelete(DeleteBehavior.Cascade);
+         .OnDelete(DeleteBehavior.Restrict);
+
+		builder.HasIndex(s => s.NationalId).IsUnique();
+		builder.HasIndex(s => s.Email).IsUnique();
+
     }
 }

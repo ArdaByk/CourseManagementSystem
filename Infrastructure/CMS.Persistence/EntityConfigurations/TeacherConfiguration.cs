@@ -12,9 +12,9 @@ public class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
         builder.Property(t => t.Id).HasColumnName("Id").IsRequired();
         builder.Property(t => t.FirstName).HasColumnName("FirstName").IsRequired();
         builder.Property(t => t.LastName).HasColumnName("LastName").IsRequired();
-        builder.Property(t => t.Phone).HasColumnName("Phone").IsRequired();
-        builder.Property(t => t.Email).HasColumnName("Email").IsRequired();
-        builder.Property(t => t.SalaryType).HasColumnName("SalaryType").IsRequired();
+		builder.Property(t => t.Phone).HasColumnName("Phone").IsRequired();
+		builder.Property(t => t.Email).HasColumnName("Email").IsRequired();
+		builder.Property(t => t.SalaryType).HasColumnName("SalaryType").IsRequired();
         builder.Property(t => t.SalaryAmount).HasColumnName("SalaryAmount").IsRequired();
         builder.Property(t => t.HiredDate).HasColumnName("HiredDate").IsRequired();
         builder.Property(t => t.Status).HasColumnName("Status").IsRequired();
@@ -23,6 +23,13 @@ public class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
         builder.Property(t => t.DeletedDate).HasColumnName("DeletedDate");
 
         builder.HasQueryFilter(t => !t.DeletedDate.HasValue);
+
+		builder.Property(t => t.FirstName).HasMaxLength(50);
+		builder.Property(t => t.LastName).HasMaxLength(50);
+		builder.Property(t => t.Phone).HasMaxLength(20);
+		builder.Property(t => t.Email).HasMaxLength(150);
+        
+		builder.HasIndex(t => t.Email).IsUnique();
 
         builder
               .HasMany(t => t.TeacherSpecializations)
