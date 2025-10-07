@@ -1,6 +1,6 @@
 ﻿namespace CMS.Presentation
 {
-    partial class Form1
+    partial class LoginForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -136,8 +136,9 @@
             loginBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             loginBtn.UseAccentColor = false;
             loginBtn.UseVisualStyleBackColor = true;
+            loginBtn.Click += loginBtn_Click;
             // 
-            // Form1
+            // LoginForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -146,7 +147,8 @@
             Controls.Add(passwordTxt);
             Controls.Add(emailTxt);
             MaximizeBox = false;
-            Name = "Form1";
+            Name = "LoginForm";
+            Sizable = false;
             Text = "Giriş Yap";
             ResumeLayout(false);
             PerformLayout();

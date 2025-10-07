@@ -1,3 +1,6 @@
+using CMS.Persistence;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace CMS.Presentation
 {
     internal static class Program
@@ -10,8 +13,18 @@ namespace CMS.Presentation
         {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
+
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+
+            var services = new ServiceCollection();
+
+            services.AddPersistenceServices();
+
+            services.AddTransient<LoginForm>();
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            Application.Run(serviceProvider.GetRequiredService<LoginForm>());
         }
     }
 }

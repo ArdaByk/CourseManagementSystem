@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS.Persistence.Migrations
 {
     [DbContext(typeof(CMSDbContext))]
-    [Migration("20251005120507_firstmigration")]
+    [Migration("20251007203720_first-migration")]
     partial class firstmigration
     {
         /// <inheritdoc />

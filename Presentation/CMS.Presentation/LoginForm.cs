@@ -4,16 +4,16 @@ using System.Drawing.Drawing2D;
 
 namespace CMS.Presentation;
 
-public partial class Form1 : MaterialForm
+public partial class LoginForm : MaterialForm
 {
-    public Form1()
+    public LoginForm()
     {
         InitializeComponent();
 
         var materialSkinManager = MaterialSkinManager.Instance;
         materialSkinManager.AddFormToManage(this);
         materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
-        materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
+        materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey900, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
 
         this.FormBorderStyle = FormBorderStyle.None;
 
@@ -49,4 +49,9 @@ public partial class Form1 : MaterialForm
         this.Region = new Region(path);
     }
 
+    private void loginBtn_Click(object sender, EventArgs e)
+    {
+        DashboardForm dashboardForm = new DashboardForm();
+        dashboardForm.Show();
+    }
 }
