@@ -19,7 +19,15 @@ public partial class DashboardForm : MaterialForm
 
         _pageBuilders = new Dictionary<string, IPageBuilder>
         {
-            { "students", new StudentPageBuilder() }
+            { "students", new StudentPageBuilder() },
+            { "teachers", new TeachersPageBuilder() },
+            { "courses", new CoursesPageBuilder() },
+            { "classes", new ClassesPageBuilder() },
+            { "courseGroups", new CourseGroupsBuilder() },
+            { "exams", new ExamsPageBuilder() },
+            { "specializations", new SpecializationPageBuilder() },
+            { "roles", new RolesPageBuilder() },
+            { "users", new UsersPageBuilder() }
         };
     }
 

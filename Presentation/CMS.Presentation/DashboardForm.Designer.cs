@@ -72,11 +72,6 @@
             materialFloatingActionButton1 = new MaterialSkin.Controls.MaterialFloatingActionButton();
             students = new TabPage();
             teachers = new TabPage();
-            materialButton2 = new MaterialSkin.Controls.MaterialButton();
-            materialTextBox24 = new MaterialSkin.Controls.MaterialTextBox2();
-            materialTextBox25 = new MaterialSkin.Controls.MaterialTextBox2();
-            materialTextBox26 = new MaterialSkin.Controls.MaterialTextBox2();
-            flowLayoutPanelTeachers = new FlowLayoutPanel();
             courses = new TabPage();
             courseGroups = new TabPage();
             classes = new TabPage();
@@ -95,7 +90,6 @@
             materialCard5.SuspendLayout();
             materialCard6.SuspendLayout();
             materialCard7.SuspendLayout();
-            teachers.SuspendLayout();
             SuspendLayout();
             // 
             // materialTabControl1
@@ -652,11 +646,6 @@
             // 
             // teachers
             // 
-            teachers.Controls.Add(materialButton2);
-            teachers.Controls.Add(materialTextBox24);
-            teachers.Controls.Add(materialTextBox25);
-            teachers.Controls.Add(materialTextBox26);
-            teachers.Controls.Add(flowLayoutPanelTeachers);
             teachers.ImageKey = "teacher.png";
             teachers.Location = new Point(4, 39);
             teachers.Name = "teachers";
@@ -664,119 +653,6 @@
             teachers.TabIndex = 2;
             teachers.Text = "Öğretmenler";
             teachers.UseVisualStyleBackColor = true;
-            // 
-            // materialButton2
-            // 
-            materialButton2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            materialButton2.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            materialButton2.Depth = 0;
-            materialButton2.HighEmphasis = true;
-            materialButton2.Icon = null;
-            materialButton2.Location = new Point(1373, 14);
-            materialButton2.Margin = new Padding(4, 6, 4, 6);
-            materialButton2.MouseState = MaterialSkin.MouseState.HOVER;
-            materialButton2.Name = "materialButton2";
-            materialButton2.NoAccentTextColor = Color.Empty;
-            materialButton2.Size = new Size(174, 36);
-            materialButton2.TabIndex = 12;
-            materialButton2.Text = "Yeni Öğretmen Ekle";
-            materialButton2.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            materialButton2.UseAccentColor = false;
-            materialButton2.UseVisualStyleBackColor = true;
-            // 
-            // materialTextBox24
-            // 
-            materialTextBox24.AnimateReadOnly = false;
-            materialTextBox24.BackgroundImageLayout = ImageLayout.None;
-            materialTextBox24.CharacterCasing = CharacterCasing.Normal;
-            materialTextBox24.Depth = 0;
-            materialTextBox24.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialTextBox24.HideSelection = true;
-            materialTextBox24.Hint = "Soyad";
-            materialTextBox24.LeadingIcon = null;
-            materialTextBox24.Location = new Point(520, 7);
-            materialTextBox24.MaxLength = 32767;
-            materialTextBox24.MouseState = MaterialSkin.MouseState.OUT;
-            materialTextBox24.Name = "materialTextBox24";
-            materialTextBox24.PasswordChar = '\0';
-            materialTextBox24.PrefixSuffixText = null;
-            materialTextBox24.ReadOnly = false;
-            materialTextBox24.RightToLeft = RightToLeft.No;
-            materialTextBox24.SelectedText = "";
-            materialTextBox24.SelectionLength = 0;
-            materialTextBox24.SelectionStart = 0;
-            materialTextBox24.ShortcutsEnabled = true;
-            materialTextBox24.Size = new Size(250, 48);
-            materialTextBox24.TabIndex = 10;
-            materialTextBox24.TabStop = false;
-            materialTextBox24.TextAlign = HorizontalAlignment.Left;
-            materialTextBox24.TrailingIcon = null;
-            materialTextBox24.UseSystemPasswordChar = false;
-            // 
-            // materialTextBox25
-            // 
-            materialTextBox25.AnimateReadOnly = false;
-            materialTextBox25.BackgroundImageLayout = ImageLayout.None;
-            materialTextBox25.CharacterCasing = CharacterCasing.Normal;
-            materialTextBox25.Depth = 0;
-            materialTextBox25.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialTextBox25.HideSelection = true;
-            materialTextBox25.Hint = "Ad";
-            materialTextBox25.LeadingIcon = null;
-            materialTextBox25.Location = new Point(264, 7);
-            materialTextBox25.MaxLength = 32767;
-            materialTextBox25.MouseState = MaterialSkin.MouseState.OUT;
-            materialTextBox25.Name = "materialTextBox25";
-            materialTextBox25.PasswordChar = '\0';
-            materialTextBox25.PrefixSuffixText = null;
-            materialTextBox25.ReadOnly = false;
-            materialTextBox25.RightToLeft = RightToLeft.No;
-            materialTextBox25.SelectedText = "";
-            materialTextBox25.SelectionLength = 0;
-            materialTextBox25.SelectionStart = 0;
-            materialTextBox25.ShortcutsEnabled = true;
-            materialTextBox25.Size = new Size(250, 48);
-            materialTextBox25.TabIndex = 9;
-            materialTextBox25.TabStop = false;
-            materialTextBox25.TextAlign = HorizontalAlignment.Left;
-            materialTextBox25.TrailingIcon = null;
-            materialTextBox25.UseSystemPasswordChar = false;
-            // 
-            // materialTextBox26
-            // 
-            materialTextBox26.AnimateReadOnly = false;
-            materialTextBox26.BackgroundImageLayout = ImageLayout.None;
-            materialTextBox26.CharacterCasing = CharacterCasing.Normal;
-            materialTextBox26.Depth = 0;
-            materialTextBox26.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialTextBox26.HideSelection = true;
-            materialTextBox26.Hint = "Kimlik No";
-            materialTextBox26.LeadingIcon = null;
-            materialTextBox26.Location = new Point(8, 7);
-            materialTextBox26.MaxLength = 32767;
-            materialTextBox26.MouseState = MaterialSkin.MouseState.OUT;
-            materialTextBox26.Name = "materialTextBox26";
-            materialTextBox26.PasswordChar = '\0';
-            materialTextBox26.PrefixSuffixText = null;
-            materialTextBox26.ReadOnly = false;
-            materialTextBox26.RightToLeft = RightToLeft.No;
-            materialTextBox26.SelectedText = "";
-            materialTextBox26.SelectionLength = 0;
-            materialTextBox26.SelectionStart = 0;
-            materialTextBox26.ShortcutsEnabled = true;
-            materialTextBox26.Size = new Size(250, 48);
-            materialTextBox26.TabIndex = 8;
-            materialTextBox26.TabStop = false;
-            materialTextBox26.TextAlign = HorizontalAlignment.Left;
-            materialTextBox26.TrailingIcon = null;
-            materialTextBox26.UseSystemPasswordChar = false;
-            // 
-            // flowLayoutPanelTeachers
-            // 
-            flowLayoutPanelTeachers.Location = new Point(3, 65);
-            flowLayoutPanelTeachers.Name = "flowLayoutPanelTeachers";
-            flowLayoutPanelTeachers.Size = new Size(1623, 805);
-            flowLayoutPanelTeachers.TabIndex = 7;
             // 
             // courses
             // 
@@ -875,7 +751,7 @@
             MaximizeBox = false;
             Name = "DashboardForm";
             Sizable = false;
-            Text = "Kurs Yönetim Merkezi Otomasyonu";
+            Text = "Kurs Merkezi Otomasyonu";
             materialTabControl1.ResumeLayout(false);
             dashboard.ResumeLayout(false);
             panel1.ResumeLayout(false);
@@ -893,8 +769,6 @@
             materialCard6.PerformLayout();
             materialCard7.ResumeLayout(false);
             materialCard7.PerformLayout();
-            teachers.ResumeLayout(false);
-            teachers.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -903,7 +777,6 @@
         private MaterialSkin.Controls.MaterialTabControl materialTabControl1;
         private TabPage dashboard;
         private ImageList imageList1;
-        private TabPage teachers;
         private TabPage courses;
         private TabPage courseGroups;
         private TabPage classes;
@@ -949,11 +822,7 @@
         private MaterialSkin.Controls.MaterialFloatingActionButton materialFloatingActionButton5;
         private MaterialSkin.Controls.MaterialFloatingActionButton materialFloatingActionButton7;
         private Panel panel1;
-        private MaterialSkin.Controls.MaterialButton materialButton2;
-        private MaterialSkin.Controls.MaterialTextBox2 materialTextBox24;
-        private MaterialSkin.Controls.MaterialTextBox2 materialTextBox25;
-        private MaterialSkin.Controls.MaterialTextBox2 materialTextBox26;
-        private FlowLayoutPanel flowLayoutPanelTeachers;
         private TabPage students;
+        private TabPage teachers;
     }
 }

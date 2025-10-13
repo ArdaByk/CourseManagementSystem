@@ -1,4 +1,5 @@
-﻿using MaterialSkin.Controls;
+﻿using CMS.Domain.Entities;
+using MaterialSkin.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace CMS.Presentation.PageBuilders;
 
-public class StudentPageBuilder : IPageBuilder
+public class TeachersPageBuilder : IPageBuilder
 {
-    private List<User> students;
-    public StudentPageBuilder()
+    private List<User> teachers;
+    public TeachersPageBuilder()
     {
-        this.students = new List<User>
+        this.teachers = new List<User>
         {
             new User { Id = 123424234, FirstName = "Ahmet", LastName = "Yılmaz", Email = "ahmet@example.com" },
             new User { Id = 123424234, FirstName = "Ayşe", LastName = "Demir", Email = "ayse@example.com" },
@@ -31,74 +32,66 @@ public class StudentPageBuilder : IPageBuilder
             Dock = DockStyle.Top
         };
 
-        var nationalIDTextBox = CreateTextBox("nationalIDTextBox", "TC Kimlik NO", new Point(8, 3));
-        var firstNameTextBox = CreateTextBox("firstNameTextBox", "Adı", new Point(264, 3));
-        var lastNameTextBox = CreateTextBox("lastNameTextBox", "Soyadı", new Point(520, 3));
+        var firstNameTextBox = CreateTextBox("firstNameTextBox", "Adı", new Point(8, 3));
+        var lastNameTextBox = CreateTextBox("lastNameTextBox", "Soyadı", new Point(264, 3));
 
-        var genderComboBox = CreateComboBox("genderComboBox", "Cinsiyet", 250, new List<string> { "Erkek", "Kız" }, new Point(776, 2));
-        var studentStatusComboBox = CreateComboBox("studentStatusComboBox", "Öğrenci Durumu", 250, new List<string> { "Aktif", "Pasif" }, new Point(1035, 2));
+        var teacherStatusComboBox = CreateComboBox("teacherStatusComboBox", "Öğretmen Durumu", 250, new List<string> { "Aktif", "Pasif" }, new Point(520, 3));
 
-        var addStudentBtn = CreateButton("addStudentButton", "Öğrenci Ekle", new Point(10, 57));
-        var reviewStudentBtn = CreateButton("reviewStudentBtn", "Öğrenci İncele", new Point(140, 57));
-        var updateStudentBtn = CreateButton("updateStudentBtn", "Öğrenci Güncelle", new Point(285, 57));
-        var deleteStudentBtn = CreateButton("deleteStudentBtn", "Öğrenci Sil", new Point(455, 57), true);
+        var addTeacherButton = CreateButton("addTeacherButton", "Öğretmen Ekle", new Point(10, 57));
+        var reviewTeacherBtn = CreateButton("reviewTeacherBtn", "Öğretmen İncele", new Point(160, 57));
+        var updateTeacherBtn = CreateButton("updateTeacherBtn", "Öğretmen Güncelle", new Point(325, 57));
+        var deleteTeacherBtn = CreateButton("deleteTeacherBtn", "Öğretmen Sil", new Point(515, 57), true);
 
-        deleteStudentBtn.Type = MaterialButton.MaterialButtonType.Contained;
-        deleteStudentBtn.UseAccentColor = true;
+        deleteTeacherBtn.Type = MaterialButton.MaterialButtonType.Contained;
+        deleteTeacherBtn.UseAccentColor = true;
 
-        Panel studentsPanel = new Panel
+        Panel teachersPanel = new Panel
         {
-            Name = "studentsPanel",
+            Name = "teachersPanel",
             Dock = DockStyle.Fill,
             BackColor = Color.Transparent
         };
 
-        addStudentBtn.MouseClick += (o, e) =>
+        addTeacherButton.MouseClick += (o, e) =>
         {
-            AddStudentForm addStudentForm = new AddStudentForm();
-            addStudentForm.Show();
+            AddTeacherForm addTeacherForm = new AddTeacherForm();
+            addTeacherForm.Show();
         };
 
-        DataGridView studentsDataGridView = CreateStudentsDataGridView(students);
+        DataGridView teachersDataGridView = CreateTeachersDataGridView(teachers);
 
-        studentsPanel.Controls.Add(studentsDataGridView);
+        teachersPanel.Controls.Add(teachersDataGridView);
 
-        inputPanel.Controls.Add(nationalIDTextBox);
         inputPanel.Controls.Add(firstNameTextBox);
         inputPanel.Controls.Add(lastNameTextBox);
-        inputPanel.Controls.Add(genderComboBox);
-        inputPanel.Controls.Add(studentStatusComboBox);
-        inputPanel.Controls.Add(addStudentBtn);
-        inputPanel.Controls.Add(reviewStudentBtn);
-        inputPanel.Controls.Add(updateStudentBtn);
-        inputPanel.Controls.Add(deleteStudentBtn);
+        inputPanel.Controls.Add(teacherStatusComboBox);
+        inputPanel.Controls.Add(addTeacherButton);
+        inputPanel.Controls.Add(reviewTeacherBtn);
+        inputPanel.Controls.Add(updateTeacherBtn);
+        inputPanel.Controls.Add(deleteTeacherBtn);
 
-        mainPanel.Controls.Add(studentsPanel);
+        mainPanel.Controls.Add(teachersPanel);
         mainPanel.Controls.Add(inputPanel);
 
         tabPage.Controls.Add(mainPanel);
 
         void ApplyFilter()
         {
-            string idFilter = nationalIDTextBox.Text.Trim();
             string firstNameFilter = firstNameTextBox.Text.Trim().ToLower();
             string lastNameFilter = lastNameTextBox.Text.Trim().ToLower();
 
-            var bs = (BindingSource)studentsDataGridView.DataSource;
-            bs.DataSource = students.Where(s =>
-                (string.IsNullOrEmpty(idFilter) || s.Id.Equals(idFilter)) &&
-                (string.IsNullOrEmpty(firstNameFilter) || s.FirstName.ToLower().Contains(firstNameFilter)) &&
-                (string.IsNullOrEmpty(lastNameFilter) || s.LastName.ToLower().Contains(lastNameFilter))
+            var bs = (BindingSource)teachersDataGridView.DataSource;
+            bs.DataSource = teachers.Where(t =>
+                (string.IsNullOrEmpty(firstNameFilter) || t.FirstName.ToLower().Contains(firstNameFilter)) &&
+                (string.IsNullOrEmpty(lastNameFilter) || t.LastName.ToLower().Contains(lastNameFilter))
             ).ToList();
 
             bs.ResetBindings(false);
         }
 
-        nationalIDTextBox.TextChanged += (s, e) => ApplyFilter();
         firstNameTextBox.TextChanged += (s, e) => ApplyFilter();
         lastNameTextBox.TextChanged += (s, e) => ApplyFilter();
-        genderComboBox.SelectedIndexChanged += (s, e) => ApplyFilter();
-        studentStatusComboBox.SelectedIndexChanged += (s, e) => ApplyFilter();
+        teacherStatusComboBox.SelectedIndexChanged += (s, e) => ApplyFilter();
     }
 
     private MaterialTextBox2 CreateTextBox(string name, string hint, Point location)
@@ -135,11 +128,11 @@ public class StudentPageBuilder : IPageBuilder
         };
     }
 
-    private DataGridView CreateStudentsDataGridView(List<User> students)
+    private DataGridView CreateTeachersDataGridView(List<User> students)
     {
         var dataGridView = new DataGridView
         {
-            Name = "studentsDataGridView",
+            Name = "teachersDataGridView",
             BackgroundColor = Color.FromArgb(30, 30, 30),
             GridColor = Color.FromArgb(60, 60, 60),
             RowsDefaultCellStyle = { BackColor = Color.FromArgb(45, 45, 45), ForeColor = Color.WhiteSmoke },
@@ -158,10 +151,10 @@ public class StudentPageBuilder : IPageBuilder
 
         dataGridView.DataBindingComplete += (s, e) =>
         {
-            dataGridView.Columns["Id"].HeaderText = "TC Kimlik No";
+            dataGridView.Columns["Id"].HeaderText = "ID";
             dataGridView.Columns["FirstName"].HeaderText = "Adı";
             dataGridView.Columns["LastName"].HeaderText = "Soyadı";
-            dataGridView.Columns["Email"].HeaderText = "E-Posta";
+            dataGridView.Columns["Email"].HeaderText = "Telefon Numarası";
         };
 
         return dataGridView;
