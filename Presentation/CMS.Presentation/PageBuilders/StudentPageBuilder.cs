@@ -1,4 +1,6 @@
 ﻿using MaterialSkin.Controls;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,8 @@ namespace CMS.Presentation.PageBuilders;
 public class StudentPageBuilder : IPageBuilder
 {
     private List<User> students;
-    public StudentPageBuilder()
+    private readonly IServiceProvider serviceProvider;
+    public StudentPageBuilder(IServiceProvider serviceProvider)
     {
         this.students = new List<User>
         {
@@ -18,6 +21,8 @@ public class StudentPageBuilder : IPageBuilder
             new User { Id = 123424234, FirstName = "Ayşe", LastName = "Demir", Email = "ayse@example.com" },
             new User { Id = 123424234, FirstName = "Mehmet", LastName = "Can", Email = "mehmet@example.com" }
         };
+
+        this.serviceProvider = serviceProvider;
     }
     public void Build(TabPage tabPage)
     {
@@ -55,7 +60,7 @@ public class StudentPageBuilder : IPageBuilder
 
         addStudentBtn.MouseClick += (o, e) =>
         {
-            AddStudentForm addStudentForm = new AddStudentForm();
+            AddStudentForm addStudentForm = serviceProvider.GetRequiredService<AddStudentForm>();
             addStudentForm.Show();
         };
 

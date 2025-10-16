@@ -1,12 +1,14 @@
 using MaterialSkin;
 using MaterialSkin.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using System.Drawing.Drawing2D;
 
 namespace CMS.Presentation;
 
 public partial class LoginForm : MaterialForm
 {
-    public LoginForm()
+    private readonly IServiceProvider serviceProvider;
+    public LoginForm(IServiceProvider serviceProvider)
     {
         InitializeComponent();
 
@@ -16,7 +18,7 @@ public partial class LoginForm : MaterialForm
         materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey900, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
 
         this.FormBorderStyle = FormBorderStyle.None;
-
+        this.serviceProvider = serviceProvider;
     }
 
     protected override CreateParams CreateParams
@@ -51,7 +53,7 @@ public partial class LoginForm : MaterialForm
 
     private void loginBtn_Click(object sender, EventArgs e)
     {
-        DashboardForm dashboardForm = new DashboardForm();
+        DashboardForm dashboardForm = serviceProvider.GetRequiredService<DashboardForm>();
         dashboardForm.Show();
     }
 }

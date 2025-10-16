@@ -13,7 +13,7 @@ namespace CMS.Persistence.Repositories;
 
 public class AttendanceManager : BaseRepository<Attendance, Guid, CMSDbContext>, IAttendanceService
 {
-    public AttendanceManager(DbContext context) : base(context)
+    public AttendanceManager(CMSDbContext context) : base(context)
     {
     }
 }

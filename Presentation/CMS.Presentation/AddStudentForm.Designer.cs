@@ -428,6 +428,7 @@
             addStudentBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             addStudentBtn.UseAccentColor = false;
             addStudentBtn.UseVisualStyleBackColor = true;
+            addStudentBtn.Click += addStudentBtn_Click;
             // 
             // AddStudentForm
             // 

@@ -13,7 +13,7 @@ namespace CMS.Persistence.Repositories;
 
 public class TeacherSpecializationManager : BaseRepository<TeacherSpecialization, Guid, CMSDbContext>, ITeacherSpecializationService
 {
-    public TeacherSpecializationManager(DbContext context) : base(context)
+    public TeacherSpecializationManager(CMSDbContext context) : base(context)
     {
     }
 }

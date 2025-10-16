@@ -1,5 +1,7 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.Students.Commands.Create;
+using MaterialSkin;
 using MaterialSkin.Controls;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,9 +17,12 @@ namespace CMS.Presentation
 {
     public partial class AddStudentForm : MaterialForm
     {
-        public AddStudentForm()
+        private readonly IMediator mediator;
+        public AddStudentForm(IMediator mediator)
         {
             InitializeComponent();
+
+            this.mediator = mediator;
 
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
@@ -72,5 +77,48 @@ namespace CMS.Presentation
             }
         }
 
+        private async void addStudentBtn_Click(object sender, EventArgs e)
+        {
+            string baseFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "StudentPhotos");
+
+            if (!Directory.Exists(baseFolder))
+            {
+                Directory.CreateDirectory(baseFolder);
+            }
+
+            string studentId = studentNationalIDTxt.Text;
+            string fileName = $"{studentId}.jpg";
+
+            string fullPath = Path.Combine(baseFolder, fileName);
+
+            if (studentPhotoPath.Image != null)
+            {
+                studentPhotoPath.Image.Save(fullPath, System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+            else
+            {
+                MessageBox.Show("Önce fotoğraf seçin!");
+            }
+
+            CreateStudentCommand createStudentCommand = new CreateStudentCommand();
+            createStudentCommand.FirstName = studentFirstNameTxt.Text;
+            createStudentCommand.LastName = studentLastNameTxt.Text;
+            createStudentCommand.NationalId = studentNationalIDTxt.Text;
+            createStudentCommand.Status = studentStatusSwitch.Checked == true ? 'A' : 'P';
+            createStudentCommand.Email = studentEmailTxt.Text;
+            createStudentCommand.Address = studentAdressTxt.Text;
+            createStudentCommand.Gender = studentGenderComboBox.SelectedIndex == 0 ? 'E' : 'K';
+            createStudentCommand.BirthDate = studentBirthDate.Value;
+            createStudentCommand.Phone = studentPhoneTxt.Text;
+            createStudentCommand.EmergencyContactName = EmergencyContactNameTxt.Text;
+            createStudentCommand.EmergencyContactRelation = EmergencyContactRelation.Text;
+            createStudentCommand.EmergencyContactPhone = EmergencyContactPhoneTxt.Text;
+            createStudentCommand.PhotoPath = fullPath;
+
+            CreateStudentResponse createStudentResponse = await mediator.Send(createStudentCommand);
+
+            MessageBox.Show(createStudentResponse.FirstName + " Adlı öğrenci başarıyla kaydedildi.");
+
+        }
     }
 }

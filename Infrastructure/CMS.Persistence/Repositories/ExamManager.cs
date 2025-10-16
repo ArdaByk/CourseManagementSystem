@@ -13,7 +13,7 @@ namespace CMS.Persistence.Repositories;
 
 public class ExamManager : BaseRepository<Exam, Guid, CMSDbContext>, IExamService
 {
-    public ExamManager(DbContext context) : base(context)
+    public ExamManager(CMSDbContext context) : base(context)
     {
     }
 }

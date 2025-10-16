@@ -1,5 +1,6 @@
 ﻿using CMS.Application.Abstractions.Repositories;
 using CMS.Domain.Common;
+using CMS.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
@@ -14,8 +15,8 @@ namespace CMS.Persistence.Common.Repositories;
 public class BaseRepository<TEntity, TEntityId, TContext> : IAsyncRepository<TEntity, TEntityId>, IQuery<TEntity>
     where TEntity: BaseEntity<TEntityId>
 {
-    protected readonly DbContext context;
-    public BaseRepository(DbContext context)
+    protected readonly CMSDbContext context;
+    public BaseRepository(CMSDbContext context)
     {
         this.context = context;
     }

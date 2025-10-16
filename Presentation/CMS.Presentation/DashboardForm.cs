@@ -8,9 +8,12 @@ namespace CMS.Presentation;
 public partial class DashboardForm : MaterialForm
 {
     private Dictionary<string, IPageBuilder> _pageBuilders;
-    public DashboardForm()
+    private readonly IServiceProvider serviceProvider;
+    public DashboardForm(IServiceProvider serviceProvider)
     {
         InitializeComponent();
+
+        this.serviceProvider = serviceProvider;
 
         var materialSkinManager = MaterialSkinManager.Instance;
         materialSkinManager.AddFormToManage(this);
@@ -19,7 +22,7 @@ public partial class DashboardForm : MaterialForm
 
         _pageBuilders = new Dictionary<string, IPageBuilder>
         {
-            { "students", new StudentPageBuilder() },
+            { "students", new StudentPageBuilder(serviceProvider) },
             { "teachers", new TeachersPageBuilder() },
             { "courses", new CoursesPageBuilder() },
             { "classes", new ClassesPageBuilder() },

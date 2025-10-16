@@ -21,7 +21,7 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
         builder.Property(s => s.EmergencyContactName).HasColumnName("EmergencyContactName").IsRequired();
         builder.Property(s => s.EmergencyContactPhone).HasColumnName("EmergencyContactPhone").IsRequired();
         builder.Property(s => s.EmergencyContactRelation).HasColumnName("EmergencyContactRelation").IsRequired();
-        builder.Property(s => s.Status).HasColumnName("Status").IsRequired();
+        builder.Property(s => s.Status).HasColumnName("Status").IsRequired().HasDefaultValue('A');
         builder.Property(s => s.PhotoPath).HasColumnName("PhotoPath").IsRequired();
         builder.Property(s => s.CreatedDate).HasColumnName("CreatedDate").IsRequired();
         builder.Property(s => s.UpdatedDate).HasColumnName("UpdatedDate");

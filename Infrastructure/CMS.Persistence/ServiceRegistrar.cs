@@ -1,4 +1,6 @@
-﻿using CMS.Persistence.Contexts;
+﻿using CMS.Application.Abstractions.Services;
+using CMS.Persistence.Contexts;
+using CMS.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +17,8 @@ public static class ServiceRegistrar
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services)
     {
         services.AddDbContext<CMSDbContext>();
+
+        services.AddScoped<IStudentService, StudentManager>();
 
         return services;
     }

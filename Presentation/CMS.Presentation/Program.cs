@@ -1,3 +1,4 @@
+using CMS.Application;
 using CMS.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,9 +19,14 @@ namespace CMS.Presentation
 
             var services = new ServiceCollection();
 
+            services.AddLogging();
+
+            services.AddApplicationServices();
             services.AddPersistenceServices();
 
             services.AddTransient<LoginForm>();
+            services.AddTransient<AddStudentForm>();
+            services.AddTransient<DashboardForm>();
 
             var serviceProvider = services.BuildServiceProvider();
 

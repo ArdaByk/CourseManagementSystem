@@ -13,7 +13,7 @@ namespace CMS.Persistence.Repositories;
 
 public class RoleManager : BaseRepository<Role, Guid, CMSDbContext>, IRoleService
 {
-    public RoleManager(DbContext context) : base(context)
+    public RoleManager(CMSDbContext context) : base(context)
     {
     }
 }

@@ -13,7 +13,7 @@ namespace CMS.Persistence.Repositories;
 
 public class StudentManager : BaseRepository<Student, Guid, CMSDbContext>, IStudentService
 {
-    public StudentManager(DbContext context) : base(context)
+    public StudentManager(CMSDbContext context) : base(context)
     {
     }
 }

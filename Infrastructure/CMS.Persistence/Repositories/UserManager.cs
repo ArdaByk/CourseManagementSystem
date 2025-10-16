@@ -13,7 +13,7 @@ namespace CMS.Persistence.Repositories;
 
 public class UserManager : BaseRepository<User, Guid, CMSDbContext>, IUserService
 {
-    public UserManager(DbContext context) : base(context)
+    public UserManager(CMSDbContext context) : base(context)
     {
     }
 }
