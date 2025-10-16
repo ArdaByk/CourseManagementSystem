@@ -1,4 +1,5 @@
-﻿using CMS.Domain.Entities;
+﻿using CMS.Application.Abstractions.Services;
+using CMS.Domain.Entities;
 using CMS.Persistence.Common.Repositories;
 using CMS.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Persistence.Repositories;
 
-public class SpecializationManager : BaseRepository<Specialization, Guid, CMSDbContext>, IAsyncRepository<Specialization, Guid>
+public class SpecializationManager : BaseRepository<Specialization, Guid, CMSDbContext>, ISpecializationService
 {
     public SpecializationManager(DbContext context) : base(context)
     {

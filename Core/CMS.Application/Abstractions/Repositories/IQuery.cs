@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CMS.Persistence.Common.Repositories;
+namespace CMS.Application.Abstractions.Repositories;
 
 public interface IQuery<T>
 {

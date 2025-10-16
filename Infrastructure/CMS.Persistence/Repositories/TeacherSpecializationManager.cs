@@ -1,4 +1,5 @@
-﻿using CMS.Domain.Entities;
+﻿using CMS.Application.Abstractions.Services;
+using CMS.Domain.Entities;
 using CMS.Persistence.Common.Repositories;
 using CMS.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Persistence.Repositories;
 
-public class TeacherSpecializationManager : BaseRepository<TeacherSpecialization, Guid, CMSDbContext>, IAsyncRepository<TeacherSpecialization, Guid>
+public class TeacherSpecializationManager : BaseRepository<TeacherSpecialization, Guid, CMSDbContext>, ITeacherSpecializationService
 {
     public TeacherSpecializationManager(DbContext context) : base(context)
     {

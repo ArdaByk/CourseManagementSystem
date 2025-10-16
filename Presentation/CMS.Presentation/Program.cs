@@ -24,7 +24,7 @@ namespace CMS.Presentation
 
             var serviceProvider = services.BuildServiceProvider();
 
-            Application.Run(serviceProvider.GetRequiredService<LoginForm>());
+            System.Windows.Forms.Application.Run(serviceProvider.GetRequiredService<LoginForm>());
         }
     }
 }

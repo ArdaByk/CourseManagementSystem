@@ -1,4 +1,5 @@
-﻿using CMS.Domain.Entities;
+﻿using CMS.Application.Abstractions.Services;
+using CMS.Domain.Entities;
 using CMS.Persistence.Common.Repositories;
 using CMS.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Persistence.Repositories;
 
-public class CourseScheduleManager : BaseRepository<CourseSchedule, Guid, CMSDbContext>, IAsyncRepository<CourseSchedule, Guid>
+public class CourseScheduleManager : BaseRepository<CourseSchedule, Guid, CMSDbContext>, ICourseScheduleService
 {
     public CourseScheduleManager(DbContext context) : base(context)
     {

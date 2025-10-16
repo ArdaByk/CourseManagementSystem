@@ -1,4 +1,5 @@
-﻿using CMS.Domain.Entities;
+﻿using CMS.Application.Abstractions.Services;
+using CMS.Domain.Entities;
 using CMS.Persistence.Common.Repositories;
 using CMS.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Persistence.Repositories;
 
-public class AttendanceManager : BaseRepository<Attendance, Guid, CMSDbContext>, IAsyncRepository<Attendance, Guid>
+public class AttendanceManager : BaseRepository<Attendance, Guid, CMSDbContext>, IAttendanceService
 {
     public AttendanceManager(DbContext context) : base(context)
     {

@@ -1,4 +1,5 @@
-﻿using CMS.Domain.Entities;
+﻿using CMS.Application.Abstractions.Services;
+using CMS.Domain.Entities;
 using CMS.Persistence.Common.Repositories;
 using CMS.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Persistence.Repositories;
 
-public class ExamResultManager : BaseRepository<ExamResult, Guid, CMSDbContext>, IAsyncRepository<ExamResult, Guid>
+public class ExamResultManager : BaseRepository<ExamResult, Guid, CMSDbContext>, IExamResultService
 {
     public ExamResultManager(DbContext context) : base(context)
     {
