@@ -37,6 +37,7 @@
             teacherFirstNameTxt = new MaterialSkin.Controls.MaterialTextBox2();
             specializationComboBox = new MaterialSkin.Controls.MaterialComboBox();
             teacherSalaryTypeComboBox = new MaterialSkin.Controls.MaterialComboBox();
+            teacherEmailTxt = new MaterialSkin.Controls.MaterialTextBox2();
             SuspendLayout();
             // 
             // addTeacherBtn
@@ -46,7 +47,7 @@
             addTeacherBtn.Depth = 0;
             addTeacherBtn.HighEmphasis = true;
             addTeacherBtn.Icon = null;
-            addTeacherBtn.Location = new Point(16, 473);
+            addTeacherBtn.Location = new Point(16, 527);
             addTeacherBtn.Margin = new Padding(4, 6, 4, 6);
             addTeacherBtn.MouseState = MaterialSkin.MouseState.HOVER;
             addTeacherBtn.Name = "addTeacherBtn";
@@ -57,6 +58,7 @@
             addTeacherBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             addTeacherBtn.UseAccentColor = false;
             addTeacherBtn.UseVisualStyleBackColor = true;
+            addTeacherBtn.Click += addTeacherBtn_Click;
             // 
             // teacherStatusSwitch
             // 
@@ -64,7 +66,7 @@
             teacherStatusSwitch.Checked = true;
             teacherStatusSwitch.CheckState = CheckState.Checked;
             teacherStatusSwitch.Depth = 0;
-            teacherStatusSwitch.Location = new Point(16, 430);
+            teacherStatusSwitch.Location = new Point(16, 484);
             teacherStatusSwitch.Margin = new Padding(0);
             teacherStatusSwitch.MouseLocation = new Point(-1, -1);
             teacherStatusSwitch.MouseState = MaterialSkin.MouseState.HOVER;
@@ -85,7 +87,7 @@
             teacherSalaryAmountTxt.HideSelection = true;
             teacherSalaryAmountTxt.Hint = "Maaş Miktarı";
             teacherSalaryAmountTxt.LeadingIcon = null;
-            teacherSalaryAmountTxt.Location = new Point(16, 270);
+            teacherSalaryAmountTxt.Location = new Point(16, 324);
             teacherSalaryAmountTxt.MaxLength = 32767;
             teacherSalaryAmountTxt.MouseState = MaterialSkin.MouseState.OUT;
             teacherSalaryAmountTxt.Name = "teacherSalaryAmountTxt";
@@ -150,7 +152,7 @@
             // teacherHiredDate
             // 
             teacherHiredDate.CalendarMonthBackground = Color.FromArgb(64, 64, 64);
-            teacherHiredDate.Location = new Point(16, 241);
+            teacherHiredDate.Location = new Point(16, 295);
             teacherHiredDate.Name = "teacherHiredDate";
             teacherHiredDate.Size = new Size(250, 23);
             teacherHiredDate.TabIndex = 23;
@@ -229,7 +231,7 @@
             specializationComboBox.IntegralHeight = false;
             specializationComboBox.ItemHeight = 43;
             specializationComboBox.Items.AddRange(new object[] { "Aylık Maaş", "Saatlik Ücret", "Ders Başına Ücret" });
-            specializationComboBox.Location = new Point(16, 378);
+            specializationComboBox.Location = new Point(16, 432);
             specializationComboBox.MaxDropDownItems = 4;
             specializationComboBox.MouseState = MaterialSkin.MouseState.OUT;
             specializationComboBox.Name = "specializationComboBox";
@@ -253,7 +255,7 @@
             teacherSalaryTypeComboBox.IntegralHeight = false;
             teacherSalaryTypeComboBox.ItemHeight = 43;
             teacherSalaryTypeComboBox.Items.AddRange(new object[] { "Aylık Maaş", "Saatlik Ücret", "Ders Başına Ücret" });
-            teacherSalaryTypeComboBox.Location = new Point(16, 324);
+            teacherSalaryTypeComboBox.Location = new Point(16, 378);
             teacherSalaryTypeComboBox.MaxDropDownItems = 4;
             teacherSalaryTypeComboBox.MouseState = MaterialSkin.MouseState.OUT;
             teacherSalaryTypeComboBox.Name = "teacherSalaryTypeComboBox";
@@ -261,11 +263,41 @@
             teacherSalaryTypeComboBox.StartIndex = 0;
             teacherSalaryTypeComboBox.TabIndex = 35;
             // 
+            // teacherEmailTxt
+            // 
+            teacherEmailTxt.AnimateReadOnly = false;
+            teacherEmailTxt.BackgroundImageLayout = ImageLayout.None;
+            teacherEmailTxt.CharacterCasing = CharacterCasing.Normal;
+            teacherEmailTxt.Depth = 0;
+            teacherEmailTxt.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            teacherEmailTxt.HideSelection = true;
+            teacherEmailTxt.Hint = "E-Posta";
+            teacherEmailTxt.LeadingIcon = null;
+            teacherEmailTxt.Location = new Point(16, 241);
+            teacherEmailTxt.MaxLength = 32767;
+            teacherEmailTxt.MouseState = MaterialSkin.MouseState.OUT;
+            teacherEmailTxt.Name = "teacherEmailTxt";
+            teacherEmailTxt.PasswordChar = '\0';
+            teacherEmailTxt.PrefixSuffixText = null;
+            teacherEmailTxt.ReadOnly = false;
+            teacherEmailTxt.RightToLeft = RightToLeft.No;
+            teacherEmailTxt.SelectedText = "";
+            teacherEmailTxt.SelectionLength = 0;
+            teacherEmailTxt.SelectionStart = 0;
+            teacherEmailTxt.ShortcutsEnabled = true;
+            teacherEmailTxt.Size = new Size(250, 48);
+            teacherEmailTxt.TabIndex = 36;
+            teacherEmailTxt.TabStop = false;
+            teacherEmailTxt.TextAlign = HorizontalAlignment.Left;
+            teacherEmailTxt.TrailingIcon = null;
+            teacherEmailTxt.UseSystemPasswordChar = false;
+            // 
             // AddTeacherForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(295, 523);
+            ClientSize = new Size(295, 577);
+            Controls.Add(teacherEmailTxt);
             Controls.Add(teacherSalaryTypeComboBox);
             Controls.Add(specializationComboBox);
             Controls.Add(addTeacherBtn);
@@ -293,5 +325,6 @@
         private MaterialSkin.Controls.MaterialTextBox2 teacherFirstNameTxt;
         private MaterialSkin.Controls.MaterialComboBox specializationComboBox;
         private MaterialSkin.Controls.MaterialComboBox teacherSalaryTypeComboBox;
+        private MaterialSkin.Controls.MaterialTextBox2 teacherEmailTxt;
     }
 }

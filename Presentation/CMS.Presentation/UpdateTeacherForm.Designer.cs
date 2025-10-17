@@ -37,6 +37,7 @@
             teacherHiredDate = new DateTimePicker();
             teacherLastNameTxt = new MaterialSkin.Controls.MaterialTextBox2();
             teacherFirstNameTxt = new MaterialSkin.Controls.MaterialTextBox2();
+            teacherEmailTxt = new MaterialSkin.Controls.MaterialTextBox2();
             SuspendLayout();
             // 
             // teacherSalaryTypeComboBox
@@ -55,7 +56,7 @@
             teacherSalaryTypeComboBox.IntegralHeight = false;
             teacherSalaryTypeComboBox.ItemHeight = 43;
             teacherSalaryTypeComboBox.Items.AddRange(new object[] { "Aylık Maaş", "Saatlik Ücret", "Ders Başına Ücret" });
-            teacherSalaryTypeComboBox.Location = new Point(14, 320);
+            teacherSalaryTypeComboBox.Location = new Point(14, 375);
             teacherSalaryTypeComboBox.MaxDropDownItems = 4;
             teacherSalaryTypeComboBox.MouseState = MaterialSkin.MouseState.OUT;
             teacherSalaryTypeComboBox.Name = "teacherSalaryTypeComboBox";
@@ -79,7 +80,7 @@
             specializationComboBox.IntegralHeight = false;
             specializationComboBox.ItemHeight = 43;
             specializationComboBox.Items.AddRange(new object[] { "Aylık Maaş", "Saatlik Ücret", "Ders Başına Ücret" });
-            specializationComboBox.Location = new Point(14, 374);
+            specializationComboBox.Location = new Point(14, 429);
             specializationComboBox.MaxDropDownItems = 4;
             specializationComboBox.MouseState = MaterialSkin.MouseState.OUT;
             specializationComboBox.Name = "specializationComboBox";
@@ -94,17 +95,18 @@
             updateTeacherBtn.Depth = 0;
             updateTeacherBtn.HighEmphasis = true;
             updateTeacherBtn.Icon = null;
-            updateTeacherBtn.Location = new Point(14, 469);
+            updateTeacherBtn.Location = new Point(14, 524);
             updateTeacherBtn.Margin = new Padding(4, 6, 4, 6);
             updateTeacherBtn.MouseState = MaterialSkin.MouseState.HOVER;
             updateTeacherBtn.Name = "updateTeacherBtn";
             updateTeacherBtn.NoAccentTextColor = Color.Empty;
-            updateTeacherBtn.Size = new Size(138, 36);
+            updateTeacherBtn.Size = new Size(76, 36);
             updateTeacherBtn.TabIndex = 42;
             updateTeacherBtn.Text = "Kaydet";
             updateTeacherBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             updateTeacherBtn.UseAccentColor = false;
             updateTeacherBtn.UseVisualStyleBackColor = true;
+            updateTeacherBtn.Click += updateTeacherBtn_Click;
             // 
             // teacherStatusSwitch
             // 
@@ -112,7 +114,7 @@
             teacherStatusSwitch.Checked = true;
             teacherStatusSwitch.CheckState = CheckState.Checked;
             teacherStatusSwitch.Depth = 0;
-            teacherStatusSwitch.Location = new Point(14, 426);
+            teacherStatusSwitch.Location = new Point(14, 481);
             teacherStatusSwitch.Margin = new Padding(0);
             teacherStatusSwitch.MouseLocation = new Point(-1, -1);
             teacherStatusSwitch.MouseState = MaterialSkin.MouseState.HOVER;
@@ -133,7 +135,7 @@
             teacherSalaryAmountTxt.HideSelection = true;
             teacherSalaryAmountTxt.Hint = "Maaş Miktarı";
             teacherSalaryAmountTxt.LeadingIcon = null;
-            teacherSalaryAmountTxt.Location = new Point(14, 266);
+            teacherSalaryAmountTxt.Location = new Point(14, 321);
             teacherSalaryAmountTxt.MaxLength = 32767;
             teacherSalaryAmountTxt.MouseState = MaterialSkin.MouseState.OUT;
             teacherSalaryAmountTxt.Name = "teacherSalaryAmountTxt";
@@ -198,7 +200,7 @@
             // teacherHiredDate
             // 
             teacherHiredDate.CalendarMonthBackground = Color.FromArgb(64, 64, 64);
-            teacherHiredDate.Location = new Point(14, 237);
+            teacherHiredDate.Location = new Point(14, 292);
             teacherHiredDate.Name = "teacherHiredDate";
             teacherHiredDate.Size = new Size(250, 23);
             teacherHiredDate.TabIndex = 38;
@@ -261,11 +263,41 @@
             teacherFirstNameTxt.TrailingIcon = null;
             teacherFirstNameTxt.UseSystemPasswordChar = false;
             // 
+            // teacherEmailTxt
+            // 
+            teacherEmailTxt.AnimateReadOnly = false;
+            teacherEmailTxt.BackgroundImageLayout = ImageLayout.None;
+            teacherEmailTxt.CharacterCasing = CharacterCasing.Normal;
+            teacherEmailTxt.Depth = 0;
+            teacherEmailTxt.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            teacherEmailTxt.HideSelection = true;
+            teacherEmailTxt.Hint = "E-Posta";
+            teacherEmailTxt.LeadingIcon = null;
+            teacherEmailTxt.Location = new Point(14, 237);
+            teacherEmailTxt.MaxLength = 32767;
+            teacherEmailTxt.MouseState = MaterialSkin.MouseState.OUT;
+            teacherEmailTxt.Name = "teacherEmailTxt";
+            teacherEmailTxt.PasswordChar = '\0';
+            teacherEmailTxt.PrefixSuffixText = null;
+            teacherEmailTxt.ReadOnly = false;
+            teacherEmailTxt.RightToLeft = RightToLeft.No;
+            teacherEmailTxt.SelectedText = "";
+            teacherEmailTxt.SelectionLength = 0;
+            teacherEmailTxt.SelectionStart = 0;
+            teacherEmailTxt.ShortcutsEnabled = true;
+            teacherEmailTxt.Size = new Size(250, 48);
+            teacherEmailTxt.TabIndex = 45;
+            teacherEmailTxt.TabStop = false;
+            teacherEmailTxt.TextAlign = HorizontalAlignment.Left;
+            teacherEmailTxt.TrailingIcon = null;
+            teacherEmailTxt.UseSystemPasswordChar = false;
+            // 
             // UpdateTeacherForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(295, 520);
+            ClientSize = new Size(295, 579);
+            Controls.Add(teacherEmailTxt);
             Controls.Add(teacherSalaryTypeComboBox);
             Controls.Add(specializationComboBox);
             Controls.Add(updateTeacherBtn);
@@ -278,6 +310,7 @@
             MaximizeBox = false;
             Name = "UpdateTeacherForm";
             Text = "Öğretmen Güncelle";
+            Load += UpdateTeacherForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -293,5 +326,6 @@
         private DateTimePicker teacherHiredDate;
         private MaterialSkin.Controls.MaterialTextBox2 teacherLastNameTxt;
         private MaterialSkin.Controls.MaterialTextBox2 teacherFirstNameTxt;
+        private MaterialSkin.Controls.MaterialTextBox2 teacherEmailTxt;
     }
 }

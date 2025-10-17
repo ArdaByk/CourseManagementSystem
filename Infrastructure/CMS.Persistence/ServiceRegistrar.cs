@@ -19,6 +19,7 @@ public static class ServiceRegistrar
         services.AddDbContext<CMSDbContext>();
 
         services.AddScoped<IStudentService, StudentManager>();
+        services.AddScoped<ITeacherService, TeacherManager>();
 
         return services;
     }

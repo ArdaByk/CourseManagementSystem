@@ -1,5 +1,12 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.Students.Commands.Update;
+using CMS.Application.Features.Students.Queries.GetStudentById;
+using CMS.Application.Features.Teachers.Commands.Update;
+using CMS.Application.Features.Teachers.Queries.GetTeacherById;
+using CMS.Domain.Entities;
+using MaterialSkin;
 using MaterialSkin.Controls;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,17 +22,19 @@ namespace CMS.Presentation
 {
     public partial class UpdateTeacherForm : MaterialForm
     {
-        public UpdateTeacherForm()
+        public Guid TeacherId { get; set; }
+        private readonly IMediator mediator;
+        public event EventHandler TeacherUpdated;
+        public UpdateTeacherForm(IServiceProvider serviceProvider)
         {
             InitializeComponent();
-
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey900, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
 
             this.FormBorderStyle = FormBorderStyle.None;
-
+            this.mediator = serviceProvider.GetRequiredService<IMediator>();
         }
 
         protected override CreateParams CreateParams
@@ -58,5 +67,40 @@ namespace CMS.Presentation
             this.Region = new Region(path);
         }
 
+        private async void UpdateTeacherForm_Load(object sender, EventArgs e)
+        {
+            GetTeacherByIdResponse teacher = await mediator.Send(new GetTeacherByIdQuery { Id = TeacherId });
+
+            teacherFirstNameTxt.Text = teacher.FirstName;
+            teacherLastNameTxt.Text = teacher.LastName;
+            teacherPhoneTxt.Text = teacher.Phone;
+            teacherHiredDate.Value = teacher.HiredDate;
+            teacherSalaryAmountTxt.Text = teacher.SalaryAmount.ToString();
+            teacherSalaryTypeComboBox.SelectedIndex = 0;
+            teacherStatusSwitch.Checked = teacher.Status == 'A' ? true : false;
+            teacherEmailTxt.Text = teacher.Email;
+        }
+
+        private async void updateTeacherBtn_Click(object sender, EventArgs e)
+        {
+            UpdateTeacherCommand teacher = new UpdateTeacherCommand();
+            teacher.Id = TeacherId;
+            teacher.FirstName = teacherFirstNameTxt.Text;
+            teacher.LastName = teacherLastNameTxt.Text;
+            teacher.Phone = teacherPhoneTxt.Text;
+            teacher.HiredDate = teacherHiredDate.Value;
+            teacher.SalaryAmount = float.Parse(teacherSalaryAmountTxt.Text);
+            teacher.SalaryType = teacherSalaryTypeComboBox.SelectedItem.ToString();
+            teacher.Status = teacherStatusSwitch.Checked == true ? 'A' : 'B';
+            teacher.Email = teacherEmailTxt.Text;
+
+            UpdateTeacherResponse updatedTeacher = await mediator.Send(teacher);
+
+            MessageBox.Show(updatedTeacher.FirstName + " adlı öğretmen başarıyla güncellendi.");
+
+            TeacherUpdated?.Invoke(this, EventArgs.Empty);
+
+            this.Close();
+        }
     }
 }

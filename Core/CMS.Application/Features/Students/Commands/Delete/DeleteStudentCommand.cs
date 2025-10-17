@@ -26,7 +26,7 @@ public class DeleteStudentCommand : IRequest<DeleteStudentResponse>
 
         public async Task<DeleteStudentResponse> Handle(DeleteStudentCommand request, CancellationToken cancellationToken)
         {
-            Student student = await studentService.GetAsync(s => s.Id == request.Id, enableTracking: false, cancellationToken: cancellationToken);
+            Student student = await studentService.GetAsync(s => s.Id == request.Id, cancellationToken: cancellationToken);
 
             Student result = await studentService.DeleteAsync(student);
 

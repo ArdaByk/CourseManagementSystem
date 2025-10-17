@@ -1,5 +1,10 @@
-﻿using CMS.Domain.Entities;
+﻿using CMS.Application.Features.Students.Queries.GetListStudents;
+using CMS.Application.Features.Teachers.Commands.Delete;
+using CMS.Application.Features.Teachers.Queries.GetListTeachers;
+using CMS.Domain.Entities;
 using MaterialSkin.Controls;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +15,21 @@ namespace CMS.Presentation.PageBuilders;
 
 public class TeachersPageBuilder : IPageBuilder
 {
-    private List<User> teachers;
-    public TeachersPageBuilder()
+    private ICollection<GetListTeacherResponse> teachers;
+    private readonly IServiceProvider serviceProvider;
+    private readonly IMediator mediator;
+    private DataGridView teachersDataGridView;
+    private BindingSource bs;
+    public TeachersPageBuilder(IServiceProvider serviceProvider)
     {
-        this.teachers = new List<User>
-        {
-            new User { Id = 123424234, FirstName = "Ahmet", LastName = "Yılmaz", Email = "ahmet@example.com" },
-            new User { Id = 123424234, FirstName = "Ayşe", LastName = "Demir", Email = "ayse@example.com" },
-            new User { Id = 123424234, FirstName = "Mehmet", LastName = "Can", Email = "mehmet@example.com" }
-        };
+        this.mediator = serviceProvider.GetRequiredService<IMediator>();
+
+        this.serviceProvider = serviceProvider;
     }
-    public void Build(TabPage tabPage)
+    public async void Build(TabPage tabPage)
     {
+        this.teachers = await mediator.Send(new GetListTeacherQuery());
+
         Panel mainPanel = new Panel
         {
             Dock = DockStyle.Fill
@@ -54,11 +62,71 @@ public class TeachersPageBuilder : IPageBuilder
 
         addTeacherButton.MouseClick += (o, e) =>
         {
-            AddTeacherForm addTeacherForm = new AddTeacherForm();
-            addTeacherForm.Show();
+            AddTeacherForm addTeacherForm = serviceProvider.GetRequiredService<AddTeacherForm>();
+
+            addTeacherForm.NewTeacherAdded += addTeacherForm_NewTeacherAdded;
+
+            addTeacherForm.ShowDialog();
         };
 
-        DataGridView teachersDataGridView = CreateTeachersDataGridView(teachers);
+        updateTeacherBtn.MouseClick += (o, e) =>
+        {
+            DataGridViewRow selectedRow = teachersDataGridView.CurrentRow;
+
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen güncellemek için bir öğretmen seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Guid id = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+            UpdateTeacherForm updateTeacherForm = serviceProvider.GetRequiredService<UpdateTeacherForm>();
+
+            updateTeacherForm.TeacherId = id;
+
+            updateTeacherForm.TeacherUpdated += updateTeacherForm_TeacherUpdated;
+
+            updateTeacherForm.ShowDialog();
+        };
+
+        deleteTeacherBtn.MouseClick += async (s, e) =>
+        {
+            var selectedRow = teachersDataGridView.CurrentRow;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen silmek için bir öğretmen seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                "Bu Öğretmeni silmek istediğinizden emin misiniz?",
+                "Onay",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    var teacherId = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+                    await mediator.Send(new DeleteTeacherCommand { Id = teacherId });
+
+                    teachers.Remove(teachers.First(t => t.Id == teacherId));
+                    bs.ResetBindings(false);
+
+                    MessageBox.Show("Öğretmen başarıyla silindi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Silme işlemi başarısız: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        };
+
+        teachersDataGridView = CreateTeachersDataGridView(teachers);
 
         teachersPanel.Controls.Add(teachersDataGridView);
 
@@ -128,7 +196,7 @@ public class TeachersPageBuilder : IPageBuilder
         };
     }
 
-    private DataGridView CreateTeachersDataGridView(List<User> students)
+    private DataGridView CreateTeachersDataGridView(ICollection<GetListTeacherResponse> teachers)
     {
         var dataGridView = new DataGridView
         {
@@ -145,18 +213,45 @@ public class TeachersPageBuilder : IPageBuilder
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         };
 
-        BindingSource bs = new BindingSource { DataSource = students };
+        bs = new BindingSource { DataSource = teachers };
         dataGridView.DataSource = bs;
         bs.ResetBindings(false);
 
         dataGridView.DataBindingComplete += (s, e) =>
         {
-            dataGridView.Columns["Id"].HeaderText = "ID";
+            dataGridView.Columns["Id"].Visible = false;
             dataGridView.Columns["FirstName"].HeaderText = "Adı";
             dataGridView.Columns["LastName"].HeaderText = "Soyadı";
-            dataGridView.Columns["Email"].HeaderText = "Telefon Numarası";
+            dataGridView.Columns["Status"].HeaderText = "Öğretmen Durumu";
+        };
+
+        dataGridView.CellFormatting += (s, e) =>
+        {
+            if (dataGridView.Columns[e.ColumnIndex].Name == "Status" && e.Value != null)
+            {
+                string status = e.Value.ToString();
+
+                if (status == "A")
+                    e.Value = "Aktif";
+                else if (status == "P")
+                    e.Value = "Pasif";
+            }
         };
 
         return dataGridView;
+    }
+
+    public async void addTeacherForm_NewTeacherAdded(object o, EventArgs e)
+    {
+        this.teachers = await mediator.Send(new GetListTeacherQuery());
+        bs.DataSource = this.teachers;
+        bs.ResetBindings(false);
+    }
+
+    public async void updateTeacherForm_TeacherUpdated(object o, EventArgs e)
+    {
+        this.teachers = await mediator.Send(new GetListTeacherQuery());
+        bs.DataSource = this.teachers;
+        bs.ResetBindings(false);
     }
 }

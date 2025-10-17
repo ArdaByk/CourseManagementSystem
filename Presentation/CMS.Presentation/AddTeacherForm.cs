@@ -1,5 +1,7 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.Teachers.Commands.Create;
+using MaterialSkin;
 using MaterialSkin.Controls;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,9 +17,13 @@ namespace CMS.Presentation
 {
     public partial class AddTeacherForm : MaterialForm
     {
-        public AddTeacherForm()
+        private readonly IMediator mediator;
+        public event EventHandler NewTeacherAdded;
+        public AddTeacherForm(IMediator mediator)
         {
             InitializeComponent();
+
+            this.mediator = mediator;
 
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
@@ -58,5 +64,27 @@ namespace CMS.Presentation
             this.Region = new Region(path);
         }
 
+        private async void addTeacherBtn_Click(object sender, EventArgs e)
+        {
+            CreateTeacherCommand createTeacherCommand = new CreateTeacherCommand
+            {
+                FirstName = teacherFirstNameTxt.Text,
+                LastName = teacherLastNameTxt.Text,
+                HiredDate = teacherHiredDate.Value,
+                Phone = teacherPhoneTxt.Text,
+                SalaryAmount = Convert.ToInt32(teacherSalaryAmountTxt.Text),
+                SalaryType = teacherSalaryTypeComboBox.SelectedItem.ToString(),
+                Status = teacherStatusSwitch.Checked ? 'A' : 'P',
+                Email = teacherEmailTxt.Text
+            };
+
+            CreateTeacherResponse createTeacherResponse = await mediator.Send(createTeacherCommand);
+
+            MessageBox.Show(createTeacherResponse.FirstName + " Adlı öğretmen başarıyla kaydedildi.");
+
+            NewTeacherAdded?.Invoke(this, EventArgs.Empty);
+
+            this.Close();
+        }
     }
 }

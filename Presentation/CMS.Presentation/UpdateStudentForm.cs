@@ -73,6 +73,7 @@ namespace CMS.Presentation
             EmergencyContactNameTxt.Text = student.EmergencyContactName;
             EmergencyContactRelation.Text = student.EmergencyContactRelation;
             EmergencyContactPhoneTxt.Text = student.EmergencyContactPhone;
+            studentEmailTxt.Text = student.Email;
         }
 
         private async void updateStudentBtn_Click(object sender, EventArgs e)
