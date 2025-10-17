@@ -55,6 +55,7 @@
             updateCourseBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             updateCourseBtn.UseAccentColor = false;
             updateCourseBtn.UseVisualStyleBackColor = true;
+            updateCourseBtn.Click += updateCourseBtn_Click;
             // 
             // courseStatusSwitch
             // 
@@ -199,6 +200,7 @@
             MaximizeBox = false;
             Name = "UpdateCourseForm";
             Text = "Kurs Güncelle";
+            Load += UpdateCourseForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

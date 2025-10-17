@@ -1,9 +1,16 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.Courses.Commands.Update;
+using CMS.Application.Features.Courses.Queries.GetTeacherById;
+using CMS.Application.Features.Teachers.Queries.GetTeacherById;
+using CMS.Domain.Entities;
+using MaterialSkin;
 using MaterialSkin.Controls;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.PerformanceData;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -15,17 +22,19 @@ namespace CMS.Presentation
 {
     public partial class UpdateCourseForm : MaterialForm
     {
-        public UpdateCourseForm()
+        public Guid CourseId { get; set; }
+        private readonly IMediator mediator;
+        public event EventHandler CourseUpdated;
+        public UpdateCourseForm(IServiceProvider serviceProvider)
         {
             InitializeComponent();
-
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey900, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
 
             this.FormBorderStyle = FormBorderStyle.None;
-
+            this.mediator = serviceProvider.GetRequiredService<IMediator>();
         }
 
         protected override CreateParams CreateParams
@@ -58,5 +67,33 @@ namespace CMS.Presentation
             this.Region = new Region(path);
         }
 
+        private async void updateCourseBtn_Click(object sender, EventArgs e)
+        {
+            UpdateCourseCommand course = new UpdateCourseCommand();
+            course.Id = CourseId;
+            course.CourseName = courseNameTxt.Text;
+            course.Description = courseDescriptionTxt.Text;
+            course.DurationWeeks = Convert.ToInt32(durationWeekTxt.Text);
+            course.WeeklyHours = Convert.ToInt32(weeklyHoursTxt.Text);
+            course.Status = courseStatusSwitch.Checked == true ? 'A' : 'P';
+
+            UpdateCourseResponse updatedCourse = await mediator.Send(course);
+
+            MessageBox.Show(updatedCourse.CourseName + " adlı kurs başarıyla güncellendi.");
+
+            CourseUpdated?.Invoke(this, EventArgs.Empty);
+
+            this.Close();
+        }
+
+        private async void UpdateCourseForm_Load(object sender, EventArgs e)
+        {
+            GetCourseByIdResponse course = await mediator.Send(new GetCourseByIdQuery { Id = CourseId });
+            courseNameTxt.Text = course.CourseName;
+            courseDescriptionTxt.Text = course.Description;
+            durationWeekTxt.Text = course.DurationWeeks.ToString();
+            weeklyHoursTxt.Text = course.WeeklyHours.ToString();
+            courseStatusSwitch.Checked = course.Status == 'A' ? true : false;
+        }
     }
 }

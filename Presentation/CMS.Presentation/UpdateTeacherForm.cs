@@ -91,7 +91,7 @@ namespace CMS.Presentation
             teacher.HiredDate = teacherHiredDate.Value;
             teacher.SalaryAmount = float.Parse(teacherSalaryAmountTxt.Text);
             teacher.SalaryType = teacherSalaryTypeComboBox.SelectedItem.ToString();
-            teacher.Status = teacherStatusSwitch.Checked == true ? 'A' : 'B';
+            teacher.Status = teacherStatusSwitch.Checked == true ? 'A' : 'P';
             teacher.Email = teacherEmailTxt.Text;
 
             UpdateTeacherResponse updatedTeacher = await mediator.Send(teacher);

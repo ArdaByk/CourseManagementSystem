@@ -1,5 +1,8 @@
-﻿using CMS.Domain.Entities;
+﻿using CMS.Application.Features.Courses.Commands.Delete;
+using CMS.Application.Features.Courses.Queries.GetListTeachers;
 using MaterialSkin.Controls;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,19 +13,22 @@ namespace CMS.Presentation.PageBuilders;
 
 public class CoursesPageBuilder : IPageBuilder
 {
-    private List<User> courses;
-    public CoursesPageBuilder()
+    private ICollection<GetListCoursesResponse> courses;
+    private readonly IServiceProvider serviceProvider;
+    private readonly IMediator mediator;
+    private DataGridView coursesDataGridView;
+    private BindingSource bs;
+    public CoursesPageBuilder(IServiceProvider serviceProvider)
     {
-        this.courses = new List<User>
-        {
-            new User { Id = 123424234, FirstName = "Ahmet", LastName = "Yılmaz", Email = "ahmet@example.com" },
-            new User { Id = 123424234, FirstName = "Ayşe", LastName = "Demir", Email = "ayse@example.com" },
-            new User { Id = 123424234, FirstName = "Mehmet", LastName = "Can", Email = "mehmet@example.com" }
-        };
+        this.mediator = serviceProvider.GetRequiredService<IMediator>();
+
+        this.serviceProvider = serviceProvider;
     }
 
-    public void Build(TabPage tabPage)
+    public async void Build(TabPage tabPage)
     {
+        this.courses = await mediator.Send(new GetListCoursesQuery());
+
         Panel mainPanel = new Panel
         {
             Dock = DockStyle.Fill
@@ -56,8 +62,68 @@ public class CoursesPageBuilder : IPageBuilder
 
         addCourseBtn.MouseClick += (o, e) =>
         {
-            AddCourseForm addCourseForm = new AddCourseForm();
-            addCourseForm.Show();
+            AddCourseForm addCourseForm = serviceProvider.GetRequiredService<AddCourseForm>();
+
+            addCourseForm.NewCourseAdded += addCourseForm_NewCourseAdded;
+
+            addCourseForm.ShowDialog();
+        };
+
+        updateCourseBtn.MouseClick += (o, e) =>
+        {
+            DataGridViewRow selectedRow = coursesDataGridView.CurrentRow;
+
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen güncellemek için bir kurs seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Guid id = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+            UpdateCourseForm updateCourseForm = serviceProvider.GetRequiredService<UpdateCourseForm>();
+
+            updateCourseForm.CourseId = id;
+
+            updateCourseForm.CourseUpdated += updateCourseForm_CourseUpdated;
+
+            updateCourseForm.ShowDialog();
+        };
+
+        deleteCourseBtn.MouseClick += async (s, e) =>
+        {
+            var selectedRow = coursesDataGridView.CurrentRow;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen silmek için bir kurs seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                "Bu kursu silmek istediğinizden emin misiniz?",
+                "Onay",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    var courseId = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+                    await mediator.Send(new DeleteCourseCommand { Id = courseId });
+
+                    courses.Remove(courses.First(c => c.Id == courseId));
+                    bs.ResetBindings(false);
+
+                    MessageBox.Show("Kurs başarıyla silindi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Silme işlemi başarısız: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         };
 
         showStudentsBtn.MouseClick += (o, e) =>
@@ -66,7 +132,7 @@ public class CoursesPageBuilder : IPageBuilder
             showCourseStudentsForm.Show();
         };
 
-        DataGridView coursesDataGridView = CreateCoursesDataGridView(courses);
+        coursesDataGridView = CreateCoursesDataGridView(courses);
 
         coursesPanel.Controls.Add(coursesDataGridView);
 
@@ -88,8 +154,8 @@ public class CoursesPageBuilder : IPageBuilder
             string courseNameFilter = courseNameTextBox.Text.Trim().ToLower();
 
             var bs = (BindingSource)coursesDataGridView.DataSource;
-            bs.DataSource = courses.Where(t =>
-                (string.IsNullOrEmpty(courseNameFilter) || t.FirstName.ToLower().Contains(courseNameFilter))
+            bs.DataSource = courses.Where(c =>
+                (string.IsNullOrEmpty(courseNameFilter) || c.CourseName.ToLower().Contains(courseNameFilter))
             ).ToList();
 
             bs.ResetBindings(false);
@@ -133,7 +199,7 @@ public class CoursesPageBuilder : IPageBuilder
         };
     }
 
-    private DataGridView CreateCoursesDataGridView(List<User> students)
+    private DataGridView CreateCoursesDataGridView(ICollection<GetListCoursesResponse> students)
     {
         var dataGridView = new DataGridView
         {
@@ -150,17 +216,45 @@ public class CoursesPageBuilder : IPageBuilder
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         };
 
-        BindingSource bs = new BindingSource { DataSource = students };
+        bs = new BindingSource { DataSource = students };
         dataGridView.DataSource = bs;
         bs.ResetBindings(false);
 
         dataGridView.DataBindingComplete += (s, e) =>
         {
-            dataGridView.Columns["Id"].HeaderText = "ID";
-            dataGridView.Columns["FirstName"].HeaderText = "Kurs Adı";
-            dataGridView.Columns["LastName"].HeaderText = "Açıklama";
+            dataGridView.Columns["Id"].Visible = false;
+            dataGridView.Columns["CourseName"].HeaderText = "Kurs Adı";
+            dataGridView.Columns["Description"].HeaderText = "Açıklama";
+            dataGridView.Columns["Status"].HeaderText = "Kurs Durumu";
+        };
+
+        dataGridView.CellFormatting += (s, e) =>
+        {
+            if (dataGridView.Columns[e.ColumnIndex].Name == "Status" && e.Value != null)
+            {
+                string status = e.Value.ToString();
+
+                if (status == "A")
+                    e.Value = "Aktif";
+                else if (status == "P")
+                    e.Value = "Pasif";
+            }
         };
 
         return dataGridView;
+    }
+
+    public async void addCourseForm_NewCourseAdded(object o, EventArgs e)
+    {
+        this.courses = await mediator.Send(new GetListCoursesQuery());
+        bs.DataSource = this.courses;
+        bs.ResetBindings(false);
+    }
+
+    public async void updateCourseForm_CourseUpdated(object o, EventArgs e)
+    {
+        this.courses = await mediator.Send(new GetListCoursesQuery());
+        bs.DataSource = this.courses;
+        bs.ResetBindings(false);
     }
 }

@@ -20,6 +20,8 @@ public static class ServiceRegistrar
 
         services.AddScoped<IStudentService, StudentManager>();
         services.AddScoped<ITeacherService, TeacherManager>();
+        services.AddScoped<ICourseService, CourseManager>();
+        services.AddScoped<IClassService, ClassManager>();
 
         return services;
     }

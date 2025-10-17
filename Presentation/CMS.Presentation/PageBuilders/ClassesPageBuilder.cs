@@ -1,5 +1,9 @@
-﻿using CMS.Domain.Entities;
+﻿using CMS.Application.Features.Classes.Commands.Delete;
+using CMS.Application.Features.Classes.Queries.GetListClasses;
+using CMS.Application.Features.Courses.Queries.GetListTeachers;
 using MaterialSkin.Controls;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,19 +14,22 @@ namespace CMS.Presentation.PageBuilders;
 
 public class ClassesPageBuilder : IPageBuilder
 {
-    private List<User> students;
-    public ClassesPageBuilder()
+    private ICollection<GetListClassesResponse> classes;
+    private readonly IServiceProvider serviceProvider;
+    private readonly IMediator mediator;
+    private DataGridView classesDataGridView;
+    private BindingSource bs;
+    public ClassesPageBuilder(IServiceProvider serviceProvider)
     {
-           this.students = new List<User>
-        {
-            new User { Id = 123424234, FirstName = "Ahmet", LastName = "Yılmaz", Email = "ahmet@example.com" },
-            new User { Id = 123424234, FirstName = "Ayşe", LastName = "Demir", Email = "ayse@example.com" },
-            new User { Id = 123424234, FirstName = "Mehmet", LastName = "Can", Email = "mehmet@example.com" }
-        };
+        this.mediator = serviceProvider.GetRequiredService<IMediator>();
+
+        this.serviceProvider = serviceProvider;
     }
 
-    public void Build(TabPage tabPage)
+    public async void Build(TabPage tabPage)
     {
+        this.classes = await mediator.Send(new GetListClassesQuery());
+
         Panel mainPanel = new Panel
         {
             Dock = DockStyle.Fill
@@ -53,8 +60,11 @@ public class ClassesPageBuilder : IPageBuilder
 
         addClassBtn.MouseClick += (o, e) =>
         {
-            AddClassForm addClassForm = new AddClassForm();
-            addClassForm.Show();
+            AddClassForm addClassForm = serviceProvider.GetRequiredService<AddClassForm>();
+
+            addClassForm.NewClassAdded += addClassForm_NewClassAdded;
+
+            addClassForm.ShowDialog();
         };
 
         reviewClassBtn.MouseClick += (o, e) =>
@@ -65,17 +75,62 @@ public class ClassesPageBuilder : IPageBuilder
 
         updateClassBtn.MouseClick += (o, e) =>
         {
-            ShowAttendanceForm showAttendanceForm = new ShowAttendanceForm();
-            showAttendanceForm.Show();
+            DataGridViewRow selectedRow = classesDataGridView.CurrentRow;
+
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen güncellemek için bir sınıf seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Guid id = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+            UpdateClassForm updateClassForm = serviceProvider.GetRequiredService<UpdateClassForm>();
+
+            updateClassForm.ClassId = id;
+
+            updateClassForm.ClassUpdated += updateClassForm_ClassUpdated;
+
+            updateClassForm.ShowDialog();
         };
 
-        deleteClassBtn.MouseClick += (o, e) =>
+        deleteClassBtn.MouseClick += async (o, e) =>
         {
-            TakeAttendanceForm takeAttendanceForm = new TakeAttendanceForm();
-            takeAttendanceForm.Show();
+            var selectedRow = classesDataGridView.CurrentRow;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen silmek için bir sınıf seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                "Bu sınıfı silmek istediğinizden emin misiniz?",
+                "Onay",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    var classId = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+                    await mediator.Send(new DeleteClassCommand { Id = classId });
+
+                    classes.Remove(classes.First(c => c.Id == classId));
+                    bs.ResetBindings(false);
+
+                    MessageBox.Show("Sınıf başarıyla silindi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Silme işlemi başarısız: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         };
 
-        DataGridView classesDataGridView = CreateClassesDataGridView(students);
+        classesDataGridView = CreateClassesDataGridView(classes);
 
         classesPanel.Controls.Add(classesDataGridView);
 
@@ -97,9 +152,8 @@ public class ClassesPageBuilder : IPageBuilder
             string classCapacityFilter = classCapacityTextBox.Text.Trim().ToLower();
 
             var bs = (BindingSource)classesDataGridView.DataSource;
-            bs.DataSource = students.Where(t =>
-                (string.IsNullOrEmpty(classNameFilter) || t.FirstName.ToLower().Contains(classNameFilter)) ||
-                (string.IsNullOrEmpty(classCapacityFilter) || t.FirstName.ToLower().Contains(classCapacityFilter))
+            bs.DataSource = classes.Where(t =>
+                (string.IsNullOrEmpty(classNameFilter) || t.ClassName.ToLower().Contains(classNameFilter))
             ).ToList();
 
             bs.ResetBindings(false);
@@ -129,7 +183,7 @@ public class ClassesPageBuilder : IPageBuilder
         };
     }
 
-    private DataGridView CreateClassesDataGridView(List<User> students)
+    private DataGridView CreateClassesDataGridView(ICollection<GetListClassesResponse> classes)
     {
         var dataGridView = new DataGridView
         {
@@ -146,17 +200,32 @@ public class ClassesPageBuilder : IPageBuilder
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         };
 
-        BindingSource bs = new BindingSource { DataSource = students };
+        bs = new BindingSource { DataSource = classes };
         dataGridView.DataSource = bs;
         bs.ResetBindings(false);
 
         dataGridView.DataBindingComplete += (s, e) =>
         {
-            dataGridView.Columns["Id"].HeaderText = "ID";
-            dataGridView.Columns["FirstName"].HeaderText = "Sınıf Adı";
-            dataGridView.Columns["LastName"].HeaderText = "Kapasitesi";
+            dataGridView.Columns["Id"].Visible = false;
+            dataGridView.Columns["ClassName"].HeaderText = "Sınıf Adı";
+            dataGridView.Columns["Capacity"].HeaderText = "Kapasitesi";
+            dataGridView.Columns["Location"].HeaderText = "Konumu";
         };
 
         return dataGridView;
+    }
+
+    public async void addClassForm_NewClassAdded(object o, EventArgs e)
+    {
+        this.classes = await mediator.Send(new GetListClassesQuery());
+        bs.DataSource = this.classes;
+        bs.ResetBindings(false);
+    }
+
+    public async void updateClassForm_ClassUpdated(object o, EventArgs e)
+    {
+        this.classes = await mediator.Send(new GetListClassesQuery());
+        bs.DataSource = this.classes;
+        bs.ResetBindings(false);
     }
 }

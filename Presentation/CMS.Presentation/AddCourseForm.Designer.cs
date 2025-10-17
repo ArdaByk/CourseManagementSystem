@@ -42,7 +42,7 @@
             courseNameTxt.BackgroundImageLayout = ImageLayout.None;
             courseNameTxt.CharacterCasing = CharacterCasing.Normal;
             courseNameTxt.Depth = 0;
-            courseNameTxt.Font = new Font("Roboto", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            courseNameTxt.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             courseNameTxt.HideSelection = true;
             courseNameTxt.Hint = "Kurs Adı";
             courseNameTxt.LeadingIcon = null;
@@ -96,7 +96,7 @@
             durationWeekTxt.BackgroundImageLayout = ImageLayout.None;
             durationWeekTxt.CharacterCasing = CharacterCasing.Normal;
             durationWeekTxt.Depth = 0;
-            durationWeekTxt.Font = new Font("Roboto", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            durationWeekTxt.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             durationWeekTxt.HideSelection = true;
             durationWeekTxt.Hint = "Hafta Sayısı";
             durationWeekTxt.LeadingIcon = null;
@@ -183,6 +183,7 @@
             addCourseBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             addCourseBtn.UseAccentColor = false;
             addCourseBtn.UseVisualStyleBackColor = true;
+            addCourseBtn.Click += addCourseBtn_Click;
             // 
             // AddCourseForm
             // 

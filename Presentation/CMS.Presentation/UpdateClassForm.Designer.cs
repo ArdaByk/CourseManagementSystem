@@ -46,12 +46,13 @@
             updateClassBtn.MouseState = MaterialSkin.MouseState.HOVER;
             updateClassBtn.Name = "updateClassBtn";
             updateClassBtn.NoAccentTextColor = Color.Empty;
-            updateClassBtn.Size = new Size(139, 36);
+            updateClassBtn.Size = new Size(76, 36);
             updateClassBtn.TabIndex = 7;
             updateClassBtn.Text = "Kaydet";
             updateClassBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             updateClassBtn.UseAccentColor = false;
             updateClassBtn.UseVisualStyleBackColor = true;
+            updateClassBtn.Click += updateClassBtn_Click;
             // 
             // locationTxt
             // 
@@ -152,6 +153,7 @@
             MaximizeBox = false;
             Name = "UpdateClassForm";
             Text = "Sınıf Güncelle";
+            Load += UpdateClassForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

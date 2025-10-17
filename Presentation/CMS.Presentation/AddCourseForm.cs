@@ -1,5 +1,7 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.Courses.Commands.Create;
+using MaterialSkin;
 using MaterialSkin.Controls;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,9 +17,13 @@ namespace CMS.Presentation
 {
     public partial class AddCourseForm : MaterialForm
     {
-        public AddCourseForm()
+        private readonly IMediator mediator;
+        public event EventHandler NewCourseAdded;
+        public AddCourseForm(IMediator mediator)
         {
             InitializeComponent();
+
+            this.mediator = mediator;
 
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
@@ -58,5 +64,24 @@ namespace CMS.Presentation
             this.Region = new Region(path);
         }
 
+        private async void addCourseBtn_Click(object sender, EventArgs e)
+        {
+            CreateCourseCommand createCourseCommand = new CreateCourseCommand
+            {
+               CourseName = courseNameTxt.Text,
+               Description = courseDescriptionTxt.Text,
+               DurationWeeks = Convert.ToInt32(durationWeekTxt.Text),
+               WeeklyHours = Convert.ToInt32(weeklyHoursTxt.Text),
+               Status = courseStatusSwitch.Checked ? 'A' : 'P'
+            };
+
+            CreateCourseResponse createCourseResponse = await mediator.Send(createCourseCommand);
+
+            MessageBox.Show(createCourseResponse.CourseName + " Adlı kurs başarıyla kaydedildi.");
+
+            NewCourseAdded?.Invoke(this, EventArgs.Empty);
+
+            this.Close();
+        }
     }
 }

@@ -40,7 +40,7 @@
             classNameTxt.BackgroundImageLayout = ImageLayout.None;
             classNameTxt.CharacterCasing = CharacterCasing.Normal;
             classNameTxt.Depth = 0;
-            classNameTxt.Font = new Font("Roboto", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            classNameTxt.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             classNameTxt.HideSelection = true;
             classNameTxt.Hint = "Sınıf Adı";
             classNameTxt.LeadingIcon = null;
@@ -139,6 +139,7 @@
             addClassBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             addClassBtn.UseAccentColor = false;
             addClassBtn.UseVisualStyleBackColor = true;
+            addClassBtn.Click += addClassBtn_Click;
             // 
             // AddClassForm
             // 

@@ -1,5 +1,12 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.Classes.Commands.Update;
+using CMS.Application.Features.Classes.Queries.GetClassById;
+using CMS.Application.Features.Courses.Commands.Update;
+using CMS.Application.Features.Courses.Queries.GetTeacherById;
+using CMS.Domain.Entities;
+using MaterialSkin;
 using MaterialSkin.Controls;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,17 +22,19 @@ namespace CMS.Presentation
 {
     public partial class UpdateClassForm : MaterialForm
     {
-        public UpdateClassForm()
+        public Guid ClassId { get; set; }
+        private readonly IMediator mediator;
+        public event EventHandler ClassUpdated;
+        public UpdateClassForm(IServiceProvider serviceProvider)
         {
             InitializeComponent();
-
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey900, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
 
             this.FormBorderStyle = FormBorderStyle.None;
-
+            this.mediator = serviceProvider.GetRequiredService<IMediator>();
         }
 
         protected override CreateParams CreateParams
@@ -58,5 +67,29 @@ namespace CMS.Presentation
             this.Region = new Region(path);
         }
 
+        private async void updateClassBtn_Click(object sender, EventArgs e)
+        {
+            UpdateClassCommand myClass = new UpdateClassCommand();
+            myClass.Id = ClassId;
+            myClass.ClassName = classNameTxt.Text;
+            myClass.Capacity = Convert.ToInt32(capacityTxt.Text);
+            myClass.Location = locationTxt.Text;
+
+            UpdateClassResponse updatedClass = await mediator.Send(myClass);
+
+            MessageBox.Show(updatedClass.ClassName + " adlı sınıf başarıyla güncellendi.");
+
+            ClassUpdated?.Invoke(this, EventArgs.Empty);
+
+            this.Close();
+        }
+
+        private async void UpdateClassForm_Load(object sender, EventArgs e)
+        {
+            GetClassByIdResponse myClass = await mediator.Send(new GetClassByIdQuery { Id = ClassId });
+            classNameTxt.Text = myClass.ClassName;
+            capacityTxt.Text = myClass.Capacity.ToString();
+            locationTxt.Text = myClass.Location;
+        }
     }
 }
