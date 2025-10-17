@@ -55,5 +55,7 @@ public partial class LoginForm : MaterialForm
     {
         DashboardForm dashboardForm = serviceProvider.GetRequiredService<DashboardForm>();
         dashboardForm.Show();
+
+        this.Hide();
     }
 }

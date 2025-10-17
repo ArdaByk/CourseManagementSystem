@@ -1,4 +1,7 @@
-﻿using MaterialSkin.Controls;
+﻿using CMS.Application.Features.Students.Commands.Delete;
+using CMS.Application.Features.Students.Commands.Update;
+using CMS.Application.Features.Students.Queries.GetListStudents;
+using MaterialSkin.Controls;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -11,21 +14,21 @@ namespace CMS.Presentation.PageBuilders;
 
 public class StudentPageBuilder : IPageBuilder
 {
-    private List<User> students;
+    private ICollection<GetListStudentResponse> students;
     private readonly IServiceProvider serviceProvider;
+    private readonly IMediator mediator;
+    private DataGridView studentsDataGridView;
+    private BindingSource bs;
     public StudentPageBuilder(IServiceProvider serviceProvider)
     {
-        this.students = new List<User>
-        {
-            new User { Id = 123424234, FirstName = "Ahmet", LastName = "Yılmaz", Email = "ahmet@example.com" },
-            new User { Id = 123424234, FirstName = "Ayşe", LastName = "Demir", Email = "ayse@example.com" },
-            new User { Id = 123424234, FirstName = "Mehmet", LastName = "Can", Email = "mehmet@example.com" }
-        };
+        this.mediator = serviceProvider.GetRequiredService<IMediator>();
 
         this.serviceProvider = serviceProvider;
     }
-    public void Build(TabPage tabPage)
+    public async void Build(TabPage tabPage)
     {
+        this.students = await mediator.Send(new GetListStudentQuery());
+
         Panel mainPanel = new Panel
         {
             Dock = DockStyle.Fill
@@ -58,13 +61,76 @@ public class StudentPageBuilder : IPageBuilder
             BackColor = Color.Transparent
         };
 
+        studentsDataGridView = CreateStudentsDataGridView(students);
+
+        updateStudentBtn.MouseClick += (o, e) =>
+        {
+            DataGridViewRow selectedRow = studentsDataGridView.CurrentRow;
+
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen güncellemek için bir öğrenci seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Guid id = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+               
+            UpdateStudentForm updateStudentForm = serviceProvider.GetRequiredService<UpdateStudentForm>();
+
+            updateStudentForm.StudentId = id;
+
+            updateStudentForm.StudentUpdated += updateStudentForm_StudentUpdated;
+
+            updateStudentForm.ShowDialog();
+
+            updateStudentForm.Show();
+        };
+
         addStudentBtn.MouseClick += (o, e) =>
         {
             AddStudentForm addStudentForm = serviceProvider.GetRequiredService<AddStudentForm>();
-            addStudentForm.Show();
+
+            addStudentForm.NewStudentAdded += addStudentForm_NewStudentAdded;
+
+            addStudentForm.ShowDialog();
         };
 
-        DataGridView studentsDataGridView = CreateStudentsDataGridView(students);
+        deleteStudentBtn.MouseClick += async (s, e) =>
+        {
+            var selectedRow = studentsDataGridView.CurrentRow;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen silmek için bir öğrenci seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                "Bu öğrenciyi silmek istediğinizden emin misiniz?",
+                "Onay",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    var studentId = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+                    await mediator.Send(new DeleteStudentCommand { Id= studentId});
+
+                    students.Remove(students.First(s => s.Id == studentId));
+                    bs.ResetBindings(false);
+
+                    MessageBox.Show("Öğrenci başarıyla silindi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Silme işlemi başarısız: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        };
+
 
         studentsPanel.Controls.Add(studentsDataGridView);
 
@@ -140,7 +206,7 @@ public class StudentPageBuilder : IPageBuilder
         };
     }
 
-    private DataGridView CreateStudentsDataGridView(List<User> students)
+    private DataGridView CreateStudentsDataGridView(ICollection<GetListStudentResponse> students)
     {
         var dataGridView = new DataGridView
         {
@@ -157,18 +223,47 @@ public class StudentPageBuilder : IPageBuilder
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         };
 
-        BindingSource bs = new BindingSource { DataSource = students };
+        bs = new BindingSource { DataSource = students };
         dataGridView.DataSource = bs;
         bs.ResetBindings(false);
 
         dataGridView.DataBindingComplete += (s, e) =>
         {
-            dataGridView.Columns["Id"].HeaderText = "TC Kimlik No";
+            dataGridView.Columns["Id"].Visible = false;
+            dataGridView.Columns["NationalId"].HeaderText = "TC Kimlik No";
             dataGridView.Columns["FirstName"].HeaderText = "Adı";
             dataGridView.Columns["LastName"].HeaderText = "Soyadı";
-            dataGridView.Columns["Email"].HeaderText = "E-Posta";
+            dataGridView.Columns["Status"].HeaderText = "Öğrenci Durumu";
+
+        };
+
+        dataGridView.CellFormatting += (s, e) =>
+        {
+            if (dataGridView.Columns[e.ColumnIndex].Name == "Status" && e.Value != null)
+            {
+                string status = e.Value.ToString();
+
+                if (status == "A")
+                    e.Value = "Aktif";
+                else if (status == "P")
+                    e.Value = "Pasif";
+            }
         };
 
         return dataGridView;
+    }
+
+    public async void addStudentForm_NewStudentAdded(object o, EventArgs e)
+    {
+        this.students = await mediator.Send(new GetListStudentQuery());
+        bs.DataSource = this.students;
+        bs.ResetBindings(false);
+    }
+
+    public async void updateStudentForm_StudentUpdated(object o, EventArgs e)
+    {
+        this.students = await mediator.Send(new GetListStudentQuery());
+        bs.DataSource = this.students;
+        bs.ResetBindings(false);
     }
 }

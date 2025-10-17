@@ -18,6 +18,7 @@ namespace CMS.Presentation
     public partial class AddStudentForm : MaterialForm
     {
         private readonly IMediator mediator;
+        public event EventHandler NewStudentAdded;
         public AddStudentForm(IMediator mediator)
         {
             InitializeComponent();
@@ -118,6 +119,14 @@ namespace CMS.Presentation
             CreateStudentResponse createStudentResponse = await mediator.Send(createStudentCommand);
 
             MessageBox.Show(createStudentResponse.FirstName + " Adlı öğrenci başarıyla kaydedildi.");
+
+            NewStudentAdded?.Invoke(this, EventArgs.Empty);
+
+            this.Close();
+        }
+
+        private void AddStudentForm_Load(object sender, EventArgs e)
+        {
 
         }
     }

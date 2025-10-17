@@ -453,6 +453,7 @@
             MaximizeBox = false;
             Name = "AddStudentForm";
             Text = "Öğrenci Ekle";
+            Load += AddStudentForm_Load;
             ((System.ComponentModel.ISupportInitialize)studentPhotoPath).EndInit();
             ResumeLayout(false);
             PerformLayout();

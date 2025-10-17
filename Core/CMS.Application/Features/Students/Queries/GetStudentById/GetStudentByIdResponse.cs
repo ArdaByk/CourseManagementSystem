@@ -1,6 +1,6 @@
-﻿namespace CMS.Application.Dtos;
+﻿namespace CMS.Application.Features.Students.Queries.GetStudentById;
 
-public class StudentDetailDto
+public class GetStudentByIdResponse
 {
     public Guid Id { get; set; }
     public string FirstName { get; set; }

@@ -65,6 +65,7 @@
             updateStudentBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             updateStudentBtn.UseAccentColor = false;
             updateStudentBtn.UseVisualStyleBackColor = true;
+            updateStudentBtn.Click += updateStudentBtn_Click;
             // 
             // studentPhotoUploadBtn
             // 
@@ -450,6 +451,7 @@
             MaximizeBox = false;
             Name = "UpdateStudentForm";
             Text = "Öğrenci Güncelle";
+            Load += UpdateStudentForm_Load;
             ((System.ComponentModel.ISupportInitialize)studentPhotoPath).EndInit();
             ResumeLayout(false);
             PerformLayout();
