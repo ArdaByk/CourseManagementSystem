@@ -30,7 +30,6 @@
         {
             updateUserBtn = new MaterialSkin.Controls.MaterialButton();
             roleComboBox = new MaterialSkin.Controls.MaterialComboBox();
-            userPasswordTxt = new MaterialSkin.Controls.MaterialMaskedTextBox();
             userPhoneTxt = new MaterialSkin.Controls.MaterialMaskedTextBox();
             emailTxt = new MaterialSkin.Controls.MaterialTextBox2();
             fullNameTxt = new MaterialSkin.Controls.MaterialTextBox2();
@@ -44,17 +43,18 @@
             updateUserBtn.Depth = 0;
             updateUserBtn.HighEmphasis = true;
             updateUserBtn.Icon = null;
-            updateUserBtn.Location = new Point(10, 399);
+            updateUserBtn.Location = new Point(10, 345);
             updateUserBtn.Margin = new Padding(4, 6, 4, 6);
             updateUserBtn.MouseState = MaterialSkin.MouseState.HOVER;
             updateUserBtn.Name = "updateUserBtn";
             updateUserBtn.NoAccentTextColor = Color.Empty;
-            updateUserBtn.Size = new Size(132, 36);
+            updateUserBtn.Size = new Size(76, 36);
             updateUserBtn.TabIndex = 16;
             updateUserBtn.Text = "Kaydet";
             updateUserBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             updateUserBtn.UseAccentColor = false;
             updateUserBtn.UseVisualStyleBackColor = true;
+            updateUserBtn.Click += updateUserBtn_Click;
             // 
             // roleComboBox
             // 
@@ -71,55 +71,13 @@
             roleComboBox.Hint = "Rolü";
             roleComboBox.IntegralHeight = false;
             roleComboBox.ItemHeight = 43;
-            roleComboBox.Location = new Point(10, 344);
+            roleComboBox.Location = new Point(10, 290);
             roleComboBox.MaxDropDownItems = 4;
             roleComboBox.MouseState = MaterialSkin.MouseState.OUT;
             roleComboBox.Name = "roleComboBox";
             roleComboBox.Size = new Size(250, 49);
             roleComboBox.StartIndex = 0;
             roleComboBox.TabIndex = 15;
-            // 
-            // userPasswordTxt
-            // 
-            userPasswordTxt.AllowPromptAsInput = true;
-            userPasswordTxt.AnimateReadOnly = false;
-            userPasswordTxt.AsciiOnly = false;
-            userPasswordTxt.BackgroundImageLayout = ImageLayout.None;
-            userPasswordTxt.BeepOnError = false;
-            userPasswordTxt.CutCopyMaskFormat = MaskFormat.IncludeLiterals;
-            userPasswordTxt.Depth = 0;
-            userPasswordTxt.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
-            userPasswordTxt.HidePromptOnLeave = false;
-            userPasswordTxt.HideSelection = true;
-            userPasswordTxt.Hint = "Şifre";
-            userPasswordTxt.InsertKeyMode = InsertKeyMode.Default;
-            userPasswordTxt.LeadingIcon = null;
-            userPasswordTxt.Location = new Point(10, 290);
-            userPasswordTxt.Mask = "";
-            userPasswordTxt.MaxLength = 32767;
-            userPasswordTxt.MouseState = MaterialSkin.MouseState.OUT;
-            userPasswordTxt.Name = "userPasswordTxt";
-            userPasswordTxt.PasswordChar = '*';
-            userPasswordTxt.PrefixSuffixText = null;
-            userPasswordTxt.PromptChar = '_';
-            userPasswordTxt.ReadOnly = false;
-            userPasswordTxt.RejectInputOnFirstFailure = false;
-            userPasswordTxt.ResetOnPrompt = true;
-            userPasswordTxt.ResetOnSpace = true;
-            userPasswordTxt.RightToLeft = RightToLeft.No;
-            userPasswordTxt.SelectedText = "";
-            userPasswordTxt.SelectionLength = 0;
-            userPasswordTxt.SelectionStart = 0;
-            userPasswordTxt.ShortcutsEnabled = true;
-            userPasswordTxt.Size = new Size(250, 48);
-            userPasswordTxt.SkipLiterals = true;
-            userPasswordTxt.TabIndex = 14;
-            userPasswordTxt.TabStop = false;
-            userPasswordTxt.TextAlign = HorizontalAlignment.Left;
-            userPasswordTxt.TextMaskFormat = MaskFormat.IncludeLiterals;
-            userPasswordTxt.TrailingIcon = null;
-            userPasswordTxt.UseSystemPasswordChar = false;
-            userPasswordTxt.ValidatingType = null;
             // 
             // userPhoneTxt
             // 
@@ -255,10 +213,9 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(270, 443);
+            ClientSize = new Size(270, 391);
             Controls.Add(updateUserBtn);
             Controls.Add(roleComboBox);
-            Controls.Add(userPasswordTxt);
             Controls.Add(userPhoneTxt);
             Controls.Add(emailTxt);
             Controls.Add(fullNameTxt);
@@ -266,6 +223,7 @@
             MaximizeBox = false;
             Name = "UpdateUserForm";
             Text = "Kullanıcı Güncelle";
+            Load += UpdateUserForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -274,7 +232,6 @@
 
         private MaterialSkin.Controls.MaterialButton updateUserBtn;
         private MaterialSkin.Controls.MaterialComboBox roleComboBox;
-        private MaterialSkin.Controls.MaterialMaskedTextBox userPasswordTxt;
         private MaterialSkin.Controls.MaterialMaskedTextBox userPhoneTxt;
         private MaterialSkin.Controls.MaterialTextBox2 emailTxt;
         private MaterialSkin.Controls.MaterialTextBox2 fullNameTxt;

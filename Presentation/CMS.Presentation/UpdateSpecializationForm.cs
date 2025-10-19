@@ -1,31 +1,28 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.Specializations.Commands.Update;
+using CMS.Application.Features.Specializations.Queries.GetSpecializationById;
+using MaterialSkin;
 using MaterialSkin.Controls;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace CMS.Presentation
 {
     public partial class UpdateSpecializationForm : MaterialForm
     {
-        public UpdateSpecializationForm()
+        public Guid SpecializationId { get; set; }
+        private readonly IMediator mediator;
+        public event EventHandler SpecializationUpdated;
+        public UpdateSpecializationForm(IServiceProvider serviceProvider)
         {
             InitializeComponent();
-
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey900, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
 
             this.FormBorderStyle = FormBorderStyle.None;
-
+            this.mediator = serviceProvider.GetRequiredService<IMediator>();
         }
 
         protected override CreateParams CreateParams
@@ -58,5 +55,25 @@ namespace CMS.Presentation
             this.Region = new Region(path);
         }
 
+        private async void UpdateSpecializationForm_Load(object sender, EventArgs e)
+        {
+            GetSpecializationByIdResponse specialization = await mediator.Send(new GetSpecializationByIdQuery { Id = SpecializationId });
+            specializationNameTxt.Text = specialization.SpecializationName;
+        }
+
+        private async void updateSpecializationBtn_Click(object sender, EventArgs e)
+        {
+            UpdateSpecializationCommand specialization = new UpdateSpecializationCommand();
+            specialization.Id = SpecializationId;
+            specialization.SpecializationName = specializationNameTxt.Text;
+
+            UpdateSpecializationResponse updatedSpecialization = await mediator.Send(specialization);
+
+            MessageBox.Show(updatedSpecialization.SpecializationName + " adlı uzmanlık alanı başarıyla güncellendi.");
+
+            SpecializationUpdated?.Invoke(this, EventArgs.Empty);
+
+            this.Close();
+        }
     }
 }

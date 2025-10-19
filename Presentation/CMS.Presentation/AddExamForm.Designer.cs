@@ -44,7 +44,7 @@
             examNameTxt.BeepOnError = false;
             examNameTxt.CutCopyMaskFormat = MaskFormat.IncludeLiterals;
             examNameTxt.Depth = 0;
-            examNameTxt.Font = new Font("Roboto", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            examNameTxt.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             examNameTxt.HidePromptOnLeave = false;
             examNameTxt.HideSelection = true;
             examNameTxt.Hint = "Sınav Adı";
@@ -135,7 +135,7 @@
             courseComboBox.DropDownHeight = 174;
             courseComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             courseComboBox.DropDownWidth = 121;
-            courseComboBox.Font = new Font("Roboto Medium", 14F, FontStyle.Bold, GraphicsUnit.Pixel);
+            courseComboBox.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Bold, GraphicsUnit.Pixel);
             courseComboBox.ForeColor = Color.FromArgb(222, 0, 0, 0);
             courseComboBox.FormattingEnabled = true;
             courseComboBox.Hint = "Kurs";
@@ -167,6 +167,7 @@
             createExamBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             createExamBtn.UseAccentColor = false;
             createExamBtn.UseVisualStyleBackColor = true;
+            createExamBtn.Click += createExamBtn_Click;
             // 
             // AddExamForm
             // 
@@ -181,6 +182,7 @@
             MaximizeBox = false;
             Name = "AddExamForm";
             Text = "Sınav Oluştur";
+            Load += AddExamForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

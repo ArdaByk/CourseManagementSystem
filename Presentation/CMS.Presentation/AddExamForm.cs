@@ -1,5 +1,9 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.Courses.Commands.Create;
+using CMS.Application.Features.Courses.Queries.GetListTeachers;
+using CMS.Application.Features.Exams.Commands.Create;
+using MaterialSkin;
 using MaterialSkin.Controls;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,9 +19,13 @@ namespace CMS.Presentation
 {
     public partial class AddExamForm : MaterialForm
     {
-        public AddExamForm()
+        private readonly IMediator mediator;
+        public event EventHandler NewExamAdded;
+        public AddExamForm(IMediator mediator)
         {
             InitializeComponent();
+
+            this.mediator = mediator;
 
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
@@ -58,5 +66,33 @@ namespace CMS.Presentation
             this.Region = new Region(path);
         }
 
+        private async void createExamBtn_Click(object sender, EventArgs e)
+        {
+            CreateExamCommand createExamCommand = new CreateExamCommand
+            {
+                CourseId = Guid.Parse(courseComboBox.SelectedValue.ToString()),
+                ExamDate = ExamDate.Value,
+                ExamName = examNameTxt.Text,
+                MaxScore = Convert.ToInt32(maxScoreTxt.Text)
+            };
+
+            CreateExamResponse createExamResponse = await mediator.Send(createExamCommand);
+
+            MessageBox.Show(createExamResponse.ExamName + " Adlı sınav başarıyla kaydedildi.");
+
+            NewExamAdded?.Invoke(this, EventArgs.Empty);
+
+            this.Close();
+        }
+
+        private async void AddExamForm_Load(object sender, EventArgs e)
+        {
+            var courses = await mediator.Send(new GetListCoursesQuery());
+
+            courseComboBox.Items.Clear();
+            courseComboBox.DataSource = courses;
+            courseComboBox.DisplayMember = "CourseName";
+            courseComboBox.ValueMember = "Id";
+        }
     }
 }

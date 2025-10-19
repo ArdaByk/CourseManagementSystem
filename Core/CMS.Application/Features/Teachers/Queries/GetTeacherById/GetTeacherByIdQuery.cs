@@ -2,6 +2,7 @@
 using CMS.Application.Abstractions.Services;
 using CMS.Application.Features.Students.Queries.GetStudentById;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ public class GetTeacherByIdQuery : IRequest<GetTeacherByIdResponse>
 
         public async Task<GetTeacherByIdResponse> Handle(GetTeacherByIdQuery request, CancellationToken cancellationToken)
         {
-            GetTeacherByIdResponse response = mapper.Map<GetTeacherByIdResponse>(await teacherService.GetAsync(predicate: t => t.Id == request.Id, enableTracking: false, cancellationToken: cancellationToken));
+            GetTeacherByIdResponse response = mapper.Map<GetTeacherByIdResponse>(await teacherService.GetAsync(predicate: t => t.Id == request.Id, include: t => t.Include(t => t.TeacherSpecializations) ,enableTracking: false, cancellationToken: cancellationToken));
 
             return response;
         }

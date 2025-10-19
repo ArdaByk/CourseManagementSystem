@@ -82,8 +82,6 @@ public class StudentPageBuilder : IPageBuilder
             updateStudentForm.StudentUpdated += updateStudentForm_StudentUpdated;
 
             updateStudentForm.ShowDialog();
-
-            updateStudentForm.Show();
         };
 
         addStudentBtn.MouseClick += (o, e) =>

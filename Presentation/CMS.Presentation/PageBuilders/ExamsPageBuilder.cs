@@ -1,5 +1,8 @@
-﻿using CMS.Domain.Entities;
+﻿using CMS.Application.Features.Exams.Commands.Delete;
+using CMS.Application.Features.Exams.Queries.GetListExams;
 using MaterialSkin.Controls;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +13,21 @@ namespace CMS.Presentation.PageBuilders;
 
 public class ExamsPageBuilder : IPageBuilder
 {
-    private List<User> exams;
-    public ExamsPageBuilder()
+    private ICollection<GetListExamsResponse> exams;
+    private readonly IServiceProvider serviceProvider;
+    private readonly IMediator mediator;
+    private DataGridView examsDataGridView;
+    private BindingSource bs;
+    public ExamsPageBuilder(IServiceProvider serviceProvider)
     {
-        this.exams = new List<User>
-        {
-            new User { Id = 123424234, FirstName = "Ahmet", LastName = "Yılmaz", Email = "ahmet@example.com" },
-            new User { Id = 123424234, FirstName = "Ayşe", LastName = "Demir", Email = "ayse@example.com" },
-            new User { Id = 123424234, FirstName = "Mehmet", LastName = "Can", Email = "mehmet@example.com" }
-        };
+        this.mediator = serviceProvider.GetRequiredService<IMediator>();
+
+        this.serviceProvider = serviceProvider;
     }
-    public void Build(TabPage tabPage)
+    public async void Build(TabPage tabPage)
     {
+        this.exams = await mediator.Send(new GetListExamsQuery());
+
         Panel mainPanel = new Panel
         {
             Dock = DockStyle.Fill
@@ -53,20 +59,68 @@ public class ExamsPageBuilder : IPageBuilder
 
         createExamBtn.MouseClick += (o, e) =>
         {
-            AddExamForm addExamForm = new AddExamForm();
-            addExamForm.Show();
+            AddExamForm addExamForm = serviceProvider.GetRequiredService<AddExamForm>();
+
+            addExamForm.NewExamAdded += addExamForm_NewExamAdded;
+
+            addExamForm.ShowDialog();
         };
 
         updateExamBtn.MouseClick += (o, e) =>
         {
-            ShowAttendanceForm showAttendanceForm = new ShowAttendanceForm();
-            showAttendanceForm.Show();
+            DataGridViewRow selectedRow = examsDataGridView.CurrentRow;
+
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen güncellemek için bir sınav seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Guid id = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+            UpdateExamForm updateExamForm = serviceProvider.GetRequiredService<UpdateExamForm>();
+
+            updateExamForm.ExamId = id;
+
+            updateExamForm.ExamUpdated += updateExamForm_ExamUpdated;
+
+            updateExamForm.ShowDialog();
         };
 
-        deleteExamBtn.MouseClick += (o, e) =>
+        deleteExamBtn.MouseClick += async (o, e) =>
         {
-            TakeAttendanceForm takeAttendanceForm = new TakeAttendanceForm();
-            takeAttendanceForm.Show();
+            var selectedRow = examsDataGridView.CurrentRow;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen silmek için bir sınav seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                "Bu sınavı silmek istediğinizden emin misiniz?",
+                "Onay",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    var examId = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+                    await mediator.Send(new DeleteExamCommand { Id = examId });
+
+                    exams.Remove(exams.First(e => e.Id == examId));
+                    bs.ResetBindings(false);
+
+                    MessageBox.Show("Sınav başarıyla silindi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Silme işlemi başarısız: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         };
 
         showExamResultsBtn.MouseClick += (o, e) =>
@@ -81,7 +135,7 @@ public class ExamsPageBuilder : IPageBuilder
             enterExamResultsForm.Show();
         };
 
-        DataGridView examsDataGridView = CreateExamsDataGridView(exams);
+        examsDataGridView = CreateExamsDataGridView(exams);
 
         examsPanel.Controls.Add(examsDataGridView);
 
@@ -101,12 +155,10 @@ public class ExamsPageBuilder : IPageBuilder
         void ApplyFilter()
         {
             string examNameFilter = examNameTextBox.Text.Trim().ToLower();
-            string courseFilter = courseTextBox.Text.Trim().ToLower();
 
             var bs = (BindingSource)examsDataGridView.DataSource;
             bs.DataSource = exams.Where(t =>
-                (string.IsNullOrEmpty(examNameFilter) || t.FirstName.ToLower().Contains(examNameFilter)) ||
-                (string.IsNullOrEmpty(courseFilter) || t.FirstName.ToLower().Contains(courseFilter))
+                (string.IsNullOrEmpty(examNameFilter) || t.ExamName.ToLower().Contains(examNameFilter))
             ).ToList();
 
             bs.ResetBindings(false);
@@ -136,7 +188,7 @@ public class ExamsPageBuilder : IPageBuilder
         };
     }
 
-    private DataGridView CreateExamsDataGridView(List<User> students)
+    private DataGridView CreateExamsDataGridView(ICollection<GetListExamsResponse> exams)
     {
         var dataGridView = new DataGridView
         {
@@ -153,17 +205,30 @@ public class ExamsPageBuilder : IPageBuilder
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         };
 
-        BindingSource bs = new BindingSource { DataSource = students };
+        bs = new BindingSource { DataSource = exams };
         dataGridView.DataSource = bs;
         bs.ResetBindings(false);
 
         dataGridView.DataBindingComplete += (s, e) =>
         {
             dataGridView.Columns["Id"].HeaderText = "ID";
-            dataGridView.Columns["FirstName"].HeaderText = "Sınav Adı";
-            dataGridView.Columns["LastName"].HeaderText = "Kurs";
+            dataGridView.Columns["ExamName"].HeaderText = "Sınav Adı";
         };
 
         return dataGridView;
+    }
+
+    public async void addExamForm_NewExamAdded(object o, EventArgs e)
+    {
+        this.exams = await mediator.Send(new GetListExamsQuery());
+        bs.DataSource = this.exams;
+        bs.ResetBindings(false);
+    }
+
+    public async void updateExamForm_ExamUpdated(object o, EventArgs e)
+    {
+        this.exams = await mediator.Send(new GetListExamsQuery());
+        bs.DataSource = this.exams;
+        bs.ResetBindings(false);
     }
 }

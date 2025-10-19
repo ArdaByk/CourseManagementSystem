@@ -1,7 +1,5 @@
 ﻿using CMS.Application.Features.Courses.Commands.Update;
 using CMS.Application.Features.Courses.Queries.GetTeacherById;
-using CMS.Application.Features.Teachers.Queries.GetTeacherById;
-using CMS.Domain.Entities;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using MediatR;

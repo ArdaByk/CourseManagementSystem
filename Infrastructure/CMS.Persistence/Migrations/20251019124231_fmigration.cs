@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace CMS.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class firstmigration : Migration
+    public partial class fmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -94,7 +96,7 @@ namespace CMS.Persistence.Migrations
                     EmergencyContactName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     EmergencyContactPhone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     EmergencyContactRelation = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(1)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(1)", nullable: false, defaultValue: "A"),
                     PhotoPath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -372,6 +374,16 @@ namespace CMS.Persistence.Migrations
                         principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "CreatedDate", "DeletedDate", "Description", "RoleName", "UpdatedDate" },
+                values: new object[,]
+                {
+                    { new Guid("11111111-1111-1111-1111-111111111111"), new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Her işlemleri yapabilen yetkiye sahiptir.", "Yönetici", null },
+                    { new Guid("22222222-2222-2222-2222-222222222222"), new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Kurs ve gruplarını yöneten ve sınavlarını yöneten yetkilere sahiptir.", "Öğretmen", null },
+                    { new Guid("33333333-3333-3333-3333-333333333333"), new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Yoklama girişleri, sınıf yönetimi ve öğrenci yönetiminden sorumludur.", "Görevli", null }
                 });
 
             migrationBuilder.CreateIndex(

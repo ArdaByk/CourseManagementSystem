@@ -47,12 +47,13 @@
             updateExamBtn.MouseState = MaterialSkin.MouseState.HOVER;
             updateExamBtn.Name = "updateExamBtn";
             updateExamBtn.NoAccentTextColor = Color.Empty;
-            updateExamBtn.Size = new Size(136, 36);
+            updateExamBtn.Size = new Size(76, 36);
             updateExamBtn.TabIndex = 9;
             updateExamBtn.Text = "Kaydet";
             updateExamBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             updateExamBtn.UseAccentColor = false;
             updateExamBtn.UseVisualStyleBackColor = true;
+            updateExamBtn.Click += updateExamBtn_Click;
             // 
             // courseComboBox
             // 
@@ -181,6 +182,7 @@
             MaximizeBox = false;
             Name = "UpdateExamForm";
             Text = "Sınav Güncelle";
+            Load += UpdateExamForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

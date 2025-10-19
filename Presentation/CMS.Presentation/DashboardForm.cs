@@ -27,10 +27,10 @@ public partial class DashboardForm : MaterialForm
             { "courses", new CoursesPageBuilder(serviceProvider) },
             { "classes", new ClassesPageBuilder(serviceProvider) },
             { "courseGroups", new CourseGroupsBuilder() },
-            { "exams", new ExamsPageBuilder() },
-            { "specializations", new SpecializationPageBuilder() },
+            { "exams", new ExamsPageBuilder(serviceProvider) },
+            { "specializations", new SpecializationPageBuilder(serviceProvider) },
             { "roles", new RolesPageBuilder() },
-            { "users", new UsersPageBuilder() }
+            { "users", new UsersPageBuilder(serviceProvider) }
         };
     }
 

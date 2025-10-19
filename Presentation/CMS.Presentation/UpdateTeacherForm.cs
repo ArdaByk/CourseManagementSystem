@@ -1,4 +1,5 @@
-﻿using CMS.Application.Features.Students.Commands.Update;
+﻿using CMS.Application.Features.Specializations.Queries.GetListSpecializations;
+using CMS.Application.Features.Students.Commands.Update;
 using CMS.Application.Features.Students.Queries.GetStudentById;
 using CMS.Application.Features.Teachers.Commands.Update;
 using CMS.Application.Features.Teachers.Queries.GetTeacherById;
@@ -79,10 +80,40 @@ namespace CMS.Presentation
             teacherSalaryTypeComboBox.SelectedIndex = 0;
             teacherStatusSwitch.Checked = teacher.Status == 'A' ? true : false;
             teacherEmailTxt.Text = teacher.Email;
+
+            var teacherSpecializationIds = teacher.TeacherSpecializations
+                .Select(ts => ts.SpecializationId)
+                .ToList();
+
+            var specializations = await mediator.Send(new GetListSpecializationsQuery());
+
+            specializationCheckedListBox.Controls.Clear();
+
+            foreach (var specialization in specializations)
+            {
+                var checkBox = new MaterialSkin.Controls.MaterialCheckbox
+                {
+                    Text = specialization.SpecializationName,
+                    Tag = specialization.Id,
+                    AutoSize = true,
+                    Checked = teacherSpecializationIds.Contains(specialization.Id)
+                };
+
+                specializationCheckedListBox.Items.Add(checkBox);
+            }
+
+
         }
 
         private async void updateTeacherBtn_Click(object sender, EventArgs e)
         {
+            var selectedIds = specializationCheckedListBox.Controls
+                .OfType<MaterialSkin.Controls.MaterialCheckbox>()
+                .Where(cb => cb.Checked)
+                .Select(cb => (Guid)cb.Tag)
+                .ToList();
+
+
             UpdateTeacherCommand teacher = new UpdateTeacherCommand();
             teacher.Id = TeacherId;
             teacher.FirstName = teacherFirstNameTxt.Text;
@@ -93,6 +124,7 @@ namespace CMS.Presentation
             teacher.SalaryType = teacherSalaryTypeComboBox.SelectedItem.ToString();
             teacher.Status = teacherStatusSwitch.Checked == true ? 'A' : 'P';
             teacher.Email = teacherEmailTxt.Text;
+            teacher.SelectedIds = selectedIds;
 
             UpdateTeacherResponse updatedTeacher = await mediator.Send(teacher);
 

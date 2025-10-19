@@ -22,6 +22,12 @@ public static class ServiceRegistrar
         services.AddScoped<ITeacherService, TeacherManager>();
         services.AddScoped<ICourseService, CourseManager>();
         services.AddScoped<IClassService, ClassManager>();
+        services.AddScoped<ISpecializationService, SpecializationManager>();
+        services.AddScoped<ITeacherSpecializationService, TeacherSpecializationManager>();
+        services.AddScoped<IExamService, ExamManager>();
+        services.AddScoped<IExamResultService, ExamResultManager>();
+        services.AddScoped<IRoleService, RoleManager>();
+        services.AddScoped<IUserService, UserManager>();
 
         return services;
     }

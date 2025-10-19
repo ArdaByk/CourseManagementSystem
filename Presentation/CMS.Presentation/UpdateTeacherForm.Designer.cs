@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             teacherSalaryTypeComboBox = new MaterialSkin.Controls.MaterialComboBox();
-            specializationComboBox = new MaterialSkin.Controls.MaterialComboBox();
             updateTeacherBtn = new MaterialSkin.Controls.MaterialButton();
             teacherStatusSwitch = new MaterialSkin.Controls.MaterialSwitch();
             teacherSalaryAmountTxt = new MaterialSkin.Controls.MaterialTextBox2();
@@ -38,6 +37,7 @@
             teacherLastNameTxt = new MaterialSkin.Controls.MaterialTextBox2();
             teacherFirstNameTxt = new MaterialSkin.Controls.MaterialTextBox2();
             teacherEmailTxt = new MaterialSkin.Controls.MaterialTextBox2();
+            specializationCheckedListBox = new MaterialSkin.Controls.MaterialCheckedListBox();
             SuspendLayout();
             // 
             // teacherSalaryTypeComboBox
@@ -64,30 +64,6 @@
             teacherSalaryTypeComboBox.StartIndex = 0;
             teacherSalaryTypeComboBox.TabIndex = 44;
             // 
-            // specializationComboBox
-            // 
-            specializationComboBox.AutoResize = false;
-            specializationComboBox.BackColor = Color.FromArgb(255, 255, 255);
-            specializationComboBox.Depth = 0;
-            specializationComboBox.DrawMode = DrawMode.OwnerDrawVariable;
-            specializationComboBox.DropDownHeight = 174;
-            specializationComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            specializationComboBox.DropDownWidth = 121;
-            specializationComboBox.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Bold, GraphicsUnit.Pixel);
-            specializationComboBox.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            specializationComboBox.FormattingEnabled = true;
-            specializationComboBox.Hint = "Uzmanlık Alanı";
-            specializationComboBox.IntegralHeight = false;
-            specializationComboBox.ItemHeight = 43;
-            specializationComboBox.Items.AddRange(new object[] { "Aylık Maaş", "Saatlik Ücret", "Ders Başına Ücret" });
-            specializationComboBox.Location = new Point(14, 429);
-            specializationComboBox.MaxDropDownItems = 4;
-            specializationComboBox.MouseState = MaterialSkin.MouseState.OUT;
-            specializationComboBox.Name = "specializationComboBox";
-            specializationComboBox.Size = new Size(250, 49);
-            specializationComboBox.StartIndex = 0;
-            specializationComboBox.TabIndex = 43;
-            // 
             // updateTeacherBtn
             // 
             updateTeacherBtn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -95,7 +71,7 @@
             updateTeacherBtn.Depth = 0;
             updateTeacherBtn.HighEmphasis = true;
             updateTeacherBtn.Icon = null;
-            updateTeacherBtn.Location = new Point(14, 524);
+            updateTeacherBtn.Location = new Point(14, 577);
             updateTeacherBtn.Margin = new Padding(4, 6, 4, 6);
             updateTeacherBtn.MouseState = MaterialSkin.MouseState.HOVER;
             updateTeacherBtn.Name = "updateTeacherBtn";
@@ -114,7 +90,7 @@
             teacherStatusSwitch.Checked = true;
             teacherStatusSwitch.CheckState = CheckState.Checked;
             teacherStatusSwitch.Depth = 0;
-            teacherStatusSwitch.Location = new Point(14, 481);
+            teacherStatusSwitch.Location = new Point(14, 534);
             teacherStatusSwitch.Margin = new Padding(0);
             teacherStatusSwitch.MouseLocation = new Point(-1, -1);
             teacherStatusSwitch.MouseState = MaterialSkin.MouseState.HOVER;
@@ -292,14 +268,27 @@
             teacherEmailTxt.TrailingIcon = null;
             teacherEmailTxt.UseSystemPasswordChar = false;
             // 
+            // specializationCheckedListBox
+            // 
+            specializationCheckedListBox.AutoScroll = true;
+            specializationCheckedListBox.BackColor = SystemColors.Control;
+            specializationCheckedListBox.Depth = 0;
+            specializationCheckedListBox.Location = new Point(14, 430);
+            specializationCheckedListBox.MouseState = MaterialSkin.MouseState.HOVER;
+            specializationCheckedListBox.Name = "specializationCheckedListBox";
+            specializationCheckedListBox.Size = new Size(250, 100);
+            specializationCheckedListBox.Striped = false;
+            specializationCheckedListBox.StripeDarkColor = Color.Empty;
+            specializationCheckedListBox.TabIndex = 46;
+            // 
             // UpdateTeacherForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(295, 579);
+            ClientSize = new Size(281, 632);
+            Controls.Add(specializationCheckedListBox);
             Controls.Add(teacherEmailTxt);
             Controls.Add(teacherSalaryTypeComboBox);
-            Controls.Add(specializationComboBox);
             Controls.Add(updateTeacherBtn);
             Controls.Add(teacherStatusSwitch);
             Controls.Add(teacherSalaryAmountTxt);
@@ -318,7 +307,6 @@
         #endregion
 
         private MaterialSkin.Controls.MaterialComboBox teacherSalaryTypeComboBox;
-        private MaterialSkin.Controls.MaterialComboBox specializationComboBox;
         private MaterialSkin.Controls.MaterialButton updateTeacherBtn;
         private MaterialSkin.Controls.MaterialSwitch teacherStatusSwitch;
         private MaterialSkin.Controls.MaterialTextBox2 teacherSalaryAmountTxt;
@@ -327,5 +315,6 @@
         private MaterialSkin.Controls.MaterialTextBox2 teacherLastNameTxt;
         private MaterialSkin.Controls.MaterialTextBox2 teacherFirstNameTxt;
         private MaterialSkin.Controls.MaterialTextBox2 teacherEmailTxt;
+        private MaterialSkin.Controls.MaterialCheckedListBox specializationCheckedListBox;
     }
 }

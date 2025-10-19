@@ -15,6 +15,7 @@ public class CreateTeacherCommand : IRequest<CreateTeacherResponse>
     public float SalaryAmount { get; set; }
     public DateTime HiredDate { get; set; }
     public char Status { get; set; }
+    public ICollection<Guid> SpecializationIds { get; set; }
 
     public class Handler : IRequestHandler<CreateTeacherCommand, CreateTeacherResponse>
     {
@@ -30,6 +31,16 @@ public class CreateTeacherCommand : IRequest<CreateTeacherResponse>
         public async Task<CreateTeacherResponse> Handle(CreateTeacherCommand request, CancellationToken cancellationToken)
         {
             Teacher teacher = mapper.Map<Teacher>(request);
+
+            foreach (var specializationId in request.SpecializationIds)
+            {
+                teacher.TeacherSpecializations.Add(new TeacherSpecialization
+                {
+                    SpecializationId = specializationId
+                });
+            }
+
+
             teacher = await teacherService.AddAsync(teacher);
             return mapper.Map<CreateTeacherResponse>(teacher);
         }

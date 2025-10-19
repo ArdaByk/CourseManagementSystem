@@ -1,5 +1,10 @@
-﻿using CMS.Domain.Entities;
+﻿using CMS.Application.Features.Specializations.Commands.Delete;
+using CMS.Application.Features.Specializations.Queries.GetListSpecializations;
+using CMS.Application.Features.Students.Queries.GetListStudents;
+using CMS.Domain.Entities;
 using MaterialSkin.Controls;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +15,22 @@ namespace CMS.Presentation.PageBuilders;
 
 public class SpecializationPageBuilder : IPageBuilder
 {
-    private List<User> specializations;
-
-    public SpecializationPageBuilder()
+    private ICollection<GetListSpecializationsResponse> specializations;
+    private readonly IServiceProvider serviceProvider;
+    private readonly IMediator mediator;
+    private DataGridView specializationsDataGridView;
+    private BindingSource bs;
+    public SpecializationPageBuilder(IServiceProvider serviceProvider)
     {
-        this.specializations = new List<User>
-        {
-            new User { Id = 123424234, FirstName = "Ahmet", LastName = "Yılmaz", Email = "ahmet@example.com" },
-            new User { Id = 123424234, FirstName = "Ayşe", LastName = "Demir", Email = "ayse@example.com" },
-            new User { Id = 123424234, FirstName = "Mehmet", LastName = "Can", Email = "mehmet@example.com" }
-        };
+        this.mediator = serviceProvider.GetRequiredService<IMediator>();
+
+        this.serviceProvider = serviceProvider;
     }
 
-    public void Build(TabPage tabPage)
+    public async void Build(TabPage tabPage)
     {
+        this.specializations = await mediator.Send(new GetListSpecializationsQuery());
+        
         Panel mainPanel = new Panel
         {
             Dock = DockStyle.Fill
@@ -52,31 +59,73 @@ public class SpecializationPageBuilder : IPageBuilder
             BackColor = Color.Transparent
         };
 
-        addSpecializationBtn.MouseClick += (o, e) =>
-        {
-            AddSpecializationForm addSpecializationForm = new AddSpecializationForm();
-            addSpecializationForm.Show();
-        };
-
-        reviewSpecializationBtn.MouseClick += (o, e) =>
-        {
-            ShowCourseStudentsForm showCourseStudentsForm = new ShowCourseStudentsForm();
-            showCourseStudentsForm.Show();
-        };
+        specializationsDataGridView = CreateSpecializationsDataGridView(specializations);
 
         updateSpecializationBtn.MouseClick += (o, e) =>
         {
-            ShowCourseStudentsForm showCourseStudentsForm = new ShowCourseStudentsForm();
-            showCourseStudentsForm.Show();
+            DataGridViewRow selectedRow = specializationsDataGridView.CurrentRow;
+
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen güncellemek için bir uzmanlık alanı seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Guid id = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+            UpdateSpecializationForm updateSpecializationForm = serviceProvider.GetRequiredService<UpdateSpecializationForm>();
+
+            updateSpecializationForm.SpecializationId = id;
+
+            updateSpecializationForm.SpecializationUpdated += updateSpecializationForm_SpecializationUpdated;
+
+            updateSpecializationForm.ShowDialog();
         };
 
-        deleteSpecializationBtn.MouseClick += (o, e) =>
+        addSpecializationBtn.MouseClick += (o, e) =>
         {
-            ShowCourseStudentsForm showCourseStudentsForm = new ShowCourseStudentsForm();
-            showCourseStudentsForm.Show();
+            AddSpecializationForm addSpecializationForm = serviceProvider.GetRequiredService<AddSpecializationForm>();
+
+            addSpecializationForm.NewSpecializationAdded += addSpecializationForm_NewSpecializationAdded;
+
+            addSpecializationForm.ShowDialog();
         };
 
-        DataGridView specializationsDataGridView = CreateSpecializationsDataGridView(specializations);
+        deleteSpecializationBtn.MouseClick += async (s, e) =>
+        {
+            var selectedRow = specializationsDataGridView.CurrentRow;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen silmek için bir uzmanlık alanı seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                "Bu uzmanlık alanını silmek istediğinizden emin misiniz?",
+                "Onay",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    var specializationId = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+                    await mediator.Send(new DeleteSpecializationCommand { Id = specializationId });
+
+                    specializations.Remove(specializations.First(s => s.Id == specializationId));
+                    bs.ResetBindings(false);
+
+                    MessageBox.Show("Uzmanlık Alanı başarıyla silindi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Silme işlemi başarısız: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        };
 
         specializationsPanel.Controls.Add(specializationsDataGridView);
 
@@ -97,7 +146,7 @@ public class SpecializationPageBuilder : IPageBuilder
 
             var bs = (BindingSource)specializationsDataGridView.DataSource;
             bs.DataSource = specializations.Where(t =>
-                (string.IsNullOrEmpty(specializationNameFilter) || t.FirstName.ToLower().Contains(specializationNameFilter))
+                (string.IsNullOrEmpty(specializationNameFilter) || t.SpecializationName.ToLower().Contains(specializationNameFilter))
             ).ToList();
 
             bs.ResetBindings(false);
@@ -127,7 +176,7 @@ public class SpecializationPageBuilder : IPageBuilder
         };
     }
 
-    private DataGridView CreateSpecializationsDataGridView(List<User> students)
+    private DataGridView CreateSpecializationsDataGridView(ICollection<GetListSpecializationsResponse> specializations)
     {
         var dataGridView = new DataGridView
         {
@@ -144,17 +193,30 @@ public class SpecializationPageBuilder : IPageBuilder
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         };
 
-        BindingSource bs = new BindingSource { DataSource = students };
+        bs = new BindingSource { DataSource = specializations };
         dataGridView.DataSource = bs;
         bs.ResetBindings(false);
 
         dataGridView.DataBindingComplete += (s, e) =>
         {
-            dataGridView.Columns["Id"].HeaderText = "ID";
-            dataGridView.Columns["FirstName"].HeaderText = "Kurs Adı";
-            dataGridView.Columns["LastName"].HeaderText = "Açıklama";
+            dataGridView.Columns["Id"].Visible = false;
+            dataGridView.Columns["SpecializationName"].HeaderText = "Uzmanlık Alanı Adı";
         };
 
         return dataGridView;
+    }
+
+    public async void addSpecializationForm_NewSpecializationAdded(object o, EventArgs e)
+    {
+        this.specializations = await mediator.Send(new GetListSpecializationsQuery());
+        bs.DataSource = this.specializations;
+        bs.ResetBindings(false);
+    }
+
+    public async void updateSpecializationForm_SpecializationUpdated(object o, EventArgs e)
+    {
+        this.specializations = await mediator.Send(new GetListSpecializationsQuery());
+        bs.DataSource = this.specializations;
+        bs.ResetBindings(false);
     }
 }

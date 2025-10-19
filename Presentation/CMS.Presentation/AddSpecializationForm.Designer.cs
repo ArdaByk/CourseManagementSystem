@@ -38,7 +38,7 @@
             specializationNameTxt.BackgroundImageLayout = ImageLayout.None;
             specializationNameTxt.CharacterCasing = CharacterCasing.Normal;
             specializationNameTxt.Depth = 0;
-            specializationNameTxt.Font = new Font("Roboto", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            specializationNameTxt.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             specializationNameTxt.HideSelection = true;
             specializationNameTxt.Hint = "Uzmanlık Alanı Adı";
             specializationNameTxt.LeadingIcon = null;
@@ -79,6 +79,7 @@
             addSpecializationBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             addSpecializationBtn.UseAccentColor = false;
             addSpecializationBtn.UseVisualStyleBackColor = true;
+            addSpecializationBtn.Click += addSpecializationBtn_Click;
             // 
             // AddSpecializationForm
             // 

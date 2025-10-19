@@ -1,5 +1,10 @@
-﻿using CMS.Domain.Entities;
+﻿using CMS.Application.Features.Classes.Commands.Delete;
+using CMS.Application.Features.Users.Commands.Delete;
+using CMS.Application.Features.Users.Queries.GetListUsers;
+using CMS.Domain.Entities;
 using MaterialSkin.Controls;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +15,22 @@ namespace CMS.Presentation.PageBuilders;
 
 public class UsersPageBuilder : IPageBuilder
 {
-    private List<User> users;
-
-    public UsersPageBuilder()
+    private ICollection<GetListUsersResponse> users;
+    private readonly IServiceProvider serviceProvider;
+    private readonly IMediator mediator;
+    private DataGridView usersDataGridView;
+    private BindingSource bs;
+    public UsersPageBuilder(IServiceProvider serviceProvider)
     {
-        this.users = new List<User>
-        {
-            new User { Id = 123424234, FirstName = "Ahmet", LastName = "Yılmaz", Email = "ahmet@example.com" },
-            new User { Id = 123424234, FirstName = "Ayşe", LastName = "Demir", Email = "ayse@example.com" },
-            new User { Id = 123424234, FirstName = "Mehmet", LastName = "Can", Email = "mehmet@example.com" }
-        };
+        this.mediator = serviceProvider.GetRequiredService<IMediator>();
+
+        this.serviceProvider = serviceProvider;
     }
 
-    public void Build(TabPage tabPage)
+    public async void Build(TabPage tabPage)
     {
+        this.users = await mediator.Send(new GetListUsersQuery());
+
         Panel mainPanel = new Panel
         {
             Dock = DockStyle.Fill
@@ -55,10 +62,15 @@ public class UsersPageBuilder : IPageBuilder
             BackColor = Color.Transparent
         };
 
+        usersDataGridView = CreateUsersDataGridView(users);
+
         addUserBtn.MouseClick += (o, e) =>
         {
-            AddUserForm addUserForm = new AddUserForm();
-            addUserForm.Show();
+            AddUserForm addUserForm = serviceProvider.GetRequiredService<AddUserForm>();
+
+            addUserForm.NewUserAdded += addUserForm_NewUserAdded;
+
+            addUserForm.ShowDialog();
         };
 
         reviewUserBtn.MouseClick += (o, e) =>
@@ -69,17 +81,60 @@ public class UsersPageBuilder : IPageBuilder
 
         updateUserBtn.MouseClick += (o, e) =>
         {
-            ShowCourseStudentsForm showCourseStudentsForm = new ShowCourseStudentsForm();
-            showCourseStudentsForm.Show();
+            DataGridViewRow selectedRow = usersDataGridView.CurrentRow;
+
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen güncellemek için bir kullanıcı seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Guid id = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+            UpdateUserForm updateUserForm = serviceProvider.GetRequiredService<UpdateUserForm>();
+
+            updateUserForm.UserId = id;
+
+            updateUserForm.UserUpdated += updateUserForm_UserUpdated;
+
+            updateUserForm.ShowDialog();
         };
 
-        deleteUserBtn.MouseClick += (o, e) =>
+        deleteUserBtn.MouseClick +=async (o, e) =>
         {
-            ShowCourseStudentsForm showCourseStudentsForm = new ShowCourseStudentsForm();
-            showCourseStudentsForm.Show();
-        };
+            var selectedRow = usersDataGridView.CurrentRow;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen silmek için bir kullanıcı seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-        DataGridView usersDataGridView = CreateUsersDataGridView(users);
+            var result = MessageBox.Show(
+                "Bu kullanıcıyı silmek istediğinizden emin misiniz?",
+                "Onay",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    var userId = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+                    await mediator.Send(new DeleteUserCommand { Id = userId });
+
+                    users.Remove(users.First(u => u.Id == userId));
+                    bs.ResetBindings(false);
+
+                    MessageBox.Show("Kullanıcı başarıyla silindi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Silme işlemi başarısız: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        };
 
         usersPanel.Controls.Add(usersDataGridView);
 
@@ -101,10 +156,10 @@ public class UsersPageBuilder : IPageBuilder
             string userNameFilter = userNameTextBox.Text.Trim().ToLower();
             string fullNameFilter = fullNameTextBox.Text.Trim().ToLower();
 
-            var bs = (BindingSource)usersDataGridView.DataSource;
+            bs = (BindingSource)usersDataGridView.DataSource;
             bs.DataSource = users.Where(t =>
-                (string.IsNullOrEmpty(userNameFilter) || t.FirstName.ToLower().Contains(userNameFilter)) ||
-                (string.IsNullOrEmpty(fullNameFilter) || t.FirstName.ToLower().Contains(fullNameFilter))
+                (string.IsNullOrEmpty(userNameFilter) || t.Username.ToLower().Contains(userNameFilter)) ||
+                (string.IsNullOrEmpty(fullNameFilter) || t.FullName.ToLower().Contains(fullNameFilter))
             ).ToList();
 
             bs.ResetBindings(false);
@@ -149,7 +204,7 @@ public class UsersPageBuilder : IPageBuilder
         };
     }
 
-    private DataGridView CreateUsersDataGridView(List<User> students)
+    private DataGridView CreateUsersDataGridView(ICollection<GetListUsersResponse> users)
     {
         var dataGridView = new DataGridView
         {
@@ -166,17 +221,32 @@ public class UsersPageBuilder : IPageBuilder
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         };
 
-        BindingSource bs = new BindingSource { DataSource = students };
-        dataGridView.DataSource = bs;
+        bs = new BindingSource { DataSource = users.Select(u => new { u.Id, u.FullName, u.Username, u.Role.RoleName }).ToList() };
+        dataGridView.DataSource = bs ;
         bs.ResetBindings(false);
 
         dataGridView.DataBindingComplete += (s, e) =>
         {
-            dataGridView.Columns["Id"].HeaderText = "ID";
-            dataGridView.Columns["FirstName"].HeaderText = "Kurs Adı";
-            dataGridView.Columns["LastName"].HeaderText = "Açıklama";
+            dataGridView.Columns["Id"].Visible = false;
+            dataGridView.Columns["FullName"].HeaderText = "Tam Adı";
+            dataGridView.Columns["UserName"].HeaderText = "Kullanıcı Adı";
+            dataGridView.Columns["RoleName"].HeaderText = "Rolü";
         };
 
         return dataGridView;
+    }
+
+    public async void addUserForm_NewUserAdded(object o, EventArgs e)
+    {
+        this.users = await mediator.Send(new GetListUsersQuery());
+        bs.DataSource = this.users.Select(u => new { u.Id, u.FullName, u.Username, u.Role.RoleName }).ToList();
+        bs.ResetBindings(false);
+    }
+
+    public async void updateUserForm_UserUpdated(object o, EventArgs e)
+    {
+        this.users = await mediator.Send(new GetListUsersQuery());
+        bs.DataSource = this.users.Select(u => new { u.Id, u.FullName, u.Username, u.Role.RoleName }).ToList();
+        bs.ResetBindings(false);
     }
 }

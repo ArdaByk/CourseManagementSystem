@@ -43,7 +43,7 @@
             userNameTxt.BackgroundImageLayout = ImageLayout.None;
             userNameTxt.CharacterCasing = CharacterCasing.Normal;
             userNameTxt.Depth = 0;
-            userNameTxt.Font = new Font("Roboto", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            userNameTxt.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             userNameTxt.HideSelection = true;
             userNameTxt.Hint = "Kullanıcı Adı";
             userNameTxt.LeadingIcon = null;
@@ -176,7 +176,7 @@
             userPasswordTxt.BeepOnError = false;
             userPasswordTxt.CutCopyMaskFormat = MaskFormat.IncludeLiterals;
             userPasswordTxt.Depth = 0;
-            userPasswordTxt.Font = new Font("Roboto", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            userPasswordTxt.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             userPasswordTxt.HidePromptOnLeave = false;
             userPasswordTxt.HideSelection = true;
             userPasswordTxt.Hint = "Şifre";
@@ -218,7 +218,7 @@
             roleComboBox.DropDownHeight = 174;
             roleComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             roleComboBox.DropDownWidth = 121;
-            roleComboBox.Font = new Font("Roboto Medium", 14F, FontStyle.Bold, GraphicsUnit.Pixel);
+            roleComboBox.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Bold, GraphicsUnit.Pixel);
             roleComboBox.ForeColor = Color.FromArgb(222, 0, 0, 0);
             roleComboBox.FormattingEnabled = true;
             roleComboBox.Hint = "Rolü";
@@ -244,12 +244,13 @@
             addUserBtn.MouseState = MaterialSkin.MouseState.HOVER;
             addUserBtn.Name = "addUserBtn";
             addUserBtn.NoAccentTextColor = Color.Empty;
-            addUserBtn.Size = new Size(158, 36);
+            addUserBtn.Size = new Size(132, 36);
             addUserBtn.TabIndex = 9;
             addUserBtn.Text = "Kullanıcı Ekle";
             addUserBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             addUserBtn.UseAccentColor = false;
             addUserBtn.UseVisualStyleBackColor = true;
+            addUserBtn.Click += addUserBtn_Click;
             // 
             // AddUserForm
             // 
@@ -266,6 +267,7 @@
             MaximizeBox = false;
             Name = "AddUserForm";
             Text = "Kullanıcı Ekle";
+            Load += AddUserForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

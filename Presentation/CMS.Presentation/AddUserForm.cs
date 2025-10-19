@@ -1,5 +1,11 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.Courses.Commands.Create;
+using CMS.Application.Features.Roles.Queries.GetListRoles;
+using CMS.Application.Features.Specializations.Queries.GetListSpecializations;
+using CMS.Application.Features.Users.Commands.Create;
+using CMS.Application.Features.Users.Queries.GetListUsers;
+using MaterialSkin;
 using MaterialSkin.Controls;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,9 +21,13 @@ namespace CMS.Presentation
 {
     public partial class AddUserForm : MaterialForm
     {
-        public AddUserForm()
+        private readonly IMediator mediator;
+        public event EventHandler NewUserAdded;
+        public AddUserForm(IMediator mediator)
         {
             InitializeComponent();
+
+            this.mediator = mediator;
 
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
@@ -58,5 +68,37 @@ namespace CMS.Presentation
             this.Region = new Region(path);
         }
 
+        private async void addUserBtn_Click(object sender, EventArgs e)
+        {
+            CreateUserCommand createUserCommand = new CreateUserCommand
+            {
+                Email = emailTxt.Text,
+                FullName = fullNameTxt.Text,
+                Password = userPasswordTxt.Text,
+                Phone = userPhoneTxt.Text,
+                RoleId = Guid.Parse(roleComboBox.SelectedValue.ToString()),
+                Username = userNameTxt.Text                
+            };
+
+            CreateUserResponse createUserResponse = await mediator.Send(createUserCommand);
+
+            MessageBox.Show(createUserResponse.Username + " Adlı kullanıcı başarıyla kaydedildi.");
+
+            NewUserAdded?.Invoke(this, EventArgs.Empty);
+
+            this.Close();
+        }
+
+        private async void AddUserForm_Load(object sender, EventArgs e)
+        {
+            var roles = await mediator.Send(new GetListRolesQuery());
+
+            roleComboBox.Items.Clear();
+
+            roleComboBox.DataSource = roles;
+
+            roleComboBox.DisplayMember = "RoleName";
+            roleComboBox.ValueMember = "Id";
+        }
     }
 }

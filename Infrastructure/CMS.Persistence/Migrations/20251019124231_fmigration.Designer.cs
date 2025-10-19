@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS.Persistence.Migrations
 {
     [DbContext(typeof(CMSDbContext))]
-    [Migration("20251007203720_first-migration")]
-    partial class firstmigration
+    [Migration("20251019124231_fmigration")]
+    partial class fmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -398,6 +398,29 @@ namespace CMS.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("Roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            CreatedDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Her işlemleri yapabilen yetkiye sahiptir.",
+                            RoleName = "Yönetici"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                            CreatedDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Kurs ve gruplarını yöneten ve sınavlarını yöneten yetkilere sahiptir.",
+                            RoleName = "Öğretmen"
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                            CreatedDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Yoklama girişleri, sınıf yönetimi ve öğrenci yönetiminden sorumludur.",
+                            RoleName = "Görevli"
+                        });
                 });
 
             modelBuilder.Entity("CMS.Domain.Entities.Specialization", b =>
@@ -519,7 +542,9 @@ namespace CMS.Persistence.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(1)")
+                        .HasDefaultValue("A")
                         .HasColumnName("Status");
 
                     b.Property<DateTime?>("UpdatedDate")

@@ -1,4 +1,6 @@
-﻿namespace CMS.Application.Features.Teachers.Queries.GetTeacherById;
+﻿using CMS.Domain.Entities;
+
+namespace CMS.Application.Features.Teachers.Queries.GetTeacherById;
 
 public class GetTeacherByIdResponse
 {
@@ -11,4 +13,5 @@ public class GetTeacherByIdResponse
     public float SalaryAmount { get; set; }
     public DateTime HiredDate { get; set; }
     public char Status { get; set; }
+    public ICollection<TeacherSpecialization> TeacherSpecializations { get; set; }
 }

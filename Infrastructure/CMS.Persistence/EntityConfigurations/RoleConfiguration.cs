@@ -1,6 +1,7 @@
 ﻿using CMS.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Reflection.Emit;
 
 namespace CMS.Persistence.EntityConfigurations;
 
@@ -28,5 +29,11 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
            .WithOne(u => u.Role)
            .HasForeignKey(u => u.RoleId)
            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasData(
+            new Role { Id = Guid.Parse("11111111-1111-1111-1111-111111111111"), RoleName = "Yönetici", CreatedDate = new DateTime(2025, 1, 1), Description = "Her işlemleri yapabilen yetkiye sahiptir." },
+            new Role { Id = Guid.Parse("22222222-2222-2222-2222-222222222222"), RoleName = "Öğretmen", CreatedDate = new DateTime(2025, 1, 1), Description = "Kurs ve gruplarını yöneten ve sınavlarını yöneten yetkilere sahiptir." },
+            new Role { Id = Guid.Parse("33333333-3333-3333-3333-333333333333"), RoleName = "Görevli", CreatedDate = new DateTime(2025, 1, 1), Description = "Yoklama girişleri, sınıf yönetimi ve öğrenci yönetiminden sorumludur." }
+        );
     }
 }

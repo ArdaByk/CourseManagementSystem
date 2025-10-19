@@ -1,5 +1,7 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.Specializations.Commands.Create;
+using MaterialSkin;
 using MaterialSkin.Controls;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,9 +17,13 @@ namespace CMS.Presentation
 {
     public partial class AddSpecializationForm : MaterialForm
     {
-        public AddSpecializationForm()
+        private readonly IMediator mediator;
+        public event EventHandler NewSpecializationAdded;
+        public AddSpecializationForm(IMediator mediator)
         {
             InitializeComponent();
+
+            this.mediator = mediator;
 
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
@@ -58,5 +64,20 @@ namespace CMS.Presentation
             this.Region = new Region(path);
         }
 
+        private async void addSpecializationBtn_Click(object sender, EventArgs e)
+        {
+            CreateSpecializationCommand createSpecializationCommand = new CreateSpecializationCommand
+            {
+                SpecializationName = specializationNameTxt.Text
+            };
+
+            CreateSpecializationResponse createSpecializationResponse = await mediator.Send(createSpecializationCommand);
+
+            MessageBox.Show(createSpecializationResponse.SpecializationName + " Adlı uzmanlık alanı başarıyla kaydedildi.");
+
+            NewSpecializationAdded?.Invoke(this, EventArgs.Empty);
+
+            this.Close();
+        }
     }
 }

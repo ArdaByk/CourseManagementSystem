@@ -44,12 +44,13 @@
             updateSpecializationBtn.MouseState = MaterialSkin.MouseState.HOVER;
             updateSpecializationBtn.Name = "updateSpecializationBtn";
             updateSpecializationBtn.NoAccentTextColor = Color.Empty;
-            updateSpecializationBtn.Size = new Size(178, 36);
+            updateSpecializationBtn.Size = new Size(76, 36);
             updateSpecializationBtn.TabIndex = 3;
             updateSpecializationBtn.Text = "Kaydet";
             updateSpecializationBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             updateSpecializationBtn.UseAccentColor = false;
             updateSpecializationBtn.UseVisualStyleBackColor = true;
+            updateSpecializationBtn.Click += updateSpecializationBtn_Click;
             // 
             // specializationNameTxt
             // 
@@ -90,6 +91,7 @@
             MaximizeBox = false;
             Name = "UpdateSpecializationForm";
             Text = "Uzmanlık Alanı Güncelle";
+            Load += UpdateSpecializationForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

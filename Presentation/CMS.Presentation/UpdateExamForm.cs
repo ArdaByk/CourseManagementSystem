@@ -1,5 +1,14 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.Courses.Commands.Update;
+using CMS.Application.Features.Courses.Queries.GetListTeachers;
+using CMS.Application.Features.Courses.Queries.GetTeacherById;
+using CMS.Application.Features.Exams.Commands.Update;
+using CMS.Application.Features.Exams.Queries.GetExamById;
+using CMS.Domain.Entities;
+using MaterialSkin;
 using MaterialSkin.Controls;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,17 +24,19 @@ namespace CMS.Presentation
 {
     public partial class UpdateExamForm : MaterialForm
     {
-        public UpdateExamForm()
+        public Guid ExamId { get; set; }
+        private readonly IMediator mediator;
+        public event EventHandler ExamUpdated;
+        public UpdateExamForm(IServiceProvider serviceProvider)
         {
             InitializeComponent();
-
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey900, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
 
             this.FormBorderStyle = FormBorderStyle.None;
-
+            this.mediator = serviceProvider.GetRequiredService<IMediator>();
         }
 
         protected override CreateParams CreateParams
@@ -58,5 +69,37 @@ namespace CMS.Presentation
             this.Region = new Region(path);
         }
 
+        private async void UpdateExamForm_Load(object sender, EventArgs e)
+        {
+            GetExamByIdResponse exam = await mediator.Send(new GetExamByIdQuery { Id = ExamId });
+            examNameTxt.Text = exam.ExamName;
+            ExamDate.Value = exam.ExamDate;
+            maxScoreTxt.Text = exam.MaxScore.ToString();
+
+            var courses = await mediator.Send(new GetListCoursesQuery());
+
+            courseComboBox.DataSource = courses;
+            courseComboBox.DisplayMember = "CourseName";
+            courseComboBox.ValueMember = "Id";
+            courseComboBox.SelectedValue = exam.Course.Id;
+        }
+
+        private async void updateExamBtn_Click(object sender, EventArgs e)
+        {
+            UpdateExamCommand updateExamCommand = new UpdateExamCommand();
+            updateExamCommand.Id = ExamId;
+            updateExamCommand.CourseId = Guid.Parse(courseComboBox.SelectedValue.ToString());
+            updateExamCommand.ExamName = examNameTxt.Text;
+            updateExamCommand.ExamDate = ExamDate.Value;
+            updateExamCommand.MaxScore = Convert.ToInt32(maxScoreTxt.Text);
+
+            UpdateExamResponse updatedExam = await mediator.Send(updateExamCommand);
+
+            MessageBox.Show(updatedExam.ExamName + " adlı sınav başarıyla güncellendi.");
+
+            ExamUpdated?.Invoke(this, EventArgs.Empty);
+
+            this.Close();
+        }
     }
 }

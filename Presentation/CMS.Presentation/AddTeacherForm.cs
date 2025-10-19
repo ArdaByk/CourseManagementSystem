@@ -1,4 +1,6 @@
-﻿using CMS.Application.Features.Teachers.Commands.Create;
+﻿using CMS.Application.Features.Specializations.Queries.GetListSpecializations;
+using CMS.Application.Features.Teachers.Commands.Create;
+using CMS.Domain.Entities;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using MediatR;
@@ -66,6 +68,12 @@ namespace CMS.Presentation
 
         private async void addTeacherBtn_Click(object sender, EventArgs e)
         {
+            var selectedIds = specializationCheckedListBox.Controls
+              .OfType<MaterialSkin.Controls.MaterialCheckbox>()
+              .Where(cb => cb.Checked)
+              .Select(cb => (Guid)cb.Tag)
+              .ToList();
+
             CreateTeacherCommand createTeacherCommand = new CreateTeacherCommand
             {
                 FirstName = teacherFirstNameTxt.Text,
@@ -75,7 +83,8 @@ namespace CMS.Presentation
                 SalaryAmount = Convert.ToInt32(teacherSalaryAmountTxt.Text),
                 SalaryType = teacherSalaryTypeComboBox.SelectedItem.ToString(),
                 Status = teacherStatusSwitch.Checked ? 'A' : 'P',
-                Email = teacherEmailTxt.Text
+                Email = teacherEmailTxt.Text,
+                SpecializationIds = selectedIds
             };
 
             CreateTeacherResponse createTeacherResponse = await mediator.Send(createTeacherCommand);
@@ -85,6 +94,25 @@ namespace CMS.Presentation
             NewTeacherAdded?.Invoke(this, EventArgs.Empty);
 
             this.Close();
+        }
+
+        private async void AddTeacherForm_Load(object sender, EventArgs e)
+        {
+            var specializations = await mediator.Send(new GetListSpecializationsQuery());
+
+            specializationCheckedListBox.Controls.Clear();
+
+            foreach (var specialization in specializations)
+            {
+                var checkBox = new MaterialSkin.Controls.MaterialCheckbox
+                {
+                    Text = specialization.SpecializationName,
+                    Tag = specialization.Id, // görünmeyen value için Tag kullan
+                    AutoSize = true
+                };
+
+                specializationCheckedListBox.Items.Add(checkBox);
+            }
         }
     }
 }
