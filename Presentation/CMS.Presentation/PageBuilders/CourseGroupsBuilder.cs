@@ -1,5 +1,8 @@
-﻿using CMS.Domain.Entities;
+﻿using CMS.Application.Features.CourseGroups.Commands.Delete;
+using CMS.Application.Features.CourseGroups.Queries.GetListCourseGroups;
 using MaterialSkin.Controls;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +13,22 @@ namespace CMS.Presentation.PageBuilders;
 
 public class CourseGroupsBuilder : IPageBuilder
 {
-    private List<User> courseGroups;
-
-    public CourseGroupsBuilder()
+    private ICollection<GetListCourseGroupsResponse> courseGroups;
+    private readonly IServiceProvider serviceProvider;
+    private readonly IMediator mediator;
+    private DataGridView courseGroupsDataGridView;
+    private BindingSource bs;
+    public CourseGroupsBuilder(IServiceProvider serviceProvider)
     {
-        this.courseGroups = new List<User>
-        {
-            new User { Id = 123424234, FirstName = "Ahmet", LastName = "Yılmaz", Email = "ahmet@example.com" },
-            new User { Id = 123424234, FirstName = "Ayşe", LastName = "Demir", Email = "ayse@example.com" },
-            new User { Id = 123424234, FirstName = "Mehmet", LastName = "Can", Email = "mehmet@example.com" }
-        };
+        this.mediator = serviceProvider.GetRequiredService<IMediator>();
+
+        this.serviceProvider = serviceProvider;
     }
 
-    public void Build(TabPage tabPage)
+    public async void Build(TabPage tabPage)
     {
+        this.courseGroups = await mediator.Send(new GetListCourseGroupsQuery());
+
         Panel mainPanel = new Panel
         {
             Dock = DockStyle.Fill
@@ -59,8 +64,68 @@ public class CourseGroupsBuilder : IPageBuilder
 
         addCourseGroupBtn.MouseClick += (o, e) =>
         {
-            AddCourseGroupForm addCourseGroupForm = new AddCourseGroupForm();
-            addCourseGroupForm.Show();
+            AddCourseGroupForm addCourseGroupForm = serviceProvider.GetRequiredService<AddCourseGroupForm>();
+
+            addCourseGroupForm.NewCourseGroupAdded += addCourseGroupForm_NewCourseGroupAdded;
+
+            addCourseGroupForm.ShowDialog();
+        };
+
+        updateCourseGroupBtn.MouseClick += (o, e) =>
+        {
+            DataGridViewRow selectedRow = courseGroupsDataGridView.CurrentRow;
+
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen güncellemek için bir kurs grubu seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Guid id = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+            UpdateCourseGroupForm updateCourseGroupForm = serviceProvider.GetRequiredService<UpdateCourseGroupForm>();
+
+            updateCourseGroupForm.CourseGroupId = id;
+
+            updateCourseGroupForm.CourseGroupUpdated += updateCourseGroupForm_CourseGroupUpdated;
+
+            updateCourseGroupForm.ShowDialog();
+        };
+
+        deleteCourseGroupBtn.MouseClick += async (o, e) =>
+        {
+            var selectedRow = courseGroupsDataGridView.CurrentRow;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Lütfen silmek için bir kurs grubu seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                "Bu kurs grubunu silmek istediğinizden emin misiniz?",
+                "Onay",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    var courseGroupId = Guid.Parse(selectedRow.Cells["Id"].Value.ToString());
+
+                    await mediator.Send(new DeleteCourseGroupCommand { Id = courseGroupId });
+
+                    courseGroups.Remove(courseGroups.First(c => c.Id == courseGroupId));
+                    bs.ResetBindings(false);
+
+                    MessageBox.Show("Kurs grubu başarıyla silindi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Silme işlemi başarısız: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         };
 
         showStudentsBtn.MouseClick += (o, e) =>
@@ -87,7 +152,7 @@ public class CourseGroupsBuilder : IPageBuilder
             registerStudentForm.Show();
         };
 
-        DataGridView courseGroupsDataGridView = CreateCourseGroupsDataGridView(courseGroups);
+        courseGroupsDataGridView = CreateCourseGroupsDataGridView(courseGroups);
 
         courseGroupsPanel.Controls.Add(courseGroupsDataGridView);
 
@@ -115,10 +180,10 @@ public class CourseGroupsBuilder : IPageBuilder
             string courseGroupQuotaFilter = courseGroupQuotaTextBox.Text.Trim().ToLower();
 
             var bs = (BindingSource)courseGroupsDataGridView.DataSource;
-            bs.DataSource = courseGroups.Where(t =>
-                (string.IsNullOrEmpty(courseNameFilter) || t.FirstName.ToLower().Contains(courseNameFilter)) ||
-                (string.IsNullOrEmpty(courseGroupNameFilter) || t.FirstName.ToLower().Contains(courseGroupNameFilter)) ||
-                (string.IsNullOrEmpty(courseGroupQuotaFilter) || t.FirstName.ToLower().Contains(courseGroupQuotaFilter))
+            bs.DataSource = courseGroups.Where(c =>
+                (string.IsNullOrEmpty(courseNameFilter) || c.Course.CourseName.ToLower().Contains(courseNameFilter)) ||
+                (string.IsNullOrEmpty(courseGroupNameFilter) || c.GroupName.ToLower().Contains(courseGroupNameFilter)) ||
+                (string.IsNullOrEmpty(courseGroupQuotaFilter) || c.Quota.Equals(courseGroupQuotaFilter))
             ).ToList();
 
             bs.ResetBindings(false);
@@ -148,7 +213,7 @@ public class CourseGroupsBuilder : IPageBuilder
         };
     }
 
-    private DataGridView CreateCourseGroupsDataGridView(List<User> students)
+    private DataGridView CreateCourseGroupsDataGridView(ICollection<GetListCourseGroupsResponse> students)
     {
         var dataGridView = new DataGridView
         {
@@ -165,17 +230,32 @@ public class CourseGroupsBuilder : IPageBuilder
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         };
 
-        BindingSource bs = new BindingSource { DataSource = students };
+        bs = new BindingSource { DataSource = courseGroups.Select(c => new { c.Id, c.GroupName, c.Course.CourseName, c.Quota, c.StartedDate, c.EndedDate }).ToList() };
         dataGridView.DataSource = bs;
         bs.ResetBindings(false);
 
         dataGridView.DataBindingComplete += (s, e) =>
         {
-            dataGridView.Columns["Id"].HeaderText = "ID";
-            dataGridView.Columns["FirstName"].HeaderText = "Kurs Adı";
-            dataGridView.Columns["LastName"].HeaderText = "Kurs Grup Adı";
+            dataGridView.Columns["Id"].Visible = false;
+            dataGridView.Columns["GroupName"].HeaderText = "Kurs Grup Adı";
+            dataGridView.Columns["CourseName"].HeaderText = "Kurs Adı";
+            dataGridView.Columns["Quota"].HeaderText = "Kontenjan";
+            dataGridView.Columns["StartedDate"].HeaderText = "Başlangıç Tarihi";
+            dataGridView.Columns["EndedDate"].HeaderText = "Bitiş Tarihi";
         };
 
         return dataGridView;
+    }
+
+    public async void addCourseGroupForm_NewCourseGroupAdded(object o, EventArgs e)
+    {
+        this.courseGroups = await mediator.Send(new GetListCourseGroupsQuery());
+        bs.DataSource = this.courseGroups.Select(c => new { c.Id, c.GroupName, c.Course.CourseName, c.Quota, c.StartedDate, c.EndedDate }).ToList();
+    }
+
+    public async void updateCourseGroupForm_CourseGroupUpdated(object o, EventArgs e)
+    {
+        this.courseGroups = await mediator.Send(new GetListCourseGroupsQuery());
+        bs.DataSource = this.courseGroups.Select(c => new { c.Id, c.GroupName, c.Course.CourseName, c.Quota, c.StartedDate, c.EndedDate }).ToList();
     }
 }

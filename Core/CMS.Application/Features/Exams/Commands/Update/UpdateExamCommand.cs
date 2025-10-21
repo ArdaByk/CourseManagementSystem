@@ -31,9 +31,9 @@ public class UpdateExamCommand : IRequest<UpdateExamResponse>
 
         public async Task<UpdateExamResponse> Handle(UpdateExamCommand request, CancellationToken cancellationToken)
         {
-            Exam exam = await examService.GetAsync(e => e.Id == request.Id, enableTracking: false, cancellationToken: cancellationToken);
+            Exam exam = await examService.GetAsync(e => e.Id == request.Id, enableTracking: true, cancellationToken: cancellationToken);
 
-            exam = mapper.Map(request, exam);
+            mapper.Map(request, exam);
 
             Exam result = await examService.UpdateAsync(exam);
 

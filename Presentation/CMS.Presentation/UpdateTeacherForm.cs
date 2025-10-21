@@ -1,6 +1,4 @@
 ﻿using CMS.Application.Features.Specializations.Queries.GetListSpecializations;
-using CMS.Application.Features.Students.Commands.Update;
-using CMS.Application.Features.Students.Queries.GetStudentById;
 using CMS.Application.Features.Teachers.Commands.Update;
 using CMS.Application.Features.Teachers.Queries.GetTeacherById;
 using CMS.Domain.Entities;

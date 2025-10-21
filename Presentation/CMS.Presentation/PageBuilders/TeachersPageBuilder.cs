@@ -1,4 +1,5 @@
-﻿using CMS.Application.Features.Students.Queries.GetListStudents;
+﻿using CMS.Application.Features.CourseGroups.Queries.GetListCourseGroups;
+using CMS.Application.Features.Students.Queries.GetListStudents;
 using CMS.Application.Features.Teachers.Commands.Delete;
 using CMS.Application.Features.Teachers.Queries.GetListTeachers;
 using CMS.Domain.Entities;
@@ -213,7 +214,7 @@ public class TeachersPageBuilder : IPageBuilder
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         };
 
-        bs = new BindingSource { DataSource = teachers };
+        bs = new BindingSource { DataSource = teachers.Select(t => new { t.Id, t.FirstName, t.LastName, t.Status }).ToList() };
         dataGridView.DataSource = bs;
         bs.ResetBindings(false);
 
@@ -244,14 +245,14 @@ public class TeachersPageBuilder : IPageBuilder
     public async void addTeacherForm_NewTeacherAdded(object o, EventArgs e)
     {
         this.teachers = await mediator.Send(new GetListTeacherQuery());
-        bs.DataSource = this.teachers;
+        bs.DataSource = this.teachers.Select(t => new { t.Id, t.FirstName, t.LastName, t.Status }).ToList();
         bs.ResetBindings(false);
     }
 
     public async void updateTeacherForm_TeacherUpdated(object o, EventArgs e)
     {
         this.teachers = await mediator.Send(new GetListTeacherQuery());
-        bs.DataSource = this.teachers;
+        bs.DataSource = this.teachers.Select(t => new { t.Id, t.FirstName, t.LastName, t.Status }).ToList();
         bs.ResetBindings(false);
     }
 }

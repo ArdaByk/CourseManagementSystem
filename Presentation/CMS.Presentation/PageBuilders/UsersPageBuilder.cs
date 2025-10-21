@@ -75,7 +75,7 @@ public class UsersPageBuilder : IPageBuilder
 
         reviewUserBtn.MouseClick += (o, e) =>
         {
-            ShowCourseStudentsForm showCourseStudentsForm = new ShowCourseStudentsForm();
+            ShowCourseStudentsForm showCourseStudentsForm = serviceProvider.GetRequiredService<ShowCourseStudentsForm>();
             showCourseStudentsForm.Show();
         };
 

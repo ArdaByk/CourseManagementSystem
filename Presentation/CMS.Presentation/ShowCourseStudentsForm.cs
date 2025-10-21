@@ -1,5 +1,8 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.Students.Queries.GetListStudents;
+using MaterialSkin;
 using MaterialSkin.Controls;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,25 +18,19 @@ namespace CMS.Presentation
 {
     public partial class ShowCourseStudentsForm : MaterialForm
     {
-        private List<User> students;
-        public ShowCourseStudentsForm()
+        public Guid CourseId { get; set; }
+        private readonly IMediator mediator;
+        private ICollection<GetListStudentResponse> students;
+        public ShowCourseStudentsForm(IServiceProvider serviceProvider)
         {
             InitializeComponent();
-
-            this.students = new List<User>
-        {
-            new User { Id = 123424234, FirstName = "Ahmet", LastName = "Yılmaz", Email = "ahmet@example.com" },
-            new User { Id = 123424234, FirstName = "Ayşe", LastName = "Demir", Email = "ayse@example.com" },
-            new User { Id = 123424234, FirstName = "Mehmet", LastName = "Can", Email = "mehmet@example.com" }
-        };
-
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey900, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
 
             this.FormBorderStyle = FormBorderStyle.None;
-
+            this.mediator = serviceProvider.GetRequiredService<IMediator>();
         }
 
         protected override CreateParams CreateParams
@@ -66,7 +63,7 @@ namespace CMS.Presentation
             this.Region = new Region(path);
         }
 
-        private void ShowCourseStudentsForm_Load(object sender, EventArgs e)
+        private async void ShowCourseStudentsForm_Load(object sender, EventArgs e)
         {
             var dataGridView = new DataGridView
             {

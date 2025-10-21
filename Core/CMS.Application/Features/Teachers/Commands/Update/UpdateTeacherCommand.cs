@@ -40,11 +40,13 @@ public class UpdateTeacherCommand : IRequest<UpdateTeacherResponse>
 
         public async Task<UpdateTeacherResponse> Handle(UpdateTeacherCommand request, CancellationToken cancellationToken)
         {
-            Teacher teacher = await teacherService.GetAsync(t => t.Id == request.Id, enableTracking: false, cancellationToken: cancellationToken);
+            Teacher teacher = await teacherService.GetAsync(
+                t => t.Id == request.Id,
+                include: x => x.Include(x => x.TeacherSpecializations),
+                enableTracking: true,
+                cancellationToken: cancellationToken);
 
-            teacher.TeacherSpecializations = teacher.TeacherSpecializations
-                .Where(ts => request.SelectedIds.Contains(ts.SpecializationId))
-                .ToList();
+            mapper.Map(request, teacher);
 
             var currentIds = teacher.TeacherSpecializations.Select(ts => ts.SpecializationId).ToList();
 
@@ -54,9 +56,18 @@ public class UpdateTeacherCommand : IRequest<UpdateTeacherResponse>
                 {
                     TeacherId = teacher.Id,
                     SpecializationId = id
-                });
+                })
+                .ToList();
 
-            teacher.TeacherSpecializations = teacher.TeacherSpecializations.Concat(toAdd).ToList();
+            var toRemove = teacher.TeacherSpecializations
+                .Where(ts => !request.SelectedIds.Contains(ts.SpecializationId))
+                .ToList();
+
+            foreach (var item in toRemove)
+                teacher.TeacherSpecializations.Remove(item);
+
+            foreach (var item in toAdd)
+                teacher.TeacherSpecializations.Add(item);
 
             Teacher result = await teacherService.UpdateAsync(teacher);
 
@@ -64,5 +75,6 @@ public class UpdateTeacherCommand : IRequest<UpdateTeacherResponse>
 
             return response;
         }
+
     }
 }

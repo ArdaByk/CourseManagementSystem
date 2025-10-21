@@ -29,9 +29,9 @@ public class UpdateSpecializationCommand : IRequest<UpdateSpecializationResponse
 
         public async Task<UpdateSpecializationResponse> Handle(UpdateSpecializationCommand request, CancellationToken cancellationToken)
         {
-            Specialization specialization = await specializationService.GetAsync(s => s.Id == request.Id, enableTracking: false, cancellationToken: cancellationToken);
+            Specialization specialization = await specializationService.GetAsync(s => s.Id == request.Id, enableTracking: true, cancellationToken: cancellationToken);
 
-            specialization = mapper.Map(request, specialization);
+            mapper.Map(request, specialization);
 
             Specialization result = await specializationService.UpdateAsync(specialization);
 

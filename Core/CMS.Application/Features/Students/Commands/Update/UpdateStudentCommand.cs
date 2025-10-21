@@ -41,9 +41,9 @@ public class UpdateStudentCommand: IRequest<UpdateStudentResponse>
 
         public async Task<UpdateStudentResponse> Handle(UpdateStudentCommand request, CancellationToken cancellationToken)
         {
-            Student student = await studentService.GetAsync(s => s.Id == request.Id, enableTracking: false, cancellationToken: cancellationToken);
+            Student student = await studentService.GetAsync(s => s.Id == request.Id, enableTracking: true, cancellationToken: cancellationToken);
 
-            student = mapper.Map(request, student);
+            mapper.Map(request, student);
 
             Student result = await studentService.UpdateAsync(student);
 

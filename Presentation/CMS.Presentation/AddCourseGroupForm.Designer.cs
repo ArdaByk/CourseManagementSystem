@@ -208,6 +208,7 @@
             addGroupBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             addGroupBtn.UseAccentColor = false;
             addGroupBtn.UseVisualStyleBackColor = true;
+            addGroupBtn.Click += addGroupBtn_Click;
             // 
             // groupBox1
             // 
@@ -243,7 +244,7 @@
             endTimeTxt.InsertKeyMode = InsertKeyMode.Default;
             endTimeTxt.LeadingIcon = null;
             endTimeTxt.Location = new Point(8, 150);
-            endTimeTxt.Mask = "99.99";
+            endTimeTxt.Mask = "99:99";
             endTimeTxt.MaxLength = 32767;
             endTimeTxt.MouseState = MaterialSkin.MouseState.OUT;
             endTimeTxt.Name = "endTimeTxt";
@@ -263,7 +264,7 @@
             endTimeTxt.SkipLiterals = true;
             endTimeTxt.TabIndex = 10;
             endTimeTxt.TabStop = false;
-            endTimeTxt.Text = "  .";
+            endTimeTxt.Text = "  :";
             endTimeTxt.TextAlign = HorizontalAlignment.Left;
             endTimeTxt.TextMaskFormat = MaskFormat.IncludeLiterals;
             endTimeTxt.TrailingIcon = null;
@@ -286,7 +287,7 @@
             startTimeTxt.InsertKeyMode = InsertKeyMode.Default;
             startTimeTxt.LeadingIcon = null;
             startTimeTxt.Location = new Point(8, 96);
-            startTimeTxt.Mask = "99.99";
+            startTimeTxt.Mask = "99:99";
             startTimeTxt.MaxLength = 32767;
             startTimeTxt.MouseState = MaterialSkin.MouseState.OUT;
             startTimeTxt.Name = "startTimeTxt";
@@ -306,7 +307,7 @@
             startTimeTxt.SkipLiterals = true;
             startTimeTxt.TabIndex = 9;
             startTimeTxt.TabStop = false;
-            startTimeTxt.Text = "  .";
+            startTimeTxt.Text = "  :";
             startTimeTxt.TextAlign = HorizontalAlignment.Left;
             startTimeTxt.TextMaskFormat = MaskFormat.IncludeLiterals;
             startTimeTxt.TrailingIcon = null;
@@ -442,6 +443,7 @@
             MaximizeBox = false;
             Name = "AddCourseGroupForm";
             Text = "Grup Ekle";
+            Load += AddCourseGroupForm_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);

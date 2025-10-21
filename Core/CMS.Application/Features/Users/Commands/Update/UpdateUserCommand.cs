@@ -32,9 +32,9 @@ public class UpdateUserCommand : IRequest<UpdateUserResponse>
 
         public async Task<UpdateUserResponse> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            User user = await userService.GetAsync(u => u.Id == request.Id, enableTracking: false, cancellationToken: cancellationToken);
+            User user = await userService.GetAsync(u => u.Id == request.Id, enableTracking: true, cancellationToken: cancellationToken);
 
-            user = mapper.Map(request, user);
+            mapper.Map(request, user);
 
             User result = await userService.UpdateAsync(user);
 

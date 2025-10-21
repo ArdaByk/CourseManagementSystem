@@ -12,6 +12,10 @@ public class CourseSchedule : BaseEntity<Guid>
         EndTime = endTime;
         CourseGroupId = courseGroupId;
     }
+    public CourseSchedule()
+    {
+        
+    }
 
     public int DayOfWeek { get; set; }
     public TimeSpan StartTime { get; set; }

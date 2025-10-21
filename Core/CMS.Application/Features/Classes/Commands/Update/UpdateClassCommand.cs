@@ -31,9 +31,9 @@ public class UpdateClassCommand : IRequest<UpdateClassResponse>
 
         public async Task<UpdateClassResponse> Handle(UpdateClassCommand request, CancellationToken cancellationToken)
         {
-            Class myClass = await classService.GetAsync(c => c.Id == request.Id, enableTracking: false, cancellationToken: cancellationToken);
+            Class myClass = await classService.GetAsync(c => c.Id == request.Id, enableTracking: true, cancellationToken: cancellationToken);
 
-            myClass = mapper.Map(request, myClass);
+            mapper.Map(request, myClass);
 
             Class result = await classService.UpdateAsync(myClass);
 
