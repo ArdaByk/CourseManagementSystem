@@ -4,6 +4,7 @@ using CMS.Application.Features.CourseGroups.Commands.Delete;
 using CMS.Application.Features.CourseGroups.Commands.Update;
 using CMS.Application.Features.CourseGroups.Queries.GetCourseGroupById;
 using CMS.Application.Features.CourseGroups.Queries.GetListCourseGroups;
+using CMS.Application.Features.CourseGroups.Queries.GetListCourseGroupsByCourseId;
 using CMS.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,10 @@ public class MappingProfiles : Profile
         CreateMap<DeleteCourseGroupResponse, CourseGroup>().ReverseMap();
         CreateMap<GetListCourseGroupsQuery, CourseGroup>().ReverseMap();
         CreateMap<GetListCourseGroupsResponse, CourseGroup>().ReverseMap();
+        CreateMap<GetListCourseGroupsResponse, Course>().ReverseMap();
         CreateMap<GetCourseGroupByIdQuery, CourseGroup>().ReverseMap();
         CreateMap<GetCourseGroupByIdResponse, CourseGroup>().ReverseMap();
+        CreateMap<GetListCourseGroupsByCourseIdQuery, CourseGroup>().ReverseMap();
+        CreateMap<GetListCourseGroupsByCourseIdResponse, CourseGroup>().ReverseMap();
     }
 }

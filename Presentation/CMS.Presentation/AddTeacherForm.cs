@@ -107,7 +107,7 @@ namespace CMS.Presentation
                 var checkBox = new MaterialSkin.Controls.MaterialCheckbox
                 {
                     Text = specialization.SpecializationName,
-                    Tag = specialization.Id, // görünmeyen value için Tag kullan
+                    Tag = specialization.Id,
                     AutoSize = true
                 };
 

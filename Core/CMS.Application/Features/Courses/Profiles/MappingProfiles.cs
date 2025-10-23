@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CMS.Application.Features.CourseGroups.Queries.GetListCourseGroupsByCourseId;
 using CMS.Application.Features.Courses.Commands.Create;
 using CMS.Application.Features.Courses.Commands.Delete;
 using CMS.Application.Features.Courses.Commands.Update;

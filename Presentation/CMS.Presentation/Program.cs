@@ -41,6 +41,9 @@ namespace CMS.Presentation
             services.AddTransient<UpdateUserForm>();
             services.AddTransient<AddCourseGroupForm>();
             services.AddTransient<UpdateCourseGroupForm>();
+            services.AddTransient<ShowCourseStudentsForm>();
+            services.AddTransient<ShowCourseGroupStudentsForm>();
+            services.AddTransient<RegisterStudentForm>();
             services.AddTransient<DashboardForm>();
 
             var serviceProvider = services.BuildServiceProvider();

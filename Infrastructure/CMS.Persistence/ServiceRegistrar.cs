@@ -30,6 +30,7 @@ public static class ServiceRegistrar
         services.AddScoped<IUserService, UserManager>();
         services.AddScoped<ICourseGroupService, CourseGroupManager>();
         services.AddScoped<ICourseScheduleService, CourseScheduleManager>();
+        services.AddScoped<IStudentCourseService, StudentCourseManager>();
 
         return services;
     }

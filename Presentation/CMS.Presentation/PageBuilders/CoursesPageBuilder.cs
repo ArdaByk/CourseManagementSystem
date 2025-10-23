@@ -45,7 +45,7 @@ public class CoursesPageBuilder : IPageBuilder
 
         var addCourseBtn = CreateButton("addCourseBtn", "Kurs Ekle", new Point(10, 57));
         var reviewCourseBtn = CreateButton("reviewCourseBtn", "Kurs İncele", new Point(110, 57));
-        var showStudentsBtn = CreateButton("reviewCourseBtn", "Kursa Kayıtlı Öğrencileri Göster", new Point(230, 57));
+        var showStudentsBtn = CreateButton("showStudentsBtn", "Kursa Kayıtlı Öğrencileri Göster", new Point(230, 57));
         var updateCourseBtn = CreateButton("updateCourseBtn", "Kurs Güncelle", new Point(520, 57));
         var deleteCourseBtn = CreateButton("deleteCourseBtn", "Kurs Sil", new Point(670, 57), true);
 
@@ -129,6 +129,7 @@ public class CoursesPageBuilder : IPageBuilder
         showStudentsBtn.MouseClick += (o, e) =>
         {
             ShowCourseStudentsForm showCourseStudentsForm = serviceProvider.GetRequiredService<ShowCourseStudentsForm>();
+            showCourseStudentsForm.CourseId = Guid.Parse(coursesDataGridView.CurrentRow.Cells["Id"].Value.ToString());
             showCourseStudentsForm.Show();
         };
 

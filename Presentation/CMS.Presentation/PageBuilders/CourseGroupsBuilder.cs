@@ -130,7 +130,8 @@ public class CourseGroupsBuilder : IPageBuilder
 
         showStudentsBtn.MouseClick += (o, e) =>
         {
-            ShowCourseGroupStudentsForm showCourseGroupStudentsForm = new ShowCourseGroupStudentsForm();
+            ShowCourseGroupStudentsForm showCourseGroupStudentsForm = serviceProvider.GetRequiredService<ShowCourseGroupStudentsForm>();
+            showCourseGroupStudentsForm.CourseGroupId = Guid.Parse(courseGroupsDataGridView.CurrentRow.Cells["Id"].Value.ToString());
             showCourseGroupStudentsForm.Show();
         };
 
@@ -148,7 +149,7 @@ public class CourseGroupsBuilder : IPageBuilder
 
         registerStudentBtn.MouseClick += (o, e) =>
         {
-            RegisterStudentForm registerStudentForm = new RegisterStudentForm();
+            RegisterStudentForm registerStudentForm = serviceProvider.GetRequiredService<RegisterStudentForm>();
             registerStudentForm.Show();
         };
 

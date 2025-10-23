@@ -56,7 +56,7 @@
             nationalIDTxt.BackgroundImageLayout = ImageLayout.None;
             nationalIDTxt.CharacterCasing = CharacterCasing.Normal;
             nationalIDTxt.Depth = 0;
-            nationalIDTxt.Font = new Font("Roboto", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            nationalIDTxt.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             nationalIDTxt.HideSelection = true;
             nationalIDTxt.Hint = "TC Kimlik NO";
             nationalIDTxt.LeadingIcon = null;
@@ -88,7 +88,7 @@
             courseComboBox.DropDownHeight = 174;
             courseComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             courseComboBox.DropDownWidth = 121;
-            courseComboBox.Font = new Font("Roboto Medium", 14F, FontStyle.Bold, GraphicsUnit.Pixel);
+            courseComboBox.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Bold, GraphicsUnit.Pixel);
             courseComboBox.ForeColor = Color.FromArgb(222, 0, 0, 0);
             courseComboBox.FormattingEnabled = true;
             courseComboBox.Hint = "Kurs";
@@ -101,6 +101,7 @@
             courseComboBox.Size = new Size(250, 49);
             courseComboBox.StartIndex = 0;
             courseComboBox.TabIndex = 3;
+            courseComboBox.SelectedIndexChanged += courseComboBox_SelectedIndexChanged;
             // 
             // courseGroupComboBox
             // 
@@ -143,6 +144,7 @@
             registerStudentBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             registerStudentBtn.UseAccentColor = false;
             registerStudentBtn.UseVisualStyleBackColor = true;
+            registerStudentBtn.Click += registerStudentBtn_Click;
             // 
             // RegisterStudentForm
             // 
@@ -158,6 +160,7 @@
             MaximizeBox = false;
             Name = "RegisterStudentForm";
             Text = "Öğrenci Kaydı";
+            Load += RegisterStudentForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

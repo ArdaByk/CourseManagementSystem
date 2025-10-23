@@ -4,6 +4,7 @@ using CMS.Application.Features.Students.Commands.Delete;
 using CMS.Application.Features.Students.Commands.Update;
 using CMS.Application.Features.Students.Queries.GetListStudents;
 using CMS.Application.Features.Students.Queries.GetStudentById;
+using CMS.Application.Features.Students.Queries.GetStudentByNationalId;
 using CMS.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -27,5 +28,7 @@ public class MappingProfiles : Profile
         CreateMap<GetListStudentQuery, Student>().ReverseMap();
         CreateMap<GetStudentByIdQuery, Student>().ReverseMap();
         CreateMap<GetStudentByIdResponse, Student>().ReverseMap();
+        CreateMap<GetStudentByNationalIdQuery, Student>().ReverseMap();
+        CreateMap<GetStudentByNationalIdResponse, Student>().ReverseMap();
     }
 }

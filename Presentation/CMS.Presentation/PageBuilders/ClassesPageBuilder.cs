@@ -69,8 +69,6 @@ public class ClassesPageBuilder : IPageBuilder
 
         reviewClassBtn.MouseClick += (o, e) =>
         {
-            ShowCourseGroupStudentsForm showCourseGroupStudentsForm = new ShowCourseGroupStudentsForm();
-            showCourseGroupStudentsForm.Show();
         };
 
         updateClassBtn.MouseClick += (o, e) =>

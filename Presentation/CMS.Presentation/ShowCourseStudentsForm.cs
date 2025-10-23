@@ -1,4 +1,5 @@
-﻿using CMS.Application.Features.Students.Queries.GetListStudents;
+﻿using CMS.Application.Features.StudentCourses.Queries.GetListStudentsByCourseId;
+using CMS.Application.Features.Students.Queries.GetListStudents;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using MediatR;
@@ -20,7 +21,8 @@ namespace CMS.Presentation
     {
         public Guid CourseId { get; set; }
         private readonly IMediator mediator;
-        private ICollection<GetListStudentResponse> students;
+        private ICollection<GetListStudentsByCourseIdResponse> students;
+        private DataGridView studentsDataGridView;
         public ShowCourseStudentsForm(IServiceProvider serviceProvider)
         {
             InitializeComponent();
@@ -65,7 +67,9 @@ namespace CMS.Presentation
 
         private async void ShowCourseStudentsForm_Load(object sender, EventArgs e)
         {
-            var dataGridView = new DataGridView
+            this.students = await mediator.Send(new GetListStudentsByCourseIdQuery{ Id = CourseId });
+
+            studentsDataGridView = new DataGridView
             {
                 Name = "studentsDataGridView",
                 BackgroundColor = Color.FromArgb(30, 30, 30),
@@ -81,19 +85,20 @@ namespace CMS.Presentation
             };
 
             BindingSource bs = new BindingSource { DataSource = students };
-            dataGridView.DataSource = bs;
+            studentsDataGridView.DataSource = bs;
             bs.ResetBindings(false);
 
-            dataGridView.DataBindingComplete += (s, e) =>
+            studentsDataGridView.DataBindingComplete += (s, e) =>
             {
-                dataGridView.Columns["Id"].HeaderText = "ID";
-                dataGridView.Columns["FirstName"].HeaderText = "Adı";
-                dataGridView.Columns["LastName"].HeaderText = "Soyadı";
-                dataGridView.Columns["Email"].HeaderText = "Telefon Numarası";
+                studentsDataGridView.Columns["Id"].Visible = false;
+                studentsDataGridView.Columns["NationalId"].HeaderText = "TC Kimlik NO";
+                studentsDataGridView.Columns["FirstName"].HeaderText = "Adı";
+                studentsDataGridView.Columns["LastName"].HeaderText = "Soyadı";
+                studentsDataGridView.Columns["Phone"].HeaderText = "Telefon Numarası";
             };
 
             studentsPanel.BackColor = Color.Transparent;
-            studentsPanel.Controls.Add(dataGridView);
+            studentsPanel.Controls.Add(studentsDataGridView);
         }
     }
 }

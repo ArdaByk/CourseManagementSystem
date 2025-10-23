@@ -59,8 +59,6 @@ public class RolesPageBuilder : IPageBuilder
 
         reviewRoleBtn.MouseClick += (o, e) =>
         {
-            ShowCourseGroupStudentsForm showCourseGroupStudentsForm = new ShowCourseGroupStudentsForm();
-            showCourseGroupStudentsForm.Show();
         };
 
         updateRoleBtn.MouseClick += (o, e) =>
