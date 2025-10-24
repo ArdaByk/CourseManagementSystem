@@ -18,6 +18,10 @@ public class Attendance : BaseEntity<Guid>
         Date = date;
         Status = status;
     }
+    public Attendance()
+    {
+        
+    }
 
     public Guid StudentId { get; set; }
     public Guid CourseId { get; set; }

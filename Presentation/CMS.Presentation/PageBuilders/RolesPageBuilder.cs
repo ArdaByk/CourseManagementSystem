@@ -69,8 +69,6 @@ public class RolesPageBuilder : IPageBuilder
 
         deleteRoleBtn.MouseClick += (o, e) =>
         {
-            TakeAttendanceForm takeAttendanceForm = new TakeAttendanceForm();
-            takeAttendanceForm.Show();
         };
 
         DataGridView rolesDataGridView = CreateRolesDataGridView(roles);

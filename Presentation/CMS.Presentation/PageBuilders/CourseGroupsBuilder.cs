@@ -143,7 +143,9 @@ public class CourseGroupsBuilder : IPageBuilder
 
         takeAttendanceBtn.MouseClick += (o, e) =>
         {
-            TakeAttendanceForm takeAttendanceForm = new TakeAttendanceForm();
+            TakeAttendanceForm takeAttendanceForm = serviceProvider.GetRequiredService<TakeAttendanceForm>();
+            takeAttendanceForm.CourseGroupId = Guid.Parse(courseGroupsDataGridView.CurrentRow.Cells["Id"].Value.ToString());
+            takeAttendanceForm.CourseId = Guid.Parse(courseGroupsDataGridView.CurrentRow.Cells["CourseId"].Value.ToString());
             takeAttendanceForm.Show();
         };
 
@@ -231,13 +233,14 @@ public class CourseGroupsBuilder : IPageBuilder
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         };
 
-        bs = new BindingSource { DataSource = courseGroups.Select(c => new { c.Id, c.GroupName, c.Course.CourseName, c.Quota, c.StartedDate, c.EndedDate }).ToList() };
+        bs = new BindingSource { DataSource = courseGroups.Select(c => new { c.Id,CourseId= c.Course.Id ,c.GroupName, c.Course.CourseName, c.Quota, c.StartedDate, c.EndedDate }).ToList() };
         dataGridView.DataSource = bs;
         bs.ResetBindings(false);
 
         dataGridView.DataBindingComplete += (s, e) =>
         {
             dataGridView.Columns["Id"].Visible = false;
+            dataGridView.Columns["CourseId"].Visible = false;
             dataGridView.Columns["GroupName"].HeaderText = "Kurs Grup Adı";
             dataGridView.Columns["CourseName"].HeaderText = "Kurs Adı";
             dataGridView.Columns["Quota"].HeaderText = "Kontenjan";
@@ -251,12 +254,12 @@ public class CourseGroupsBuilder : IPageBuilder
     public async void addCourseGroupForm_NewCourseGroupAdded(object o, EventArgs e)
     {
         this.courseGroups = await mediator.Send(new GetListCourseGroupsQuery());
-        bs.DataSource = this.courseGroups.Select(c => new { c.Id, c.GroupName, c.Course.CourseName, c.Quota, c.StartedDate, c.EndedDate }).ToList();
+        bs.DataSource = this.courseGroups.Select(c => new { c.Id, CourseId=c.Course.Id ,c.GroupName, c.Course.CourseName, c.Quota, c.StartedDate, c.EndedDate }).ToList();
     }
 
     public async void updateCourseGroupForm_CourseGroupUpdated(object o, EventArgs e)
     {
         this.courseGroups = await mediator.Send(new GetListCourseGroupsQuery());
-        bs.DataSource = this.courseGroups.Select(c => new { c.Id, c.GroupName, c.Course.CourseName, c.Quota, c.StartedDate, c.EndedDate }).ToList();
+        bs.DataSource = this.courseGroups.Select(c => new { c.Id, CourseId=c.Course.Id, c.GroupName, c.Course.CourseName, c.Quota, c.StartedDate, c.EndedDate }).ToList();
     }
 }

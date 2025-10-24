@@ -59,6 +59,7 @@
             saveAttendanceBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             saveAttendanceBtn.UseAccentColor = false;
             saveAttendanceBtn.UseVisualStyleBackColor = true;
+            saveAttendanceBtn.Click += saveAttendanceBtn_Click;
             // 
             // TakeAttendanceForm
             // 
