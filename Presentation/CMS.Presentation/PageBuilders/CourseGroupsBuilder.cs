@@ -1,5 +1,7 @@
 ﻿using CMS.Application.Features.CourseGroups.Commands.Delete;
 using CMS.Application.Features.CourseGroups.Queries.GetListCourseGroups;
+using CMS.Application.Features.Students.Queries.GetListStudents;
+using CMS.Domain.Entities;
 using MaterialSkin.Controls;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -137,7 +139,9 @@ public class CourseGroupsBuilder : IPageBuilder
 
         showAttendanceBtn.MouseClick += (o, e) =>
         {
-            ShowAttendanceForm showAttendanceForm = new ShowAttendanceForm();
+            ShowAttendanceForm showAttendanceForm = serviceProvider.GetRequiredService<ShowAttendanceForm>();
+            showAttendanceForm.CourseGroupId = Guid.Parse(courseGroupsDataGridView.CurrentRow.Cells["Id"].Value.ToString());
+            showAttendanceForm.CourseId = Guid.Parse(courseGroupsDataGridView.CurrentRow.Cells["CourseId"].Value.ToString());
             showAttendanceForm.Show();
         };
 
@@ -182,13 +186,20 @@ public class CourseGroupsBuilder : IPageBuilder
             string courseGroupNameFilter = courseGroupNameTextBox.Text.Trim().ToLower();
             string courseGroupQuotaFilter = courseGroupQuotaTextBox.Text.Trim().ToLower();
 
-            var bs = (BindingSource)courseGroupsDataGridView.DataSource;
-            bs.DataSource = courseGroups.Where(c =>
-                (string.IsNullOrEmpty(courseNameFilter) || c.Course.CourseName.ToLower().Contains(courseNameFilter)) ||
-                (string.IsNullOrEmpty(courseGroupNameFilter) || c.GroupName.ToLower().Contains(courseGroupNameFilter)) ||
-                (string.IsNullOrEmpty(courseGroupQuotaFilter) || c.Quota.Equals(courseGroupQuotaFilter))
-            ).ToList();
+            bs = (BindingSource)courseGroupsDataGridView.DataSource;
 
+            IEnumerable<GetListCourseGroupsResponse> filtered = courseGroups;
+
+            if (!string.IsNullOrEmpty(courseNameFilter))
+                filtered = filtered.Where(c => c.Course.CourseName.ToLower().Contains(courseNameFilter));
+
+            if (!string.IsNullOrEmpty(courseGroupNameFilter))
+                filtered = filtered.Where(c => c.GroupName.ToLower().Contains(courseGroupNameFilter));
+
+            if (!string.IsNullOrEmpty(courseGroupQuotaFilter))
+                filtered = filtered.Where(c => c.Quota.Equals(courseGroupQuotaFilter));
+
+            bs.DataSource = filtered.ToList();
             bs.ResetBindings(false);
         }
 

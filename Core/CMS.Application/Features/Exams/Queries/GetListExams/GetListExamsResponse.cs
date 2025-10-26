@@ -1,4 +1,6 @@
-﻿namespace CMS.Application.Features.Exams.Queries.GetListExams
+﻿using CMS.Domain.Entities;
+
+namespace CMS.Application.Features.Exams.Queries.GetListExams
 {
     public class GetListExamsResponse
     {
@@ -6,5 +8,6 @@
         public string ExamName { get; set; }
         public DateTime ExamDate { get; set; }
         public int MaxScore { get; set; }
+        public Course Course { get; set; }
     }
 }

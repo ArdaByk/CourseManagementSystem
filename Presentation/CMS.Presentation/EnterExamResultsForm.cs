@@ -1,5 +1,11 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.Attendances.Commands.Create;
+using CMS.Application.Features.ExamResults.Commands.Create;
+using CMS.Application.Features.StudentCourses.Queries.GetListStudentsByCourseGroupId;
+using CMS.Application.Features.StudentCourses.Queries.GetListStudentsByCourseId;
+using CMS.Domain.Entities;
+using MaterialSkin;
 using MaterialSkin.Controls;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,17 +21,14 @@ namespace CMS.Presentation
 {
     public partial class EnterExamResultsForm : MaterialForm
     {
-        private List<User> students;
-        public EnterExamResultsForm()
+        private readonly IMediator mediator;
+        public Guid ExamId;
+        public Guid CourseId;
+        private DataGridView studentsDataGridView;
+        private ICollection<GetListStudentsByCourseIdResponse> students;
+        public EnterExamResultsForm(IMediator mediator)
         {
             InitializeComponent();
-
-            this.students = new List<User>
-        {
-            new User { Id = 123424234, FirstName = "Ahmet", LastName = "Yılmaz", Email = "ahmet@example.com" },
-            new User { Id = 123424234, FirstName = "Ayşe", LastName = "Demir", Email = "ayse@example.com" },
-            new User { Id = 123424234, FirstName = "Mehmet", LastName = "Can", Email = "mehmet@example.com" }
-        };
 
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
@@ -33,6 +36,8 @@ namespace CMS.Presentation
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey900, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
 
             this.FormBorderStyle = FormBorderStyle.None;
+
+            this.mediator = mediator;
 
         }
 
@@ -66,9 +71,11 @@ namespace CMS.Presentation
             this.Region = new Region(path);
         }
 
-        private void EnterExamResultsForm_Load(object sender, EventArgs e)
+        private async void EnterExamResultsForm_Load(object sender, EventArgs e)
         {
-            var dataGridView = new DataGridView
+            this.students = await mediator.Send(new GetListStudentsByCourseIdQuery { Id = CourseId });
+
+            studentsDataGridView = new DataGridView
             {
                 Name = "studentsDataGridView",
                 BackgroundColor = Color.FromArgb(30, 30, 30),
@@ -89,21 +96,38 @@ namespace CMS.Presentation
             noteTxt.Width = 50;
             noteTxt.ReadOnly = false;
 
-            dataGridView.Columns.Add(noteTxt);
+            studentsDataGridView.Columns.Add(noteTxt);
 
             BindingSource bs = new BindingSource { DataSource = students };
-            dataGridView.DataSource = bs;
+            studentsDataGridView.DataSource = bs;
             bs.ResetBindings(false);
 
-            dataGridView.DataBindingComplete += (s, e) =>
+            studentsDataGridView.DataBindingComplete += (s, e) =>
             {
-                dataGridView.Columns["Id"].HeaderText = "ID";
-                dataGridView.Columns["FirstName"].HeaderText = "Adı";
-                dataGridView.Columns["LastName"].HeaderText = "Soyadı";
+                studentsDataGridView.Columns["Id"].Visible = false;
+                studentsDataGridView.Columns["NationalId"].HeaderText = "TC Kimlik NO";
+                studentsDataGridView.Columns["FirstName"].HeaderText = "Adı";
+                studentsDataGridView.Columns["LastName"].HeaderText = "Soyadı";
+                studentsDataGridView.Columns["Phone"].HeaderText = "Telefon Numarası";
             };
 
             examResultsPanel.BackColor = Color.Transparent;
-            examResultsPanel.Controls.Add(dataGridView);
+            examResultsPanel.Controls.Add(studentsDataGridView);
+        }
+
+        private async void saveResultsBtn_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in studentsDataGridView.Rows)
+            {
+                CreateExamResultCommand examResult = new CreateExamResultCommand();
+                examResult.StudentId = Guid.Parse(row.Cells["Id"].Value.ToString());
+                examResult.ExamId = ExamId;
+                examResult.Score = Convert.ToInt32(row.Cells["score"].Value);
+
+                CreateExamResultResponse result = await mediator.Send(examResult);
+
+                MessageBox.Show("Sınav notları kaydedildi.");
+            }
         }
     }
 }

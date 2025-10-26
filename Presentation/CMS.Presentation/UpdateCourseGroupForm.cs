@@ -134,8 +134,7 @@ namespace CMS.Presentation
             courseComboBox.DataSource = courses;
             courseComboBox.DisplayMember = "CourseName";
             courseComboBox.ValueMember = "Id";
-            courseComboBox.SelectedIndex = 0;
-
+            
             classComboBox.Items.Clear();
             classComboBox.DataSource = classes;
             classComboBox.DisplayMember = "ClassName";

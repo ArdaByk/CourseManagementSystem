@@ -1,6 +1,8 @@
 ﻿using CMS.Application.Features.Classes.Commands.Delete;
 using CMS.Application.Features.Classes.Queries.GetListClasses;
+using CMS.Application.Features.CourseGroups.Queries.GetListCourseGroups;
 using CMS.Application.Features.Courses.Queries.GetListTeachers;
+using CMS.Domain.Entities;
 using MaterialSkin.Controls;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -149,11 +151,17 @@ public class ClassesPageBuilder : IPageBuilder
             string classNameFilter = classNameTextBox.Text.Trim().ToLower();
             string classCapacityFilter = classCapacityTextBox.Text.Trim().ToLower();
 
-            var bs = (BindingSource)classesDataGridView.DataSource;
-            bs.DataSource = classes.Where(t =>
-                (string.IsNullOrEmpty(classNameFilter) || t.ClassName.ToLower().Contains(classNameFilter))
-            ).ToList();
+            bs = (BindingSource)classesDataGridView.DataSource;
 
+            IEnumerable<GetListClassesResponse> filtered = classes;
+
+            if (!string.IsNullOrEmpty(classNameFilter))
+                filtered = filtered.Where(c => c.ClassName.ToLower().Contains(classNameFilter));
+
+            if (!string.IsNullOrEmpty(classCapacityFilter))
+                filtered = filtered.Where(c => c.Capacity.Equals(classCapacityFilter));
+
+            bs.DataSource = filtered.ToList();
             bs.ResetBindings(false);
         }
 

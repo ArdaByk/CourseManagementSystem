@@ -149,12 +149,23 @@ public class TeachersPageBuilder : IPageBuilder
             string firstNameFilter = firstNameTextBox.Text.Trim().ToLower();
             string lastNameFilter = lastNameTextBox.Text.Trim().ToLower();
 
-            var bs = (BindingSource)teachersDataGridView.DataSource;
-            bs.DataSource = teachers.Where(t =>
-                (string.IsNullOrEmpty(firstNameFilter) || t.FirstName.ToLower().Contains(firstNameFilter)) &&
-                (string.IsNullOrEmpty(lastNameFilter) || t.LastName.ToLower().Contains(lastNameFilter))
-            ).ToList();
+            bs = (BindingSource)teachersDataGridView.DataSource;
 
+            IEnumerable<GetListTeacherResponse> filtered = teachers;
+
+            if (!string.IsNullOrEmpty(firstNameFilter))
+                filtered = filtered.Where(t => t.FirstName.ToLower().Contains(firstNameFilter));
+
+            if (!string.IsNullOrEmpty(lastNameFilter))
+                filtered = filtered.Where(t => t.LastName.ToLower().Contains(lastNameFilter));
+
+            if (teacherStatusComboBox.SelectedItem != null)
+            {
+                char genderFilter = teacherStatusComboBox.SelectedItem.ToString() == "Aktif" ? 'A' : 'P';
+                filtered = filtered.Where(t => t.Status == genderFilter);
+            }
+
+            bs.DataSource = filtered.ToList();
             bs.ResetBindings(false);
         }
 

@@ -1,5 +1,7 @@
-﻿using CMS.Application.Features.Exams.Commands.Delete;
+﻿using CMS.Application.Features.Courses.Queries.GetListTeachers;
+using CMS.Application.Features.Exams.Commands.Delete;
 using CMS.Application.Features.Exams.Queries.GetListExams;
+using CMS.Domain.Entities;
 using MaterialSkin.Controls;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -125,13 +127,16 @@ public class ExamsPageBuilder : IPageBuilder
 
         showExamResultsBtn.MouseClick += (o, e) =>
         {
-            ShowExamResultsForm showExamResultsForm = new ShowExamResultsForm();
+            ShowExamResultsForm showExamResultsForm = serviceProvider.GetRequiredService<ShowExamResultsForm>();
+            showExamResultsForm.ExamId = Guid.Parse(examsDataGridView.CurrentRow.Cells["Id"].Value.ToString());
             showExamResultsForm.Show();
         };
 
         enterExamResultsBtn.MouseClick += (o, e) =>
         {
-            EnterExamResultsForm enterExamResultsForm = new EnterExamResultsForm();
+            EnterExamResultsForm enterExamResultsForm = serviceProvider.GetRequiredService<EnterExamResultsForm>();
+            enterExamResultsForm.CourseId = Guid.Parse(examsDataGridView.CurrentRow.Cells["CourseId"].Value.ToString());
+            enterExamResultsForm.ExamId = Guid.Parse(examsDataGridView.CurrentRow.Cells["Id"].Value.ToString());
             enterExamResultsForm.Show();
         };
 
@@ -156,11 +161,14 @@ public class ExamsPageBuilder : IPageBuilder
         {
             string examNameFilter = examNameTextBox.Text.Trim().ToLower();
 
-            var bs = (BindingSource)examsDataGridView.DataSource;
-            bs.DataSource = exams.Where(t =>
-                (string.IsNullOrEmpty(examNameFilter) || t.ExamName.ToLower().Contains(examNameFilter))
-            ).ToList();
+            bs = (BindingSource)examsDataGridView.DataSource;
 
+            IEnumerable<GetListExamsResponse> filtered = exams;
+
+            if (!string.IsNullOrEmpty(examNameFilter))
+                filtered = filtered.Where(e => e.ExamName.ToLower().Contains(examNameFilter));
+
+            bs.DataSource = filtered.ToList();
             bs.ResetBindings(false);
         }
 
@@ -190,7 +198,7 @@ public class ExamsPageBuilder : IPageBuilder
 
     private DataGridView CreateExamsDataGridView(ICollection<GetListExamsResponse> exams)
     {
-        var dataGridView = new DataGridView
+        examsDataGridView = new DataGridView
         {
             Name = "examsDatGridView",
             BackgroundColor = Color.FromArgb(30, 30, 30),
@@ -205,30 +213,33 @@ public class ExamsPageBuilder : IPageBuilder
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         };
 
-        bs = new BindingSource { DataSource = exams };
-        dataGridView.DataSource = bs;
+        bs = new BindingSource { DataSource = exams.Select(e => new {e.Id, CourseId= e.Course.Id, e.ExamName, e.Course.CourseName, e.ExamDate}).ToList() };
+        examsDataGridView.DataSource = bs;
         bs.ResetBindings(false);
 
-        dataGridView.DataBindingComplete += (s, e) =>
+        examsDataGridView.DataBindingComplete += (s, e) =>
         {
-            dataGridView.Columns["Id"].HeaderText = "ID";
-            dataGridView.Columns["ExamName"].HeaderText = "Sınav Adı";
+            examsDataGridView.Columns["Id"].Visible = false;
+            examsDataGridView.Columns["CourseId"].Visible = false;
+            examsDataGridView.Columns["ExamName"].HeaderText = "Sınav Adı";
+            examsDataGridView.Columns["CourseName"].HeaderText = "Kurs Adı";
+            examsDataGridView.Columns["ExamDate"].HeaderText = "Tarihi";
         };
 
-        return dataGridView;
+        return examsDataGridView;
     }
 
     public async void addExamForm_NewExamAdded(object o, EventArgs e)
     {
         this.exams = await mediator.Send(new GetListExamsQuery());
-        bs.DataSource = this.exams;
+        bs.DataSource = this.exams.Select(e => new { e.Id, CourseId = e.Course.Id, e.ExamName, e.Course.CourseName, e.ExamDate }).ToList();
         bs.ResetBindings(false);
     }
 
     public async void updateExamForm_ExamUpdated(object o, EventArgs e)
     {
         this.exams = await mediator.Send(new GetListExamsQuery());
-        bs.DataSource = this.exams;
+        bs.DataSource = this.exams.Select(e => new { e.Id, CourseId = e.Course.Id, e.ExamName, e.Course.CourseName, e.ExamDate }).ToList();
         bs.ResetBindings(false);
     }
 }

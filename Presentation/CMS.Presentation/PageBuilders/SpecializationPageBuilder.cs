@@ -1,4 +1,5 @@
-﻿using CMS.Application.Features.Specializations.Commands.Delete;
+﻿using CMS.Application.Features.Courses.Queries.GetListTeachers;
+using CMS.Application.Features.Specializations.Commands.Delete;
 using CMS.Application.Features.Specializations.Queries.GetListSpecializations;
 using CMS.Application.Features.Students.Queries.GetListStudents;
 using CMS.Domain.Entities;
@@ -144,11 +145,14 @@ public class SpecializationPageBuilder : IPageBuilder
         {
             string specializationNameFilter = specializationNameTextBox.Text.Trim().ToLower();
 
-            var bs = (BindingSource)specializationsDataGridView.DataSource;
-            bs.DataSource = specializations.Where(t =>
-                (string.IsNullOrEmpty(specializationNameFilter) || t.SpecializationName.ToLower().Contains(specializationNameFilter))
-            ).ToList();
+            bs = (BindingSource)specializationsDataGridView.DataSource;
 
+            IEnumerable<GetListSpecializationsResponse> filtered = specializations;
+
+            if (!string.IsNullOrEmpty(specializationNameFilter))
+                filtered = filtered.Where(s => s.SpecializationName.ToLower().Contains(specializationNameFilter));
+
+            bs.DataSource = filtered.ToList();
             bs.ResetBindings(false);
         }
 

@@ -7,4 +7,5 @@ public class GetListStudentResponse
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public char Status { get; set; }
+    public char Gender { get; set; }
 }

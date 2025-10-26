@@ -1,4 +1,5 @@
 ﻿using CMS.Application.Features.Classes.Commands.Delete;
+using CMS.Application.Features.Classes.Queries.GetListClasses;
 using CMS.Application.Features.Users.Commands.Delete;
 using CMS.Application.Features.Users.Queries.GetListUsers;
 using CMS.Domain.Entities;
@@ -157,11 +158,22 @@ public class UsersPageBuilder : IPageBuilder
             string fullNameFilter = fullNameTextBox.Text.Trim().ToLower();
 
             bs = (BindingSource)usersDataGridView.DataSource;
-            bs.DataSource = users.Where(t =>
-                (string.IsNullOrEmpty(userNameFilter) || t.Username.ToLower().Contains(userNameFilter)) ||
-                (string.IsNullOrEmpty(fullNameFilter) || t.FullName.ToLower().Contains(fullNameFilter))
-            ).ToList();
 
+            IEnumerable<GetListUsersResponse> filtered = users;
+
+            if (!string.IsNullOrEmpty(userNameFilter))
+                filtered = filtered.Where(u => u.Username.ToLower().Contains(userNameFilter));
+
+            if (!string.IsNullOrEmpty(fullNameFilter))
+                filtered = filtered.Where(u => u.FullName.ToLower().Contains(fullNameFilter));
+
+            if (rolesComboBox.SelectedItem != null)
+            {
+                string roleFilter = rolesComboBox.SelectedItem.ToString();
+                filtered = filtered.Where(u => u.Role.RoleName == roleFilter);
+            }
+
+            bs.DataSource = filtered.ToList();
             bs.ResetBindings(false);
         }
 

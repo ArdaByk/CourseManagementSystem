@@ -1,5 +1,11 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.Attendances.Commands.Create;
+using CMS.Application.Features.Attendances.Commands.Update;
+using CMS.Application.Features.Attendances.Queries.GetListAttendancesByCourseGroupId;
+using CMS.Application.Features.StudentCourses.Queries.GetListStudentsByCourseGroupId;
+using CMS.Domain.Entities;
+using MaterialSkin;
 using MaterialSkin.Controls;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,17 +21,14 @@ namespace CMS.Presentation
 {
     public partial class ShowAttendanceForm : MaterialForm
     {
-        private List<User> students;
-        public ShowAttendanceForm()
+        private readonly IMediator mediator;
+        public Guid CourseGroupId;
+        public Guid CourseId;
+        private List<DataGridView> dataGridViews;
+        private ICollection<GetListAttendancesByCourseGroupIdResponse> students;
+        public ShowAttendanceForm(IMediator mediator)
         {
             InitializeComponent();
-
-            this.students = new List<User>
-        {
-            new User { Id = 123424234, FirstName = "Ahmet", LastName = "Yılmaz", Email = "ahmet@example.com" },
-            new User { Id = 123424234, FirstName = "Ayşe", LastName = "Demir", Email = "ayse@example.com" },
-            new User { Id = 123424234, FirstName = "Mehmet", LastName = "Can", Email = "mehmet@example.com" }
-        };
 
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
@@ -33,6 +36,9 @@ namespace CMS.Presentation
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey900, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
 
             this.FormBorderStyle = FormBorderStyle.None;
+            dataGridViews = new List<DataGridView>();
+
+            this.mediator = mediator;
 
         }
 
@@ -66,9 +72,28 @@ namespace CMS.Presentation
             this.Region = new Region(path);
         }
 
-        private void ShowAttendanceForm_Load(object sender, EventArgs e)
+        private async void ShowAttendanceForm_Load(object sender, EventArgs e)
         {
-            var dataGridView = new DataGridView
+            students = await mediator.Send(new GetListAttendancesByCourseGroupIdQuery { Id = CourseGroupId });
+
+            foreach (var studentGroup in students)
+            {
+                GroupBox groupBox = new GroupBox();
+                groupBox.Text = studentGroup.Key + " tarihli yoklama";
+                groupBox.Width = 1231;
+                groupBox.Height = 500;
+
+                groupBox.Controls.Add(CreateDataGridView(studentGroup.Students));
+
+                mainPanel.Controls.Add(groupBox);
+
+            }
+
+        }
+
+        private DataGridView CreateDataGridView(ICollection<GetListAttendancesByCourseGroupIdGroupDto> studentGroup)
+        {
+            var studentsDataGridView = new DataGridView
             {
                 Name = "studentsDataGridView",
                 BackgroundColor = Color.FromArgb(30, 30, 30),
@@ -83,30 +108,56 @@ namespace CMS.Presentation
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
 
-            BindingSource bs = new BindingSource { DataSource = students };
-            dataGridView.DataSource = bs;
+            BindingSource bs = new BindingSource { DataSource = studentGroup };
+            studentsDataGridView.DataSource = bs;
             bs.ResetBindings(false);
 
-            dataGridView.DataBindingComplete += (s, e) =>
+            studentsDataGridView.DataBindingComplete += (s, e) =>
             {
-                dataGridView.Columns["Id"].HeaderText = "ID";
-                dataGridView.Columns["FirstName"].HeaderText = "Adı";
-                dataGridView.Columns["LastName"].HeaderText = "Soyadı";
-                dataGridView.Columns["Email"].HeaderText = "Telefon Numarası";
+                studentsDataGridView.Columns["Id"].Visible = false;
+                studentsDataGridView.Columns["StudentId"].Visible = false;
+                studentsDataGridView.Columns["NationalId"].HeaderText = "TC Kimlik NO";
+                studentsDataGridView.Columns["FirstName"].HeaderText = "Adı";
+                studentsDataGridView.Columns["LastName"].HeaderText = "Soyadı";
+                studentsDataGridView.Columns["Phone"].HeaderText = "Telefon Numarası";
+                studentsDataGridView.Columns["Status"].HeaderText = "İşlem";
             };
 
-            DataGridViewCheckBoxColumn chk = new DataGridViewCheckBoxColumn();
-            chk.HeaderText = "İşlem";
-            chk.Name = "attendance";
-            chk.Width = 50;
-            chk.ReadOnly = false;
-            chk.TrueValue = true;
-            chk.FalseValue = false;
-
-            dataGridView.Columns.Add(chk);
-
             mainPanel.BackColor = Color.Transparent;
-            studentsPanel.Controls.Add(dataGridView);
+
+            dataGridViews.Add(studentsDataGridView);
+
+            return studentsDataGridView;
+        }
+
+        private async void saveAttendanceBtn_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridView dgv in dataGridViews)
+            {
+                foreach (DataGridViewRow row in dgv.Rows)
+                {
+                    UpdateAttendanceCommand attendance = new UpdateAttendanceCommand();
+                    attendance.StudentId = Guid.Parse(row.Cells["StudentId"].Value.ToString());
+                    attendance.CourseGroupId = CourseGroupId;
+                    attendance.CourseId = CourseId;
+                    attendance.Id = Guid.Parse(row.Cells["Id"].Value.ToString());
+
+                    bool isSelected = Convert.ToBoolean(row.Cells["Status"].Value);
+                    if (isSelected)
+                    {
+                        attendance.Status = true;
+                    }
+                    else
+                    {
+                        attendance.Status = false;
+                    }
+
+                    UpdateAttendanceResponse result = await mediator.Send(attendance);
+
+                    MessageBox.Show("Yoklama kaydedildi.");
+                }
+
+            }
         }
     }
 }

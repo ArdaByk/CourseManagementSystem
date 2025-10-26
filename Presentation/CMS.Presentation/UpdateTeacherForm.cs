@@ -78,6 +78,7 @@ namespace CMS.Presentation
             teacherSalaryTypeComboBox.SelectedIndex = 0;
             teacherStatusSwitch.Checked = teacher.Status == 'A' ? true : false;
             teacherEmailTxt.Text = teacher.Email;
+            teacherSalaryTypeComboBox.SelectedIndex = teacher.SalaryType == "Aylık Maaş" ? 0 : 1;
 
             var teacherSpecializationIds = teacher.TeacherSpecializations
                 .Select(ts => ts.SpecializationId)

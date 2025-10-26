@@ -149,17 +149,36 @@ public class StudentPageBuilder : IPageBuilder
 
         void ApplyFilter()
         {
-            string idFilter = nationalIDTextBox.Text.Trim();
+            string nationalIdFilter = nationalIDTextBox.Text.Trim();
             string firstNameFilter = firstNameTextBox.Text.Trim().ToLower();
             string lastNameFilter = lastNameTextBox.Text.Trim().ToLower();
 
-            var bs = (BindingSource)studentsDataGridView.DataSource;
-            bs.DataSource = students.Where(s =>
-                (string.IsNullOrEmpty(idFilter) || s.Id.Equals(idFilter)) &&
-                (string.IsNullOrEmpty(firstNameFilter) || s.FirstName.ToLower().Contains(firstNameFilter)) &&
-                (string.IsNullOrEmpty(lastNameFilter) || s.LastName.ToLower().Contains(lastNameFilter))
-            ).ToList();
+            bs = (BindingSource)studentsDataGridView.DataSource;
 
+            IEnumerable<GetListStudentResponse> filtered = students;
+
+            if (!string.IsNullOrEmpty(nationalIdFilter))
+                filtered = filtered.Where(s => s.NationalId.Contains(nationalIdFilter));
+
+            if (!string.IsNullOrEmpty(firstNameFilter))
+                filtered = filtered.Where(s => s.FirstName.ToLower().Contains(firstNameFilter));
+
+            if (!string.IsNullOrEmpty(lastNameFilter))
+                filtered = filtered.Where(s => s.LastName.ToLower().Contains(lastNameFilter));
+
+            if (genderComboBox.SelectedItem != null)
+            {
+                char genderFilter = genderComboBox.SelectedItem.ToString() == "Erkek" ? 'E' : 'K';
+                filtered = filtered.Where(s => s.Gender == genderFilter);
+            }
+
+            if (studentStatusComboBox.SelectedItem != null)
+            {
+                char statusFilter = studentStatusComboBox.SelectedItem.ToString() == "Aktif" ? 'A' : 'P';
+                filtered = filtered.Where(s => s.Status == statusFilter);
+            }
+
+            bs.DataSource = filtered.ToList();
             bs.ResetBindings(false);
         }
 

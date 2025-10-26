@@ -63,8 +63,6 @@ public class RolesPageBuilder : IPageBuilder
 
         updateRoleBtn.MouseClick += (o, e) =>
         {
-            ShowAttendanceForm showAttendanceForm = new ShowAttendanceForm();
-            showAttendanceForm.Show();
         };
 
         deleteRoleBtn.MouseClick += (o, e) =>

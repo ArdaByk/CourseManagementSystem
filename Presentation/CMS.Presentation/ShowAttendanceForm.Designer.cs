@@ -29,40 +29,17 @@
         private void InitializeComponent()
         {
             mainPanel = new Panel();
-            dateGroupBox = new GroupBox();
-            studentsPanel = new Panel();
             saveAttendanceBtn = new MaterialSkin.Controls.MaterialButton();
-            mainPanel.SuspendLayout();
-            dateGroupBox.SuspendLayout();
             SuspendLayout();
             // 
             // mainPanel
             // 
             mainPanel.AutoScroll = true;
-            mainPanel.Controls.Add(dateGroupBox);
             mainPanel.Dock = DockStyle.Fill;
             mainPanel.Location = new Point(3, 64);
             mainPanel.Name = "mainPanel";
             mainPanel.Size = new Size(1231, 817);
             mainPanel.TabIndex = 0;
-            // 
-            // dateGroupBox
-            // 
-            dateGroupBox.Controls.Add(studentsPanel);
-            dateGroupBox.Location = new Point(12, 14);
-            dateGroupBox.Name = "dateGroupBox";
-            dateGroupBox.Size = new Size(1206, 282);
-            dateGroupBox.TabIndex = 0;
-            dateGroupBox.TabStop = false;
-            dateGroupBox.Text = "xxxx Tarihli Yoklama";
-            // 
-            // studentsPanel
-            // 
-            studentsPanel.Dock = DockStyle.Fill;
-            studentsPanel.Location = new Point(3, 19);
-            studentsPanel.Name = "studentsPanel";
-            studentsPanel.Size = new Size(1200, 260);
-            studentsPanel.TabIndex = 0;
             // 
             // saveAttendanceBtn
             // 
@@ -83,6 +60,7 @@
             saveAttendanceBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             saveAttendanceBtn.UseAccentColor = false;
             saveAttendanceBtn.UseVisualStyleBackColor = true;
+            saveAttendanceBtn.Click += saveAttendanceBtn_Click;
             // 
             // ShowAttendanceForm
             // 
@@ -95,8 +73,6 @@
             Name = "ShowAttendanceForm";
             Text = "Yoklama Kayıtları";
             Load += ShowAttendanceForm_Load;
-            mainPanel.ResumeLayout(false);
-            dateGroupBox.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -104,8 +80,6 @@
         #endregion
 
         private Panel mainPanel;
-        private GroupBox dateGroupBox;
         private MaterialSkin.Controls.MaterialButton saveAttendanceBtn;
-        private Panel studentsPanel;
     }
 }

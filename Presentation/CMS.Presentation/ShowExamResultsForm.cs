@@ -1,5 +1,9 @@
-﻿using MaterialSkin;
+﻿using CMS.Application.Features.ExamResults.Queries.GetListExamResultsByExamId;
+using CMS.Application.Features.StudentCourses.Queries.GetListStudentsByCourseGroupId;
+using MaterialSkin;
 using MaterialSkin.Controls;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,25 +19,20 @@ namespace CMS.Presentation
 {
     public partial class ShowExamResultsForm : MaterialForm
     {
-        private List<User> students;
-        public ShowExamResultsForm()
+        public Guid ExamId { get; set; }
+        private readonly IMediator mediator;
+        private ICollection<GetListExamResultsByExamIdResponse> examResults;
+        private DataGridView examsDataGridView;
+        public ShowExamResultsForm(IServiceProvider serviceProvider)
         {
             InitializeComponent();
-
-            this.students = new List<User>
-        {
-            new User { Id = 123424234, FirstName = "Ahmet", LastName = "Yılmaz", Email = "ahmet@example.com" },
-            new User { Id = 123424234, FirstName = "Ayşe", LastName = "Demir", Email = "ayse@example.com" },
-            new User { Id = 123424234, FirstName = "Mehmet", LastName = "Can", Email = "mehmet@example.com" }
-        };
-
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey900, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
 
             this.FormBorderStyle = FormBorderStyle.None;
-
+            this.mediator = serviceProvider.GetRequiredService<IMediator>();
         }
 
         protected override CreateParams CreateParams
@@ -66,8 +65,10 @@ namespace CMS.Presentation
             this.Region = new Region(path);
         }
 
-        private void ShowExamResultsForm_Load(object sender, EventArgs e)
+        private async void ShowExamResultsForm_Load(object sender, EventArgs e)
         {
+            this.examResults = await mediator.Send(new GetListExamResultsByExamIdQuery { Id = ExamId});
+
             var dataGridView = new DataGridView
             {
                 Name = "studentsDataGridView",
@@ -83,16 +84,19 @@ namespace CMS.Presentation
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
 
-            BindingSource bs = new BindingSource { DataSource = students };
+            BindingSource bs = new BindingSource { DataSource = examResults.Select(er => new {er.Id, er.Student.NationalId, er.Student.FirstName, er.Student.LastName, er.Student.Phone, er.Score, er.Grade}).ToList() };
             dataGridView.DataSource = bs;
             bs.ResetBindings(false);
 
             dataGridView.DataBindingComplete += (s, e) =>
             {
-                dataGridView.Columns["Id"].HeaderText = "ID";
+                dataGridView.Columns["Id"].Visible = false;
+                dataGridView.Columns["NationalId"].HeaderText = "TC Kimlik NO";
                 dataGridView.Columns["FirstName"].HeaderText = "Adı";
                 dataGridView.Columns["LastName"].HeaderText = "Soyadı";
-                dataGridView.Columns["Email"].HeaderText = "Telefon Numarası";
+                dataGridView.Columns["Phone"].HeaderText = "Telefon Numarası";
+                dataGridView.Columns["Score"].HeaderText = "Puanı";
+                dataGridView.Columns["Grade"].HeaderText = "Durumu";
             };
 
             examResultsPanel.BackColor = Color.Transparent;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ public class GetListExamsQuery : IRequest<ICollection<GetListExamsResponse>>
 
         public async Task<ICollection<GetListExamsResponse>> Handle(GetListExamsQuery request, CancellationToken cancellationToken)
         {
-            ICollection<GetListExamsResponse> exams = mapper.Map<ICollection<GetListExamsResponse>>(await examService.GetListAsync(enableTracking: false, cancellationToken: cancellationToken));
+            ICollection<GetListExamsResponse> exams = mapper.Map<ICollection<GetListExamsResponse>>(await examService.GetListAsync(enableTracking: false, include: e => e.Include(e => e.Course) ,cancellationToken: cancellationToken));
 
             return exams;
         }

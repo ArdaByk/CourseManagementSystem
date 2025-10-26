@@ -59,6 +59,7 @@
             saveResultsBtn.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             saveResultsBtn.UseAccentColor = false;
             saveResultsBtn.UseVisualStyleBackColor = true;
+            saveResultsBtn.Click += saveResultsBtn_Click;
             // 
             // EnterExamResultsForm
             // 

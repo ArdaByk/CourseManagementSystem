@@ -230,7 +230,7 @@
             teacherSalaryTypeComboBox.Hint = "Maaş Tipi";
             teacherSalaryTypeComboBox.IntegralHeight = false;
             teacherSalaryTypeComboBox.ItemHeight = 43;
-            teacherSalaryTypeComboBox.Items.AddRange(new object[] { "Aylık Maaş", "Saatlik Ücret", "Ders Başına Ücret" });
+            teacherSalaryTypeComboBox.Items.AddRange(new object[] { "Aylık Maaş", "Saatlik Ücret" });
             teacherSalaryTypeComboBox.Location = new Point(16, 378);
             teacherSalaryTypeComboBox.MaxDropDownItems = 4;
             teacherSalaryTypeComboBox.MouseState = MaterialSkin.MouseState.OUT;

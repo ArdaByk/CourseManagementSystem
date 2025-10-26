@@ -1,5 +1,7 @@
-﻿using CMS.Application.Features.Courses.Commands.Delete;
+﻿using CMS.Application.Features.Classes.Queries.GetListClasses;
+using CMS.Application.Features.Courses.Commands.Delete;
 using CMS.Application.Features.Courses.Queries.GetListTeachers;
+using CMS.Domain.Entities;
 using MaterialSkin.Controls;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -154,11 +156,20 @@ public class CoursesPageBuilder : IPageBuilder
         {
             string courseNameFilter = courseNameTextBox.Text.Trim().ToLower();
 
-            var bs = (BindingSource)coursesDataGridView.DataSource;
-            bs.DataSource = courses.Where(c =>
-                (string.IsNullOrEmpty(courseNameFilter) || c.CourseName.ToLower().Contains(courseNameFilter))
-            ).ToList();
+            bs = (BindingSource)coursesDataGridView.DataSource;
 
+            IEnumerable<GetListCoursesResponse> filtered = courses;
+
+            if (!string.IsNullOrEmpty(courseNameFilter))
+                filtered = filtered.Where(c => c.CourseName.ToLower().Contains(courseNameFilter));
+
+            if (courseStatusComboBox.SelectedItem != null)
+            {
+                char statusFilter = courseStatusComboBox.SelectedItem.ToString().Equals("Aktif") ? 'A' : 'P';
+                filtered = filtered.Where(c => c.Status == statusFilter);
+            }
+
+            bs.DataSource = filtered.ToList();
             bs.ResetBindings(false);
         }
 
