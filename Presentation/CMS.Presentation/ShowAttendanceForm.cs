@@ -76,19 +76,24 @@ namespace CMS.Presentation
         {
             students = await mediator.Send(new GetListAttendancesByCourseGroupIdQuery { Id = CourseGroupId });
 
+            int yOffset = 10;
+
             foreach (var studentGroup in students)
             {
                 GroupBox groupBox = new GroupBox();
                 groupBox.Text = studentGroup.Key + " tarihli yoklama";
-                groupBox.Width = 1231;
+                groupBox.Width = 1200;
                 groupBox.Height = 500;
+                groupBox.Left = 10;
+                groupBox.Top = yOffset;
+                groupBox.ForeColor = Color.White;
 
                 groupBox.Controls.Add(CreateDataGridView(studentGroup.Students));
 
                 mainPanel.Controls.Add(groupBox);
 
+                yOffset += groupBox.Height + 15;
             }
-
         }
 
         private DataGridView CreateDataGridView(ICollection<GetListAttendancesByCourseGroupIdGroupDto> studentGroup)
@@ -105,7 +110,8 @@ namespace CMS.Presentation
                 RowHeadersDefaultCellStyle = { BackColor = Color.FromArgb(50, 50, 50), ForeColor = Color.White },
                 DefaultCellStyle = { SelectionBackColor = Color.Gray, SelectionForeColor = Color.White },
                 Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                AllowUserToAddRows = false
             };
 
             BindingSource bs = new BindingSource { DataSource = studentGroup };
@@ -153,11 +159,12 @@ namespace CMS.Presentation
                     }
 
                     UpdateAttendanceResponse result = await mediator.Send(attendance);
-
-                    MessageBox.Show("Yoklama kaydedildi.");
                 }
 
             }
+
+            MessageBox.Show("Yoklama kaydedildi.");
+            this.Close();
         }
     }
 }

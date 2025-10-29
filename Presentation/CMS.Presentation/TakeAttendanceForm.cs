@@ -84,7 +84,8 @@ namespace CMS.Presentation
                 RowHeadersDefaultCellStyle = { BackColor = Color.FromArgb(50, 50, 50), ForeColor = Color.White },
                 DefaultCellStyle = { SelectionBackColor = Color.Gray, SelectionForeColor = Color.White },
                 Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                AllowUserToAddRows =false
             };
 
             BindingSource bs = new BindingSource { DataSource = students };
@@ -117,12 +118,14 @@ namespace CMS.Presentation
 
         private async void saveAttendanceBtn_Click(object sender, EventArgs e)
         {
+            var attendanceDate = DateTime.Now;
+
             foreach (DataGridViewRow row in studentsDataGridView.Rows)
             {
                 CreateAttendanceCommand attendance = new CreateAttendanceCommand();
                 attendance.StudentId = Guid.Parse(row.Cells["Id"].Value.ToString());
                 attendance.CourseGroupId = CourseGroupId;
-                attendance.Date = DateTime.UtcNow;
+                attendance.Date = attendanceDate;
                 attendance.CourseId = CourseId;
 
                 bool isSelected = Convert.ToBoolean(row.Cells["attendance"].Value);
@@ -137,8 +140,10 @@ namespace CMS.Presentation
 
                 CreateAttendanceResponse result = await mediator.Send(attendance);
 
-                MessageBox.Show("Yoklama kaydedildi.");
             }
+
+            MessageBox.Show("Yoklama kaydedildi.");
+            this.Close();
         }
     }
 }

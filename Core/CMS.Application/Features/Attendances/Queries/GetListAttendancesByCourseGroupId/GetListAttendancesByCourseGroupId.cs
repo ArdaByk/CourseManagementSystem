@@ -32,7 +32,7 @@ public class GetListAttendancesByCourseGroupIdQuery : IRequest<ICollection<GetLi
            var attendances = await attendanceService.GetListAsync(predicate: a => a.CourseGroupId == request.Id, include: a => a.Include(a => a.Student), enableTracking: false, cancellationToken: cancellationToken);
 
             var attendanceGroup = attendances
-                .GroupBy(a => a.Date.Date)
+                .GroupBy(a => a.Date)
                 .OrderBy(a => a.Key)
                 .Select(a => new GetListAttendancesByCourseGroupIdResponse
                 {

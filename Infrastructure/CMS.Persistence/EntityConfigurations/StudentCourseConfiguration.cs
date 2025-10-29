@@ -23,7 +23,6 @@ public class StudentCourseConfiguration : IEntityTypeConfiguration<StudentCourse
         builder.HasQueryFilter(sc => !sc.DeletedDate.HasValue);
 
         builder.HasIndex(sc => sc.StudentId).IsUnique();
-        builder.HasIndex(sc => sc.CourseGroupId).IsUnique();
 
         builder
            .HasOne(sc => sc.Student)

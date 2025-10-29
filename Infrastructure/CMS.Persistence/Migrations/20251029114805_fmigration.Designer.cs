@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS.Persistence.Migrations
 {
     [DbContext(typeof(CMSDbContext))]
-    [Migration("20251019124231_fmigration")]
+    [Migration("20251029114805_fmigration")]
     partial class fmigration
     {
         /// <inheritdoc />
@@ -67,13 +67,11 @@ namespace CMS.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseGroupId")
-                        .IsUnique();
+                    b.HasIndex("CourseGroupId");
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("StudentId")
-                        .IsUnique();
+                    b.HasIndex("StudentId");
 
                     b.ToTable("Attendances", (string)null);
                 });
@@ -352,11 +350,12 @@ namespace CMS.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExamId")
+                    b.HasIndex("ExamId");
+
+                    b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("StudentId")
-                        .IsUnique();
+                    b.HasIndex("StudentId");
 
                     b.ToTable("ExamResults", (string)null);
                 });
@@ -608,8 +607,7 @@ namespace CMS.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseGroupId")
-                        .IsUnique();
+                    b.HasIndex("CourseGroupId");
 
                     b.HasIndex("CourseId");
 

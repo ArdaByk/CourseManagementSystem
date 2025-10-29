@@ -89,16 +89,19 @@ namespace CMS.Presentation
             if (sunday.Checked)
                 selectedDays.Add(6);
 
+            var parsedStartTime = TimeSpan.Parse(startTimeTxt.Text);
+            var parsedEndTime = TimeSpan.Parse(endTimeTxt.Text);
+
             UpdateCourseGroupCommand updateCourseGroupCommand = new UpdateCourseGroupCommand
             {
                 Id = CourseGroupId,
                 ClassId = Guid.Parse(classComboBox.SelectedValue.ToString()),
                 CourseId = Guid.Parse(courseComboBox.SelectedValue.ToString()),
                 DaysOfWeek = selectedDays,
-                EndedDate = endedDate.Value,
-                StartedDate = startedDate.Value,
-                EndTime = TimeSpan.Parse(endTimeTxt.Text),
-                StartTime = TimeSpan.Parse(startTimeTxt.Text),
+                StartedDate = startedDate.Value.Date + parsedStartTime,
+                EndedDate = endedDate.Value.Date + parsedEndTime,
+                EndTime = parsedEndTime,
+                StartTime = parsedStartTime,
                 GroupName = courseGroupNameTxt.Text,
                 Quota = Convert.ToInt32(CourseGroupQuotaTxt.Text),
                 TeacherId = Guid.Parse(teacherComboBox.SelectedValue.ToString())
@@ -134,12 +137,13 @@ namespace CMS.Presentation
             courseComboBox.DataSource = courses;
             courseComboBox.DisplayMember = "CourseName";
             courseComboBox.ValueMember = "Id";
-            
+            courseComboBox.SelectedValue = courseGroup.Course.Id;
+
             classComboBox.Items.Clear();
             classComboBox.DataSource = classes;
             classComboBox.DisplayMember = "ClassName";
             classComboBox.ValueMember = "Id";
-            classComboBox.SelectedIndex = 0;
+            classComboBox.SelectedValue = courseGroup.Class.Id;
 
             teacherComboBox.Items.Clear();
             teacherComboBox.DataSource = teachers
@@ -151,6 +155,7 @@ namespace CMS.Presentation
                            .ToList();
             teacherComboBox.DisplayMember = "FullName";
             teacherComboBox.ValueMember = "Id";
+            teacherComboBox.SelectedValue = courseGroup.Teacher.Id;
 
             foreach (var courseSchedule in courseGroup.CourseSchedules)
             {

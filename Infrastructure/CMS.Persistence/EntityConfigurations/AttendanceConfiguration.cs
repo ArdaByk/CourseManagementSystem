@@ -27,9 +27,6 @@ public class AttendanceConfiguration : IEntityTypeConfiguration<Attendance>
 
         builder.HasQueryFilter(a => !a.DeletedDate.HasValue);
 
-        builder.HasIndex(a => a.StudentId).IsUnique();
-        builder.HasIndex(a => a.CourseGroupId).IsUnique();
-
 		builder.Property(a => a.Status).HasMaxLength(1);
 
 		builder

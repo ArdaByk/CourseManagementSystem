@@ -389,8 +389,7 @@ namespace CMS.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Attendances_CourseGroupId",
                 table: "Attendances",
-                column: "CourseGroupId",
-                unique: true);
+                column: "CourseGroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attendances_CourseId",
@@ -400,8 +399,7 @@ namespace CMS.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Attendances_StudentId",
                 table: "Attendances",
-                column: "StudentId",
-                unique: true);
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CourseGroups_ClassId",
@@ -426,14 +424,18 @@ namespace CMS.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ExamResults_ExamId",
                 table: "ExamResults",
-                column: "ExamId",
+                column: "ExamId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamResults_Id",
+                table: "ExamResults",
+                column: "Id",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExamResults_StudentId",
                 table: "ExamResults",
-                column: "StudentId",
-                unique: true);
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Exams_CourseId",
@@ -455,8 +457,7 @@ namespace CMS.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_StudentCourses_CourseGroupId",
                 table: "StudentCourses",
-                column: "CourseGroupId",
-                unique: true);
+                column: "CourseGroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentCourses_CourseId",

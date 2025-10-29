@@ -64,13 +64,11 @@ namespace CMS.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseGroupId")
-                        .IsUnique();
+                    b.HasIndex("CourseGroupId");
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("StudentId")
-                        .IsUnique();
+                    b.HasIndex("StudentId");
 
                     b.ToTable("Attendances", (string)null);
                 });
@@ -349,11 +347,12 @@ namespace CMS.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExamId")
+                    b.HasIndex("ExamId");
+
+                    b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("StudentId")
-                        .IsUnique();
+                    b.HasIndex("StudentId");
 
                     b.ToTable("ExamResults", (string)null);
                 });
@@ -605,8 +604,7 @@ namespace CMS.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseGroupId")
-                        .IsUnique();
+                    b.HasIndex("CourseGroupId");
 
                     b.HasIndex("CourseId");
 

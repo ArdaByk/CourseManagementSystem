@@ -20,8 +20,7 @@ public class ExamResultConfiguration : IEntityTypeConfiguration<ExamResult>
 
         builder.HasQueryFilter(er => !er.DeletedDate.HasValue);
 
-		builder.HasIndex(er => er.ExamId).IsUnique();
-        builder.HasIndex(er => er.StudentId).IsUnique();
+		builder.HasIndex(er => er.Id).IsUnique();
 
         builder
            .HasOne(er => er.Exam)
