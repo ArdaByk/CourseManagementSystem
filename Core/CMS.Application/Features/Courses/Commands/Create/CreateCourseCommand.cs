@@ -2,6 +2,7 @@ using AutoMapper;
 using CMS.Application.Abstractions.Services;
 using CMS.Domain.Entities;
 using MediatR;
+using CMS.Application.Features.Courses.Rules;
 
 namespace CMS.Application.Features.Courses.Commands.Create;
 
@@ -18,15 +19,19 @@ public class CreateCourseCommand : IRequest<CreateCourseResponse>
     {
         private readonly ICourseService courseService;
         private readonly IMapper mapper;
+        private readonly CourseBusinessRules _courseBusinessRules;
 
-        public CreateCourseCommandHandler(ICourseService courseService, IMapper mapper)
+        public CreateCourseCommandHandler(ICourseService courseService, IMapper mapper, CourseBusinessRules courseBusinessRules)
         {
             this.courseService = courseService;
             this.mapper = mapper;
+            _courseBusinessRules = courseBusinessRules;
         }
 
         public async Task<CreateCourseResponse> Handle(CreateCourseCommand request, CancellationToken cancellationToken)
         {
+            await _courseBusinessRules.EnsureCourseNameIsUniqueAsync(request.CourseName);
+            _courseBusinessRules.EnsureWeeklyHoursInLimit(request.WeeklyHours);
             Course course = mapper.Map<Course>(request);
             course = await courseService.AddAsync(course);
             return mapper.Map<CreateCourseResponse>(course);

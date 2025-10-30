@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Features.Users.Rules;
 using CMS.Domain.Entities;
 using MediatR;
 using System;
@@ -23,15 +24,19 @@ public class UpdateUserCommand : IRequest<UpdateUserResponse>
     {
         private readonly IUserService userService;
         private readonly IMapper mapper;
+        private readonly UserBusinessRules _userBusinessRules;
 
-        public UpdateUserCommandHandler(IUserService userService, IMapper mapper)
+        public UpdateUserCommandHandler(IUserService userService, IMapper mapper, UserBusinessRules userBusinessRules)
         {
             this.userService = userService;
             this.mapper = mapper;
+            _userBusinessRules = userBusinessRules;
         }
 
         public async Task<UpdateUserResponse> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
+            await _userBusinessRules.EnsureUserExistsAsync(request.Id);
+
             User user = await userService.GetAsync(u => u.Id == request.Id, enableTracking: true, cancellationToken: cancellationToken);
 
             mapper.Map(request, user);

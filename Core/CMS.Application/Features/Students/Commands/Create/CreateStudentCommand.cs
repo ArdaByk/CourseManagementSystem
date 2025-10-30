@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CMS.Application.Features.Students.Rules;
 
 namespace CMS.Application.Features.Students.Commands.Create;
 
@@ -30,15 +31,20 @@ public class CreateStudentCommand: IRequest<CreateStudentResponse>
     {
         private readonly IStudentService studentService;
         private readonly IMapper mapper;
+        private readonly StudentBusinessRules _studentBusinessRules;
 
-        public CreateStudentCommandHandler(IStudentService studentService, IMapper mapper)
+        public CreateStudentCommandHandler(IStudentService studentService, IMapper mapper, StudentBusinessRules studentBusinessRules)
         {
             this.studentService = studentService;
             this.mapper = mapper;
+            _studentBusinessRules = studentBusinessRules;
         }
 
         public async Task<CreateStudentResponse> Handle(CreateStudentCommand request, CancellationToken cancellationToken)
         {
+            await _studentBusinessRules.EnsureNationalIdIsUniqueAsync(request.NationalId);
+            await _studentBusinessRules.EnsureEmailIsUniqueAsync(request.Email);
+
             Student student = mapper.Map<Student>(request);
 
             student = await studentService.AddAsync(student);

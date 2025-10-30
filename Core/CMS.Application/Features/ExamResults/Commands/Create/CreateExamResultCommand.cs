@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Features.ExamResults.Rules;
 using CMS.Domain.Entities;
 using MediatR;
 using System;
@@ -21,15 +22,18 @@ public class CreateExamResultCommand : IRequest<CreateExamResultResponse>
     {
         private readonly IExamResultService examResultService;
         private readonly IMapper mapper;
+        private readonly ExamResultBusinessRules _examResultBusinessRules;
 
-        public CreateExamResultCommandHandler(IExamResultService examResultService, IMapper mapper)
+        public CreateExamResultCommandHandler(IExamResultService examResultService, IMapper mapper, ExamResultBusinessRules examResultBusinessRules)
         {
             this.examResultService = examResultService;
             this.mapper = mapper;
+            _examResultBusinessRules = examResultBusinessRules;
         }
 
         public async Task<CreateExamResultResponse> Handle(CreateExamResultCommand request, CancellationToken cancellationToken)
         {
+            await _examResultBusinessRules.EnsureStudentHasNoExamResultForExamAsync(request.StudentId, request.ExamId);
             ExamResult examResult = mapper.Map<ExamResult>(request);
             
             if(examResult.Score < 50)

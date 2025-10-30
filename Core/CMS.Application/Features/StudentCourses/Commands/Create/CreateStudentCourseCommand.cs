@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
 using CMS.Application.Features.Courses.Commands.Create;
+using CMS.Application.Features.StudentCourses.Rules;
 using CMS.Domain.Entities;
 using MediatR;
 using System;
@@ -24,15 +25,18 @@ public class CreateStudentCourseCommand : IRequest<CreateStudentCourseResponse>
     {
         private readonly IStudentCourseService studentCourseService;
         private readonly IMapper mapper;
+        private readonly StudentCourseBusinessRules _studentCourseBusinessRules;
 
-        public CreateStudentCourseCommandHandler(IStudentCourseService studentCourseService, IMapper mapper)
+        public CreateStudentCourseCommandHandler(IStudentCourseService studentCourseService, IMapper mapper, StudentCourseBusinessRules studentCourseBusinessRules)
         {
             this.studentCourseService = studentCourseService;
             this.mapper = mapper;
+            _studentCourseBusinessRules = studentCourseBusinessRules;
         }
 
         public async Task<CreateStudentCourseResponse> Handle(CreateStudentCourseCommand request, CancellationToken cancellationToken)
         {
+            await _studentCourseBusinessRules.EnsureStudentNotExistsInCourseGroupAsync(request.StudentId, request.CourseGroupId);
             StudentCourse studentCourse = mapper.Map<StudentCourse>(request);
             studentCourse = await studentCourseService.AddAsync(studentCourse);
             return mapper.Map<CreateStudentCourseResponse>(studentCourse);

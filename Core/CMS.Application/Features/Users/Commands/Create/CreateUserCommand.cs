@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
 using CMS.Application.Common.Security.Hashing;
+using CMS.Application.Features.Users.Rules;
 using CMS.Domain.Entities;
 using MediatR;
 using System;
@@ -24,15 +25,20 @@ public class CreateUserCommand : IRequest<CreateUserResponse>
     {
         private readonly IUserService userService;
         private readonly IMapper mapper;
+        private readonly UserBusinessRules _userBusinessRules;
 
-        public CreateUserCommandHandler(IUserService userService, IMapper mapper)
+        public CreateUserCommandHandler(IUserService userService, IMapper mapper, UserBusinessRules userBusinessRules)
         {
             this.userService = userService;
             this.mapper = mapper;
+            _userBusinessRules = userBusinessRules;
         }
 
         public async Task<CreateUserResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
+            await _userBusinessRules.EnsureUsernameIsUniqueAsync(request.Username);
+            await _userBusinessRules.EnsureEmailIsUniqueAsync(request.Email);
+
             User user = mapper.Map<User>(request);
 
             byte[] passwordHash;

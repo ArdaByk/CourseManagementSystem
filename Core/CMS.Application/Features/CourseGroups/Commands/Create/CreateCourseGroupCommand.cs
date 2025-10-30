@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
 using CMS.Application.Features.Courses.Commands.Create;
+using CMS.Application.Features.CourseGroups.Rules;
 using CMS.Domain.Entities;
 using MediatR;
 using System;
@@ -29,16 +30,25 @@ public class CreateCourseGroupCommand : IRequest<CreateCourseGroupResponse>
         private readonly ICourseGroupService courseGroupService;
         private readonly ICourseScheduleService courseScheduleService;
         private readonly IMapper mapper;
+        private readonly CourseGroupBusinessRules _courseGroupBusinessRules;
 
-        public CreateCourseGroupCommandHandler(ICourseGroupService courseGroupService, IMapper mapper, ICourseScheduleService courseScheduleService)
+        public CreateCourseGroupCommandHandler(ICourseGroupService courseGroupService, IMapper mapper, ICourseScheduleService courseScheduleService, CourseGroupBusinessRules courseGroupBusinessRules)
         {
             this.courseGroupService = courseGroupService;
             this.mapper = mapper;
             this.courseScheduleService = courseScheduleService;
+            _courseGroupBusinessRules = courseGroupBusinessRules;
         }
 
         public async Task<CreateCourseGroupResponse> Handle(CreateCourseGroupCommand request, CancellationToken cancellationToken)
         {
+            await _courseGroupBusinessRules.EnsureCourseExistsAsync(request.CourseId);
+            await _courseGroupBusinessRules.EnsureClassExistsAsync(request.ClassId);
+            await _courseGroupBusinessRules.EnsureTeacherExistsAsync(request.TeacherId);
+            _courseGroupBusinessRules.EnsureStartDateIsBeforeEndDate(request.StartedDate, request.EndedDate);
+            _courseGroupBusinessRules.EnsureQuotaInLimits(request.Quota);
+            await _courseGroupBusinessRules.EnsureGroupNameIsUniqueInCourseAsync(request.GroupName, request.CourseId);
+
             CourseGroup courseGroup = mapper.Map<CourseGroup>(request);
             courseGroup = await courseGroupService.AddAsync(courseGroup);
 
