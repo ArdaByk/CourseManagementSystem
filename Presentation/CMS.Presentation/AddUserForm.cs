@@ -1,8 +1,5 @@
-﻿using CMS.Application.Features.Courses.Commands.Create;
-using CMS.Application.Features.Roles.Queries.GetListRoles;
-using CMS.Application.Features.Specializations.Queries.GetListSpecializations;
+﻿using CMS.Application.Features.Roles.Queries.GetListRoles;
 using CMS.Application.Features.Users.Commands.Create;
-using CMS.Application.Features.Users.Queries.GetListUsers;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using MediatR;

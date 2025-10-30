@@ -1,10 +1,11 @@
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Business;
 using System;
 using System.Threading.Tasks;
 
 namespace CMS.Application.Features.ExamResults.Rules
 {
-    public class ExamResultBusinessRules
+    public class ExamResultBusinessRules : BusinessRule
     {
         private readonly IExamResultService _examResultService;
         public ExamResultBusinessRules(IExamResultService examResultService)

@@ -1,10 +1,11 @@
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Business;
 using System;
 using System.Threading.Tasks;
 
 namespace CMS.Application.Features.Specializations.Rules
 {
-    public class SpecializationBusinessRules
+    public class SpecializationBusinessRules : BusinessRule
     {
         private readonly ISpecializationService _specializationService;
         public SpecializationBusinessRules(ISpecializationService specializationService)

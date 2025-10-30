@@ -78,7 +78,6 @@
             exams = new TabPage();
             specializations = new TabPage();
             users = new TabPage();
-            roles = new TabPage();
             imageList1 = new ImageList(components);
             materialTabControl1.SuspendLayout();
             dashboard.SuspendLayout();
@@ -103,7 +102,6 @@
             materialTabControl1.Controls.Add(exams);
             materialTabControl1.Controls.Add(specializations);
             materialTabControl1.Controls.Add(users);
-            materialTabControl1.Controls.Add(roles);
             materialTabControl1.Depth = 0;
             materialTabControl1.Dock = DockStyle.Fill;
             materialTabControl1.ImageList = imageList1;
@@ -714,16 +712,6 @@
             users.Text = "Sistem Kullanıcıları";
             users.UseVisualStyleBackColor = true;
             // 
-            // roles
-            // 
-            roles.ImageKey = "role.png";
-            roles.Location = new Point(4, 39);
-            roles.Name = "roles";
-            roles.Size = new Size(1629, 876);
-            roles.TabIndex = 9;
-            roles.Text = "Kullanıcı Rolleri";
-            roles.UseVisualStyleBackColor = true;
-            // 
             // imageList1
             // 
             imageList1.ColorDepth = ColorDepth.Depth32Bit;
@@ -783,7 +771,6 @@
         private TabPage exams;
         private TabPage specializations;
         private TabPage users;
-        private TabPage roles;
         private MaterialSkin.Controls.MaterialCard materialCard1;
         private MaterialSkin.Controls.MaterialLabel materialLabel1;
         private Label label1;

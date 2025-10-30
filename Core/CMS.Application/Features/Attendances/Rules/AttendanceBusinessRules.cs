@@ -1,10 +1,11 @@
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Business;
 using System;
 using System.Threading.Tasks;
 
 namespace CMS.Application.Features.Attendances.Rules
 {
-    public class AttendanceBusinessRules
+    public class AttendanceBusinessRules : BusinessRule
     {
         private readonly IAttendanceService _attendanceService;
         public AttendanceBusinessRules(IAttendanceService attendanceService)

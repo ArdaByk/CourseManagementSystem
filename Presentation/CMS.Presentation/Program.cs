@@ -21,9 +21,9 @@ namespace CMS.Presentation
 
             services.AddLogging();
 
-            services.AddApplicationServices();
             services.AddPersistenceServices();
-
+            services.AddApplicationServices();
+          
             services.AddTransient<LoginForm>();
             services.AddTransient<AddStudentForm>();
             services.AddTransient<UpdateStudentForm>();

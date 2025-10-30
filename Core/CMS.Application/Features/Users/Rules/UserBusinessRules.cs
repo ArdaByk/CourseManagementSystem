@@ -1,10 +1,11 @@
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Business;
 using System;
 using System.Threading.Tasks;
 
 namespace CMS.Application.Features.Users.Rules
 {
-    public class UserBusinessRules
+    public class UserBusinessRules : BusinessRule
     {
         private readonly IUserService _userService;
         public UserBusinessRules(IUserService userService)

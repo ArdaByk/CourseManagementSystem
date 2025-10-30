@@ -2,6 +2,7 @@
 using MaterialSkin;
 using MaterialSkin.Controls;
 using System.Drawing.Drawing2D;
+using CMS.Application.Abstractions.Services;
 
 namespace CMS.Presentation;
 
@@ -29,9 +30,36 @@ public partial class DashboardForm : MaterialForm
             { "courseGroups", new CourseGroupsBuilder(serviceProvider) },
             { "exams", new ExamsPageBuilder(serviceProvider) },
             { "specializations", new SpecializationPageBuilder(serviceProvider) },
-            { "roles", new RolesPageBuilder() },
             { "users", new UsersPageBuilder(serviceProvider) }
         };
+
+        this.Load += DashboardForm_Load;
+    }
+
+    private async void DashboardForm_Load(object? sender, EventArgs e)
+    {
+
+        var studentService = (IStudentService)serviceProvider.GetService(typeof(IStudentService));
+        var teacherService = (ITeacherService)serviceProvider.GetService(typeof(ITeacherService));
+        var classService = (IClassService)serviceProvider.GetService(typeof(IClassService));
+        var courseService = (ICourseService)serviceProvider.GetService(typeof(ICourseService));
+        var courseGroupService = (ICourseGroupService)serviceProvider.GetService(typeof(ICourseGroupService));
+        var userService = (IUserService)serviceProvider.GetService(typeof(IUserService));
+
+        var students = await studentService.GetListAsync(enableTracking: false);
+        var teachers = await teacherService.GetListAsync(enableTracking: false);
+        var classesList = await classService.GetListAsync(enableTracking: false);
+        var coursesList = await courseService.GetListAsync(enableTracking: false);
+        var courseGroups = await courseGroupService.GetListAsync(enableTracking: false);
+        var usersList = await userService.GetListAsync(enableTracking: false);
+
+        materialLabel2.Text = students.Count.ToString();
+        materialLabel3.Text = teachers.Count.ToString();
+        materialLabel5.Text = classesList.Count.ToString();
+        materialLabel7.Text = coursesList.Count.ToString();
+        materialLabel9.Text = courseGroups.Count.ToString();
+        materialLabel11.Text = usersList.Count.ToString();
+
     }
 
     private void materialTabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -72,7 +100,6 @@ public partial class DashboardForm : MaterialForm
         path.CloseFigure();
         this.Region = new Region(path);
     }
-
 }
 
 public class User

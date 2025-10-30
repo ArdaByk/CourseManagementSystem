@@ -1,4 +1,5 @@
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Business;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Application.Features.Teachers.Rules
 {
-    public class TeacherBusinessRules
+    public class TeacherBusinessRules : BusinessRule
     {
         private readonly ITeacherService _teacherService;
         private readonly ISpecializationService _specializationService;

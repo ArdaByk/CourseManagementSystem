@@ -1,10 +1,11 @@
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Business;
 using System;
 using System.Threading.Tasks;
 
 namespace CMS.Application.Features.StudentCourses.Rules
 {
-    public class StudentCourseBusinessRules
+    public class StudentCourseBusinessRules : BusinessRule
     {
         private readonly IStudentCourseService _studentCourseService;
         public StudentCourseBusinessRules(IStudentCourseService studentCourseService)

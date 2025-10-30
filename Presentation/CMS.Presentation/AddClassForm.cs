@@ -3,6 +3,7 @@ using CMS.Application.Features.Courses.Commands.Create;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +11,7 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -82,5 +84,6 @@ namespace CMS.Presentation
 
             this.Close();
         }
+
     }
 }
