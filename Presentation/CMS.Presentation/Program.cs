@@ -1,6 +1,8 @@
 using CMS.Application;
 using CMS.Persistence;
 using Microsoft.Extensions.DependencyInjection;
+using CMS.Application.Abstractions.Notifications;
+using CMS.Presentation.Common;
 
 namespace CMS.Presentation
 {
@@ -23,6 +25,8 @@ namespace CMS.Presentation
 
             services.AddPersistenceServices();
             services.AddApplicationServices();
+
+            services.AddSingleton<IUserNotification, WinFormsUserNotification>();
           
             services.AddTransient<LoginForm>();
             services.AddTransient<AddStudentForm>();

@@ -66,12 +66,18 @@ namespace CMS.Presentation
 
         private async void addCourseBtn_Click(object sender, EventArgs e)
         {
+            int durationWeeks;
+            int weeklyHours;
+
+            int.TryParse(durationWeekTxt.Text, out durationWeeks);
+            int.TryParse(weeklyHoursTxt.Text, out weeklyHours);
+
             CreateCourseCommand createCourseCommand = new CreateCourseCommand
             {
                CourseName = courseNameTxt.Text,
                Description = courseDescriptionTxt.Text,
-               DurationWeeks = Convert.ToInt32(durationWeekTxt.Text),
-               WeeklyHours = Convert.ToInt32(weeklyHoursTxt.Text),
+               DurationWeeks = durationWeeks,
+               WeeklyHours = weeklyHours,
                Status = courseStatusSwitch.Checked ? 'A' : 'P'
             };
 

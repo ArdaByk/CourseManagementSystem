@@ -112,6 +112,8 @@ namespace CMS.Presentation
                 .Select(cb => (Guid)cb.Tag)
                 .ToList();
 
+            float salaryAmount;
+            float.TryParse(teacherSalaryAmountTxt.Text,out salaryAmount);
 
             UpdateTeacherCommand teacher = new UpdateTeacherCommand();
             teacher.Id = TeacherId;
@@ -119,7 +121,7 @@ namespace CMS.Presentation
             teacher.LastName = teacherLastNameTxt.Text;
             teacher.Phone = teacherPhoneTxt.Text;
             teacher.HiredDate = teacherHiredDate.Value;
-            teacher.SalaryAmount = float.Parse(teacherSalaryAmountTxt.Text);
+            teacher.SalaryAmount = salaryAmount;
             teacher.SalaryType = teacherSalaryTypeComboBox.SelectedItem.ToString();
             teacher.Status = teacherStatusSwitch.Checked == true ? 'A' : 'P';
             teacher.Email = teacherEmailTxt.Text;

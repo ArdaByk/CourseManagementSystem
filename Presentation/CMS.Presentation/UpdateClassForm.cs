@@ -69,10 +69,13 @@ namespace CMS.Presentation
 
         private async void updateClassBtn_Click(object sender, EventArgs e)
         {
+            int capacity;
+            int.TryParse(capacityTxt.Text, out capacity);
+
             UpdateClassCommand myClass = new UpdateClassCommand();
             myClass.Id = ClassId;
             myClass.ClassName = classNameTxt.Text;
-            myClass.Capacity = Convert.ToInt32(capacityTxt.Text);
+            myClass.Capacity = capacity;
             myClass.Location = locationTxt.Text;
 
             UpdateClassResponse updatedClass = await mediator.Send(myClass);

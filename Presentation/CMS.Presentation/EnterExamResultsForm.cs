@@ -119,10 +119,13 @@ namespace CMS.Presentation
         {
             foreach (DataGridViewRow row in studentsDataGridView.Rows)
             {
+                int score;
+                int.TryParse(row.Cells["score"].Value.ToString(), out score);
+
                 CreateExamResultCommand examResult = new CreateExamResultCommand();
                 examResult.StudentId = Guid.Parse(row.Cells["Id"].Value.ToString());
                 examResult.ExamId = ExamId;
-                examResult.Score = Convert.ToInt32(row.Cells["score"].Value);
+                examResult.Score = score;
 
                 CreateExamResultResponse result = await mediator.Send(examResult);
 

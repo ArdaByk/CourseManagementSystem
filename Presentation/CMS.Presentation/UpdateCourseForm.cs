@@ -67,12 +67,18 @@ namespace CMS.Presentation
 
         private async void updateCourseBtn_Click(object sender, EventArgs e)
         {
+            int durationWeeks;
+            int weeklyHours;
+
+            int.TryParse(durationWeekTxt.Text, out durationWeeks);
+            int.TryParse(weeklyHoursTxt.Text, out weeklyHours);
+
             UpdateCourseCommand course = new UpdateCourseCommand();
             course.Id = CourseId;
             course.CourseName = courseNameTxt.Text;
             course.Description = courseDescriptionTxt.Text;
-            course.DurationWeeks = Convert.ToInt32(durationWeekTxt.Text);
-            course.WeeklyHours = Convert.ToInt32(weeklyHoursTxt.Text);
+            course.DurationWeeks =durationWeeks;
+            course.WeeklyHours = weeklyHours;
             course.Status = courseStatusSwitch.Checked == true ? 'A' : 'P';
 
             UpdateCourseResponse updatedCourse = await mediator.Send(course);

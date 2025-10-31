@@ -68,12 +68,15 @@ namespace CMS.Presentation
 
         private async void createExamBtn_Click(object sender, EventArgs e)
         {
+            int maxScore;
+            int.TryParse(maxScoreTxt.Text, out maxScore);
+
             CreateExamCommand createExamCommand = new CreateExamCommand
             {
                 CourseId = Guid.Parse(courseComboBox.SelectedValue.ToString()),
                 ExamDate = ExamDate.Value,
                 ExamName = examNameTxt.Text,
-                MaxScore = Convert.ToInt32(maxScoreTxt.Text)
+                MaxScore = maxScore
             };
 
             CreateExamResponse createExamResponse = await mediator.Send(createExamCommand);

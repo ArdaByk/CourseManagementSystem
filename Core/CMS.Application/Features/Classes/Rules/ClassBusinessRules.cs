@@ -22,7 +22,7 @@ namespace CMS.Application.Features.Classes.Rules
             var exists = await _classService.AnyAsync(c => c.Id == classId);
             if (!exists) throw new Exception("Sınıf bulunamadı.");
         }
-        public void EnsureCapacityInLimit(int capacity)
+        public void EnsureCapacityInLimit(int? capacity)
         {
             if (capacity < 1 || capacity > 200) throw new Exception("Sınıf kapasitesi 1-200 arasında olmalıdır.");
         }

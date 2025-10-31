@@ -86,12 +86,15 @@ namespace CMS.Presentation
 
         private async void updateExamBtn_Click(object sender, EventArgs e)
         {
+            int maxScore;
+            int.TryParse(maxScoreTxt.Text, out maxScore);
+
             UpdateExamCommand updateExamCommand = new UpdateExamCommand();
             updateExamCommand.Id = ExamId;
             updateExamCommand.CourseId = Guid.Parse(courseComboBox.SelectedValue.ToString());
             updateExamCommand.ExamName = examNameTxt.Text;
             updateExamCommand.ExamDate = ExamDate.Value;
-            updateExamCommand.MaxScore = Convert.ToInt32(maxScoreTxt.Text);
+            updateExamCommand.MaxScore = maxScore;
 
             UpdateExamResponse updatedExam = await mediator.Send(updateExamCommand);
 

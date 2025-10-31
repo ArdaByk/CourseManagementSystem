@@ -69,10 +69,13 @@ namespace CMS.Presentation
 
         private async void addClassBtn_Click(object sender, EventArgs e)
         {
+            int capacity;
+            int.TryParse(capacityTxt.Text, out capacity);
+
             CreateClassCommand createClassCommand = new CreateClassCommand
             {
                 ClassName = classNameTxt.Text,
-                Capacity = Convert.ToInt32(capacityTxt.Text),
+                Capacity = capacity,
                 Location = locationTxt.Text
             };
 

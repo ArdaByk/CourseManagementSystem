@@ -92,6 +92,9 @@ namespace CMS.Presentation
             var parsedStartTime = TimeSpan.Parse(startTimeTxt.Text);
             var parsedEndTime = TimeSpan.Parse(endTimeTxt.Text);
 
+            int quota;
+            int.TryParse(CourseGroupQuotaTxt.Text, out quota);
+
             UpdateCourseGroupCommand updateCourseGroupCommand = new UpdateCourseGroupCommand
             {
                 Id = CourseGroupId,
@@ -103,7 +106,7 @@ namespace CMS.Presentation
                 EndTime = parsedEndTime,
                 StartTime = parsedStartTime,
                 GroupName = courseGroupNameTxt.Text,
-                Quota = Convert.ToInt32(CourseGroupQuotaTxt.Text),
+                Quota = quota,
                 TeacherId = Guid.Parse(teacherComboBox.SelectedValue.ToString())
             };
 

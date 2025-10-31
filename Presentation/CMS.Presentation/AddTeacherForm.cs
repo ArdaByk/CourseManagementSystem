@@ -74,13 +74,17 @@ namespace CMS.Presentation
               .Select(cb => (Guid)cb.Tag)
               .ToList();
 
+
+            int salaryAmount;
+            int.TryParse(teacherSalaryAmountTxt.Text, out salaryAmount);
+
             CreateTeacherCommand createTeacherCommand = new CreateTeacherCommand
             {
                 FirstName = teacherFirstNameTxt.Text,
                 LastName = teacherLastNameTxt.Text,
                 HiredDate = teacherHiredDate.Value,
                 Phone = teacherPhoneTxt.Text,
-                SalaryAmount = Convert.ToInt32(teacherSalaryAmountTxt.Text),
+                SalaryAmount = salaryAmount,
                 SalaryType = teacherSalaryTypeComboBox.SelectedItem.ToString(),
                 Status = teacherStatusSwitch.Checked ? 'A' : 'P',
                 Email = teacherEmailTxt.Text,

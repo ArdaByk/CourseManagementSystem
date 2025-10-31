@@ -86,6 +86,9 @@ namespace CMS.Presentation
             if (sunday.Checked)
                 selectedDays.Add(6);
 
+            int quota;
+            int.TryParse(CourseGroupQuotaTxt.Text, out quota);
+
             CreateCourseGroupCommand createCourseGroupCommand = new CreateCourseGroupCommand
             {
                 ClassId = Guid.Parse(classComboBox.SelectedValue.ToString()),
@@ -96,7 +99,7 @@ namespace CMS.Presentation
                 EndTime = TimeSpan.Parse(endTimeTxt.Text),
                 StartTime = TimeSpan.Parse(startTimeTxt.Text),
                 GroupName = courseGroupNameTxt.Text,
-                Quota = Convert.ToInt32(CourseGroupQuotaTxt.Text),
+                Quota = quota,
                 TeacherId = Guid.Parse(teacherComboBox.SelectedValue.ToString())
             };
 
