@@ -1,6 +1,7 @@
 ﻿using CMS.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Security.Cryptography;
 
 namespace CMS.Persistence.EntityConfigurations;
 
@@ -36,5 +37,27 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
            .WithMany(r => r.Users)
            .HasForeignKey(u => u.RoleId)
            .OnDelete(DeleteBehavior.Restrict);
+
+        byte[] adminSalt = new byte[] { 0x3A, 0x7F, 0x21, 0xC4, 0x55, 0x9B, 0x12, 0x88, 0xDE, 0x0A, 0x6E, 0x4C, 0x90, 0x5F, 0x33, 0xB1 };
+        byte[] adminHash;
+        using (var pbkdf2 = new Rfc2898DeriveBytes("123", adminSalt, 100000, HashAlgorithmName.SHA256))
+        {
+            adminHash = pbkdf2.GetBytes(32);
+        }
+
+        builder.HasData(
+            new User
+            {
+                Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                Username = "admin",
+                PasswordHash = adminHash,
+                PasswordSalt = adminSalt,
+                FullName = "Yönetici Kullanıcı",
+                Email = "admin@cms.local",
+                Phone = "+90 000 000 00 00",
+                RoleId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                CreatedDate = new DateTime(2025, 1, 1)
+            }
+        );
     }
 }

@@ -36,7 +36,7 @@ public class ExceptionHandlingBehavior<TRequest, TResponse> : IPipelineBehavior<
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception for request {RequestName} with payload {@Request}", typeof(TRequest).Name, request);
-            // Basic user-friendly surface if available
+            
             _userNotification?.ShowError("Beklenmeyen Hata", ex.Message);
             throw;
         }
