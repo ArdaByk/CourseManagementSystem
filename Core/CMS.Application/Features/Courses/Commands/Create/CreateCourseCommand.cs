@@ -4,8 +4,11 @@ using CMS.Domain.Entities;
 using MediatR;
 using CMS.Application.Features.Courses.Rules;
 
+using CMS.Application.Common.Authorization;
+
 namespace CMS.Application.Features.Courses.Commands.Create;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
 public class CreateCourseCommand : IRequest<CreateCourseResponse>
 {
     public string CourseName { get; set; }

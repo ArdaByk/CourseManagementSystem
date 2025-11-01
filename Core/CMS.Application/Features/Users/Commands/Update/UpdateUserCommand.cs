@@ -9,8 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CMS.Application.Common.Authorization;
+
 namespace CMS.Application.Features.Users.Commands.Update;
 
+[Authorize(RoleConstants.Admin)]
 public class UpdateUserCommand : IRequest<UpdateUserResponse>
 {
     public Guid Id { get; set; }

@@ -386,6 +386,11 @@ namespace CMS.Persistence.Migrations
                     { new Guid("33333333-3333-3333-3333-333333333333"), new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Yoklama girişleri, sınıf yönetimi ve öğrenci yönetiminden sorumludur.", "Görevli", null }
                 });
 
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "CreatedDate", "DeletedDate", "Email", "FullName", "PasswordHash", "PasswordSalt", "Phone", "RoleId", "UpdatedDate", "Username" },
+                values: new object[] { new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "admin@cms.local", "Yönetici Kullanıcı", new byte[] { 248, 5, 232, 37, 221, 77, 251, 96, 197, 216, 59, 34, 207, 163, 147, 43, 86, 214, 130, 206, 106, 57, 234, 199, 62, 225, 65, 158, 88, 199, 236, 4 }, new byte[] { 58, 127, 33, 196, 85, 155, 18, 136, 222, 10, 110, 76, 144, 95, 51, 177 }, "+90 000 000 00 00", new Guid("11111111-1111-1111-1111-111111111111"), null, "admin" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Attendances_CourseGroupId",
                 table: "Attendances",

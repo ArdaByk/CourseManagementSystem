@@ -16,8 +16,7 @@ public class UpdateTeacherCommandValidator : AbstractValidator<UpdateTeacherComm
             .NotEmpty().WithMessage(TeacherMessages.LastNameRequired)
             .MinimumLength(2).WithMessage("Soyad en az 2 karakter olmalıdır.");
         RuleFor(x => x.Phone)
-            .NotEmpty().WithMessage(TeacherMessages.PhoneRequired)
-            .Matches("^05\\d{9}$").WithMessage(TeacherMessages.PhoneFormat);
+            .NotEmpty().WithMessage(TeacherMessages.PhoneRequired);
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage(TeacherMessages.EmailRequired)
             .EmailAddress().WithMessage(TeacherMessages.EmailFormat);

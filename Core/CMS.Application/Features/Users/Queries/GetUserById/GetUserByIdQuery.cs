@@ -7,8 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CMS.Application.Common.Authorization;
+
 namespace CMS.Application.Features.Users.Queries.GetUserById;
 
+[Authorize(RoleConstants.Admin)]
 public class GetUserByIdQuery : IRequest<GetUserByIdResponse>
 {
     public Guid Id { get; set; }

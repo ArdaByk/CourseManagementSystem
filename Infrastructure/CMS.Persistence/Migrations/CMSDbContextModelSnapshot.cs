@@ -787,6 +787,20 @@ namespace CMS.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                            CreatedDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin@cms.local",
+                            FullName = "Yönetici Kullanıcı",
+                            PasswordHash = new byte[] { 248, 5, 232, 37, 221, 77, 251, 96, 197, 216, 59, 34, 207, 163, 147, 43, 86, 214, 130, 206, 106, 57, 234, 199, 62, 225, 65, 158, 88, 199, 236, 4 },
+                            PasswordSalt = new byte[] { 58, 127, 33, 196, 85, 155, 18, 136, 222, 10, 110, 76, 144, 95, 51, 177 },
+                            Phone = "+90 000 000 00 00",
+                            RoleId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Username = "admin"
+                        });
                 });
 
             modelBuilder.Entity("CMS.Domain.Entities.Attendance", b =>

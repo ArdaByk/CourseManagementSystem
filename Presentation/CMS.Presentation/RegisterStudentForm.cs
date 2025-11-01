@@ -79,6 +79,7 @@ namespace CMS.Presentation
             studentCourse.CourseGroupId = Guid.Parse(courseGroupComboBox.SelectedValue.ToString());
             studentCourse.CompletionDate = completionDate.Value;
             studentCourse.RegisteredDate = registeredDate.Value;
+            studentCourse.Status = 'A';
 
             CreateStudentCourseResponse result = await mediator.Send(studentCourse);
 

@@ -2,12 +2,19 @@ using MaterialSkin;
 using MaterialSkin.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using System.Drawing.Drawing2D;
+using MediatR;
+using CMS.Application.Features.Authentication.Commands.Login;
+using CMS.Presentation.Common;
+using System;
+using CMS.Application.Common.Authentication;
 
 namespace CMS.Presentation;
 
 public partial class LoginForm : MaterialForm
 {
     private readonly IServiceProvider serviceProvider;
+    private readonly IMediator mediator;
+    
     public LoginForm(IServiceProvider serviceProvider)
     {
         InitializeComponent();
@@ -19,6 +26,7 @@ public partial class LoginForm : MaterialForm
 
         this.FormBorderStyle = FormBorderStyle.None;
         this.serviceProvider = serviceProvider;
+        this.mediator = serviceProvider.GetRequiredService<IMediator>();
     }
 
     protected override CreateParams CreateParams
@@ -51,11 +59,67 @@ public partial class LoginForm : MaterialForm
         this.Region = new Region(path);
     }
 
-    private void loginBtn_Click(object sender, EventArgs e)
+    private async void loginBtn_Click(object sender, EventArgs e)
     {
-        DashboardForm dashboardForm = serviceProvider.GetRequiredService<DashboardForm>();
-        dashboardForm.Show();
+        string emailOrUsername = emailTxt.Text.Trim();
+        string password = passwordTxt.Text;
 
-        this.Hide();
+        if (string.IsNullOrWhiteSpace(emailOrUsername))
+        {
+            MessageBox.Show("E-posta veya kullanıcı adı boş olamaz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            MessageBox.Show("Şifre boş olamaz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        try
+        {
+            loginBtn.Enabled = false;
+            loginBtn.Text = "Giriş yapılıyor...";
+
+            var loginCommand = new LoginCommand
+            {
+                EmailOrUsername = emailOrUsername,
+                Password = password
+            };
+
+            var response = await mediator.Send(loginCommand);
+
+            if (response.Success && response.UserId.HasValue && response.RoleId.HasValue && !string.IsNullOrEmpty(response.Token))
+            {
+                CurrentUserContext.Instance.SetUser(
+                    response.Token,
+                    response.UserId.Value,
+                    response.Username,
+                    response.Email,
+                    response.FullName,
+                    response.RoleId.Value,
+                    response.RoleName
+                );
+
+                DashboardForm dashboardForm = serviceProvider.GetRequiredService<DashboardForm>();
+                dashboardForm.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show(response.Message, "Giriş Hatası", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                passwordTxt.Clear();
+                passwordTxt.Focus();
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Bir hata oluştu: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        finally
+        {
+            loginBtn.Enabled = true;
+            loginBtn.Text = "Giriş Yap";
+        }
     }
 }

@@ -10,8 +10,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CMS.Application.Common.Authorization;
+
 namespace CMS.Application.Features.CourseGroups.Commands.Create;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
 public class CreateCourseGroupCommand : IRequest<CreateCourseGroupResponse>
 {
     public string GroupName { get; set; }

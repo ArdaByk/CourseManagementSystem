@@ -18,8 +18,7 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
             .NotEmpty().WithMessage(UserMessages.EmailRequired)
             .EmailAddress().WithMessage(UserMessages.EmailFormat);
         RuleFor(x => x.Phone)
-            .NotEmpty().WithMessage(UserMessages.PhoneRequired)
-            .Matches("^05\\d{9}$").WithMessage(UserMessages.PhoneFormat);
+            .NotEmpty().WithMessage(UserMessages.PhoneRequired);
         RuleFor(x => x.RoleId)
             .NotEmpty().WithMessage(UserMessages.RoleIdRequired);
     }

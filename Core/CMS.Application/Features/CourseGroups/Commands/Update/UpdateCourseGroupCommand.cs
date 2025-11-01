@@ -9,8 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CMS.Application.Common.Authorization;
+
 namespace CMS.Application.Features.CourseGroups.Commands.Update;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
 public class UpdateCourseGroupCommand : IRequest<UpdateCourseGroupResponse>
 {
     public Guid Id { get; set; }

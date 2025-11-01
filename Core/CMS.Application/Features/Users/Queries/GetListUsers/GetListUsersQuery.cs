@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Authorization;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Application.Features.Users.Queries.GetListUsers;
 
+[Authorize(RoleConstants.Admin)]
 public class GetListUsersQuery : IRequest<ICollection<GetListUsersResponse>>
 {
 

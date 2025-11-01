@@ -7,8 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CMS.Application.Common.Authorization;
+
 namespace CMS.Application.Features.Classes.Queries.GetListClasses;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
 public class GetListClassesQuery : IRequest<ICollection<GetListClassesResponse>>
 {
 

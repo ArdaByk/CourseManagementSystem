@@ -7,8 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CMS.Application.Common.Authorization;
+
 namespace CMS.Application.Features.Specializations.Queries.GetListSpecializations;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
 public class GetListSpecializationsQuery : IRequest<ICollection<GetListSpecializationsResponse>>
 {
 

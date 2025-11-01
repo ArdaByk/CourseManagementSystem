@@ -25,8 +25,7 @@ public class UpdateStudentCommandValidator : AbstractValidator<UpdateStudentComm
             .NotEmpty().WithMessage(StudentMessages.BirthDateRequired)
             .LessThan(DateTime.Now).WithMessage("Doğum tarihi gelecekten olamaz.");
         RuleFor(x => x.Phone)
-            .NotEmpty().WithMessage(StudentMessages.PhoneRequired)
-            .Matches("^05\\d{9}$").WithMessage(StudentMessages.PhoneFormat);
+            .NotEmpty().WithMessage(StudentMessages.PhoneRequired);
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage(StudentMessages.EmailRequired)
             .EmailAddress().WithMessage(StudentMessages.EmailFormat);
@@ -35,8 +34,7 @@ public class UpdateStudentCommandValidator : AbstractValidator<UpdateStudentComm
         RuleFor(x => x.EmergencyContactName)
             .NotEmpty().WithMessage(StudentMessages.EmergencyContactNameRequired);
         RuleFor(x => x.EmergencyContactPhone)
-            .NotEmpty().WithMessage(StudentMessages.EmergencyContactPhoneRequired)
-            .Matches("^05\\d{9}$").WithMessage("Acil durum telefonu hatalı.");
+            .NotEmpty().WithMessage(StudentMessages.EmergencyContactPhoneRequired);
         RuleFor(x => x.EmergencyContactRelation)
             .NotEmpty().WithMessage(StudentMessages.EmergencyContactRelationRequired);
         RuleFor(x => x.Status)

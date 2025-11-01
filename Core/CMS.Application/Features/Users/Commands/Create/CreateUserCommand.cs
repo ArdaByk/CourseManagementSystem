@@ -10,8 +10,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CMS.Application.Common.Authorization;
+
 namespace CMS.Application.Features.Users.Commands.Create;
 
+[Authorize(RoleConstants.Admin)]
 public class CreateUserCommand : IRequest<CreateUserResponse>
 {
     public string Username { get; set; }

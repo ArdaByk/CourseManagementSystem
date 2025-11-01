@@ -45,7 +45,7 @@
             emailTxt.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             emailTxt.HidePromptOnLeave = false;
             emailTxt.HideSelection = true;
-            emailTxt.Hint = "E-posta";
+            emailTxt.Hint = "E-posta veya Kullanıcı Adı";
             emailTxt.InsertKeyMode = InsertKeyMode.Default;
             emailTxt.LeadingIcon = null;
             emailTxt.Location = new Point(68, 140);

@@ -1,4 +1,6 @@
 using CMS.Application;
+using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Security.Jwt;
 using CMS.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using CMS.Application.Abstractions.Notifications;
@@ -25,6 +27,16 @@ namespace CMS.Presentation
 
             services.AddPersistenceServices();
             services.AddApplicationServices();
+
+            var jwtConfig = new JwtConfiguration
+            {
+                SecretKey = "YourSuperSecretKeyForJWTTokenGenerationMustBeAtLeast32CharactersLong!",
+                Issuer = "CMS",
+                Audience = "CMS",
+                ExpirationInMinutes = 480
+            };
+            services.AddSingleton(jwtConfig);
+            services.AddScoped<ITokenService, TokenService>();
 
             services.AddSingleton<IUserNotification, WinFormsUserNotification>();
           

@@ -8,8 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CMS.Application.Common.Authorization;
+
 namespace CMS.Application.Features.Teachers.Queries.GetListTeachers;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
 public class GetListTeacherQuery : IRequest<ICollection<GetListTeacherResponse>>
 {
 

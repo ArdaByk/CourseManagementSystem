@@ -3,6 +3,8 @@ using MaterialSkin;
 using MaterialSkin.Controls;
 using System.Drawing.Drawing2D;
 using CMS.Application.Abstractions.Services;
+using Microsoft.Extensions.DependencyInjection;
+using CMS.Application.Common.Authentication;
 
 namespace CMS.Presentation;
 
@@ -34,6 +36,17 @@ public partial class DashboardForm : MaterialForm
         };
 
         this.Load += DashboardForm_Load;
+        this.logoutBtn.Click += LogoutBtn_Click;
+    }
+
+    private void LogoutBtn_Click(object? sender, EventArgs e)
+    {
+        CurrentUserContext.Instance.Clear();
+
+        var loginForm = serviceProvider.GetRequiredService<LoginForm>();
+        loginForm.Show();
+
+        this.Hide();
     }
 
     private async void DashboardForm_Load(object? sender, EventArgs e)
@@ -59,6 +72,12 @@ public partial class DashboardForm : MaterialForm
         materialLabel7.Text = coursesList.Count.ToString();
         materialLabel9.Text = courseGroups.Count.ToString();
         materialLabel11.Text = usersList.Count.ToString();
+
+        var currentUser = CurrentUserContext.Instance;
+        materialLabel13.Text = currentUser.FullName ?? "Kullanıcı Adı";
+        materialLabel14.Text = $"Kullanıcı adı: {currentUser.Username ?? "N/A"}";
+        materialLabel15.Text = $"E-Posta Adresi: {currentUser.Email ?? "N/A"}";
+        materialLabel16.Text = $"Rol: {currentUser.RoleName ?? "N/A"}";
 
     }
 
@@ -100,12 +119,4 @@ public partial class DashboardForm : MaterialForm
         path.CloseFigure();
         this.Region = new Region(path);
     }
-}
-
-public class User
-{
-    public int Id { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Email { get; set; }
 }

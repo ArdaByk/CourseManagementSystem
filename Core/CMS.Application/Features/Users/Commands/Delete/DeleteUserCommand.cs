@@ -8,8 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CMS.Application.Common.Authorization;
+
 namespace CMS.Application.Features.Users.Commands.Delete;
 
+[Authorize(RoleConstants.Admin)]
 public class DeleteUserCommand : IRequest<DeleteUserResponse>
 {
     public Guid Id { get; set; }
