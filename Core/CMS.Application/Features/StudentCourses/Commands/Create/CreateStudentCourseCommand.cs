@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Authorization;
 using CMS.Application.Features.Courses.Commands.Create;
 using CMS.Application.Features.StudentCourses.Rules;
 using CMS.Domain.Entities;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Application.Features.StudentCourses.Commands.Create;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
 public class CreateStudentCourseCommand : IRequest<CreateStudentCourseResponse>
 {
     public DateTime RegisteredDate { get; set; }

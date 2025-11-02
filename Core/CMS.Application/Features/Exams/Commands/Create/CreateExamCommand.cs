@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Authorization;
 using CMS.Application.Features.Exams.Rules;
 using CMS.Domain.Entities;
 using MediatR;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Application.Features.Exams.Commands.Create;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff, RoleConstants.Teacher)]
 public class CreateExamCommand : IRequest<CreateExamResponse>
 {
     public string ExamName { get; set; }

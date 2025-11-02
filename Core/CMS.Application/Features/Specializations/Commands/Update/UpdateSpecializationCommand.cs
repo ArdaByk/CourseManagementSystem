@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Authorization;
 using CMS.Application.Features.Classes.Commands.Update;
 using CMS.Domain.Entities;
 using MediatR;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Application.Features.Specializations.Commands.Update;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
 public class UpdateSpecializationCommand : IRequest<UpdateSpecializationResponse>
 {
     public Guid Id { get; set; }

@@ -1,11 +1,13 @@
 using AutoMapper;
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Authorization;
 using CMS.Application.Features.Teachers.Rules;
 using CMS.Domain.Entities;
 using MediatR;
 
 namespace CMS.Application.Features.Teachers.Commands.Create;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
 public class CreateTeacherCommand : IRequest<CreateTeacherResponse>
 {
     public string FirstName { get; set; }

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Authorization;
+using CMS.Application.Features.Students.Rules;
 using CMS.Domain.Entities;
 using MediatR;
 using System;
@@ -7,10 +9,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CMS.Application.Features.Students.Rules;
 
 namespace CMS.Application.Features.Students.Commands.Create;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
 public class CreateStudentCommand: IRequest<CreateStudentResponse>
 {
     public string FirstName { get; set; }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Authorization;
 using CMS.Application.Features.StudentCourses.Commands.Delete;
 using CMS.Domain.Entities;
 using MediatR;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Application.Features.Attendances.Commands.Delete;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Teacher, RoleConstants.Staff)]
 public class DeleteAttendanceCommand : IRequest<DeleteAttendanceResponse>
 {
     public Guid Id { get; set; }

@@ -12,7 +12,7 @@ using CMS.Application.Common.Authorization;
 
 namespace CMS.Application.Features.Students.Queries.GetListStudents;
 
-[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
+[Authorize(RoleConstants.Admin, RoleConstants.Staff, RoleConstants.Teacher)]
 public class GetListStudentQuery:IRequest<ICollection<GetListStudentResponse>>
 {
 

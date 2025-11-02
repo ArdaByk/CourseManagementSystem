@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Authorization;
 using CMS.Application.Features.Students.Queries.GetStudentById;
 using MediatR;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Application.Features.Students.Queries.GetStudentByNationalId;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Teacher, RoleConstants.Staff)]
 public class GetStudentByNationalIdQuery : IRequest<GetStudentByNationalIdResponse>
 {
     public string NationalId { get; set; }

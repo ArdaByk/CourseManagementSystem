@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
-using CMS.Application.Features.Courses.Commands.Create;
+using CMS.Application.Common.Authorization;
 using CMS.Application.Features.Classes.Rules;
+using CMS.Application.Features.Courses.Commands.Create;
 using CMS.Domain.Entities;
 using MediatR;
 using System;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Application.Features.Classes.Commands.Create;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
 public class CreateClassCommand : IRequest<CreateClassResponse>
 {
     public string ClassName { get; set; }

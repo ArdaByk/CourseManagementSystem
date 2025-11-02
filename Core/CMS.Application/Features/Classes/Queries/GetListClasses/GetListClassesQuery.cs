@@ -11,7 +11,7 @@ using CMS.Application.Common.Authorization;
 
 namespace CMS.Application.Features.Classes.Queries.GetListClasses;
 
-[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
+[Authorize(RoleConstants.Admin, RoleConstants.Staff, RoleConstants.Teacher)]
 public class GetListClassesQuery : IRequest<ICollection<GetListClassesResponse>>
 {
 

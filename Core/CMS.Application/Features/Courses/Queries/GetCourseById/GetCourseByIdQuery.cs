@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Authorization;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Application.Features.Courses.Queries.GetTeacherById;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Teacher, RoleConstants.Staff)]
 public class GetCourseByIdQuery : IRequest<GetCourseByIdResponse>
 {
     public Guid Id { get; set; }

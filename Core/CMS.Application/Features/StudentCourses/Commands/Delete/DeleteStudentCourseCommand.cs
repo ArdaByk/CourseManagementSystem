@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Authorization;
 using CMS.Domain.Entities;
 using MediatR;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Application.Features.StudentCourses.Commands.Delete;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
 public class DeleteStudentCourseCommand : IRequest<DeleteStudentCourseResponse>
 {
     public Guid Id { get; set; }

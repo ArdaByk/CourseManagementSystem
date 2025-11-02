@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Authorization;
 using CMS.Application.Features.Students.Queries.GetStudentById;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Application.Features.Teachers.Queries.GetTeacherById;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
 public class GetTeacherByIdQuery : IRequest<GetTeacherByIdResponse>
 {
     public Guid Id { get; set; }

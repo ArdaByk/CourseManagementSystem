@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CMS.Application.Abstractions.Services;
+using CMS.Application.Common.Authorization;
 using CMS.Application.Features.Teachers.Commands.Update;
 using CMS.Domain.Entities;
 using MediatR;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Application.Features.Teachers.Commands.Update;
 
+[Authorize(RoleConstants.Admin, RoleConstants.Staff)]
 public class UpdateTeacherCommand : IRequest<UpdateTeacherResponse>
 {
     public Guid Id { get; set; }
