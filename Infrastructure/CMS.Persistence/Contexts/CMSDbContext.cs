@@ -26,6 +26,7 @@ public class CMSDbContext : DbContext
     public DbSet<TeacherSpecialization> TeacherSpecializations { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Log> Logs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

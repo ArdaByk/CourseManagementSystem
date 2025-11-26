@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS.Persistence.Migrations
 {
     [DbContext(typeof(CMSDbContext))]
-    [Migration("20251101090215_fmigration")]
+    [Migration("20251126153504_fmigration")]
     partial class fmigration
     {
         /// <inheritdoc />
@@ -358,6 +358,80 @@ namespace CMS.Persistence.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("ExamResults", (string)null);
+                });
+
+            modelBuilder.Entity("CMS.Domain.Entities.Log", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("Id");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreatedDate");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletedDate");
+
+                    b.Property<double?>("ElapsedMilliseconds")
+                        .HasColumnType("float")
+                        .HasColumnName("ElapsedMilliseconds");
+
+                    b.Property<string>("ExceptionMessage")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExceptionMessage");
+
+                    b.Property<string>("ExceptionStackTrace")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExceptionStackTrace");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("Level");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnName("Message");
+
+                    b.Property<string>("Payload")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Payload");
+
+                    b.Property<string>("RequestName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("RequestName");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UpdatedDate");
+
+                    b.Property<string>("UserId")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("UserId");
+
+                    b.Property<string>("Username")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
+                        .HasColumnName("Username");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedDate");
+
+                    b.HasIndex("Level");
+
+                    b.HasIndex("RequestName");
+
+                    b.ToTable("Logs", (string)null);
                 });
 
             modelBuilder.Entity("CMS.Domain.Entities.Role", b =>

@@ -50,6 +50,29 @@ namespace CMS.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Logs",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Level = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    RequestName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Username = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    Payload = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ElapsedMilliseconds = table.Column<double>(type: "float", nullable: true),
+                    ExceptionMessage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExceptionStackTrace = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Logs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -448,6 +471,21 @@ namespace CMS.Persistence.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Logs_CreatedDate",
+                table: "Logs",
+                column: "CreatedDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Logs_Level",
+                table: "Logs",
+                column: "Level");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Logs_RequestName",
+                table: "Logs",
+                column: "RequestName");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Roles_RoleName",
                 table: "Roles",
                 column: "RoleName",
@@ -532,6 +570,9 @@ namespace CMS.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "ExamResults");
+
+            migrationBuilder.DropTable(
+                name: "Logs");
 
             migrationBuilder.DropTable(
                 name: "StudentCourses");

@@ -32,6 +32,7 @@ public static class ServiceRegistrar
         services.AddScoped<ICourseScheduleService, CourseScheduleManager>();
         services.AddScoped<IStudentCourseService, StudentCourseManager>();
         services.AddScoped<IAttendanceService, AttendanceManager>();
+        services.AddScoped<IRequestLogService, RequestLogManager>();
 
         return services;
     }
