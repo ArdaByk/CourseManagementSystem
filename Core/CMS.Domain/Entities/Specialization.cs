@@ -14,14 +14,17 @@ public class Specialization : BaseEntity<Guid>
     {
         SpecializationName = specializationName;
         TeacherSpecializations = new List<TeacherSpecialization>();
+        Courses = new List<Course>();
     }
     public Specialization()
     {
         TeacherSpecializations = new List<TeacherSpecialization>();
+        Courses = new List<Course>();
     }
     public string SpecializationName { get; set; }
 
     public ICollection<TeacherSpecialization> TeacherSpecializations { get; set; }
+    public ICollection<Course> Courses { get; set; }
 
 
 }

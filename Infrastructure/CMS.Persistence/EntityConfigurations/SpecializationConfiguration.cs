@@ -26,5 +26,10 @@ public class SpecializationConfiguration : IEntityTypeConfiguration<Specializati
             .WithOne(ts => ts.Specialization)
             .HasForeignKey(ts => ts.SpecializationId)
             .OnDelete(DeleteBehavior.Cascade);
+        builder
+           .HasMany(s => s.Courses)
+           .WithOne(c => c.Specialization)
+           .HasForeignKey(c => c.SpecializationId)
+           .OnDelete(DeleteBehavior.Restrict);
     }
 }

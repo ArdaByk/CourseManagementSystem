@@ -47,5 +47,10 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
             .HasMany(c => c.Attendances)
             .WithOne(c => c.Course)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasOne(c => c.Specialization)
+            .WithMany(s => s.Courses)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

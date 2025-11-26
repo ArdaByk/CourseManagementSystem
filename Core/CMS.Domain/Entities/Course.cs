@@ -4,8 +4,8 @@ namespace CMS.Domain.Entities;
 
 public class Course : BaseEntity<Guid>
 {
-    public Course(Guid id, string courseName, string description, int durationWeeks, int weeklyHours, char status)
-       :base(id)
+    public Course(Guid id, string courseName, string description, int durationWeeks, int weeklyHours, char status, Guid specializationId)
+       : base(id)
     {
         CourseName = courseName;
         Description = description;
@@ -17,7 +17,7 @@ public class Course : BaseEntity<Guid>
         Exams = new List<Exam>();
         StudentCourses = new List<StudentCourse>();
         Attendances = new List<Attendance>();
-
+        SpecializationId = specializationId;
     }
 
     public Course()
@@ -33,7 +33,9 @@ public class Course : BaseEntity<Guid>
     public int DurationWeeks { get; set; }
     public int WeeklyHours { get; set; }
     public char Status { get; set; }
+    public Guid SpecializationId { get; set; }
 
+    public virtual Specialization Specialization { get; set; }
     public virtual ICollection<CourseGroup> CourseGroups { get; set; }
     public virtual ICollection<Exam> Exams { get; set; }
     public virtual ICollection<StudentCourse> StudentCourses { get; set; }
