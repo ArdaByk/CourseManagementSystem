@@ -79,7 +79,6 @@ public class ExceptionHandlingBehavior<TRequest, TResponse> : IPipelineBehavior<
         }
         catch
         {
-            // DB logging errors are swallowed
         }
     }
 

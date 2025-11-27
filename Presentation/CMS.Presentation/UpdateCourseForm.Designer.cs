@@ -34,6 +34,7 @@
             durationWeekTxt = new MaterialSkin.Controls.MaterialTextBox2();
             courseDescriptionTxt = new MaterialSkin.Controls.MaterialMultiLineTextBox2();
             courseNameTxt = new MaterialSkin.Controls.MaterialTextBox2();
+            specializationComboBox = new MaterialSkin.Controls.MaterialComboBox();
             SuspendLayout();
             // 
             // updateCourseBtn
@@ -43,7 +44,7 @@
             updateCourseBtn.Depth = 0;
             updateCourseBtn.HighEmphasis = true;
             updateCourseBtn.Icon = null;
-            updateCourseBtn.Location = new Point(6, 384);
+            updateCourseBtn.Location = new Point(6, 440);
             updateCourseBtn.Margin = new Padding(4, 6, 4, 6);
             updateCourseBtn.MouseState = MaterialSkin.MouseState.HOVER;
             updateCourseBtn.Name = "updateCourseBtn";
@@ -63,7 +64,7 @@
             courseStatusSwitch.Checked = true;
             courseStatusSwitch.CheckState = CheckState.Checked;
             courseStatusSwitch.Depth = 0;
-            courseStatusSwitch.Location = new Point(6, 337);
+            courseStatusSwitch.Location = new Point(6, 393);
             courseStatusSwitch.Margin = new Padding(0);
             courseStatusSwitch.MouseLocation = new Point(-1, -1);
             courseStatusSwitch.MouseState = MaterialSkin.MouseState.HOVER;
@@ -186,11 +187,35 @@
             courseNameTxt.TrailingIcon = null;
             courseNameTxt.UseSystemPasswordChar = false;
             // 
+            // specializationComboBox
+            // 
+            specializationComboBox.AutoResize = false;
+            specializationComboBox.BackColor = Color.FromArgb(255, 255, 255);
+            specializationComboBox.Depth = 0;
+            specializationComboBox.DrawMode = DrawMode.OwnerDrawVariable;
+            specializationComboBox.DropDownHeight = 174;
+            specializationComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            specializationComboBox.DropDownWidth = 121;
+            specializationComboBox.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Bold, GraphicsUnit.Pixel);
+            specializationComboBox.ForeColor = Color.FromArgb(222, 0, 0, 0);
+            specializationComboBox.FormattingEnabled = true;
+            specializationComboBox.Hint = "Kurs Alanı";
+            specializationComboBox.IntegralHeight = false;
+            specializationComboBox.ItemHeight = 43;
+            specializationComboBox.Location = new Point(8, 340);
+            specializationComboBox.MaxDropDownItems = 4;
+            specializationComboBox.MouseState = MaterialSkin.MouseState.OUT;
+            specializationComboBox.Name = "specializationComboBox";
+            specializationComboBox.Size = new Size(250, 49);
+            specializationComboBox.StartIndex = 0;
+            specializationComboBox.TabIndex = 12;
+            // 
             // UpdateCourseForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(264, 432);
+            ClientSize = new Size(264, 489);
+            Controls.Add(specializationComboBox);
             Controls.Add(updateCourseBtn);
             Controls.Add(courseStatusSwitch);
             Controls.Add(weeklyHoursTxt);
@@ -213,5 +238,6 @@
         private MaterialSkin.Controls.MaterialTextBox2 durationWeekTxt;
         private MaterialSkin.Controls.MaterialMultiLineTextBox2 courseDescriptionTxt;
         private MaterialSkin.Controls.MaterialTextBox2 courseNameTxt;
+        private MaterialSkin.Controls.MaterialComboBox specializationComboBox;
     }
 }

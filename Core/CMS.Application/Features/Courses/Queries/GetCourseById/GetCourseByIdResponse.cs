@@ -1,4 +1,6 @@
-﻿namespace CMS.Application.Features.Courses.Queries.GetTeacherById;
+﻿using CMS.Domain.Entities;
+
+namespace CMS.Application.Features.Courses.Queries.GetTeacherById;
 
 public class GetCourseByIdResponse
 {
@@ -8,4 +10,5 @@ public class GetCourseByIdResponse
     public int DurationWeeks { get; set; }
     public int WeeklyHours { get; set; }
     public char Status { get; set; }
+    public Specialization Specialization { get; set; }
 }

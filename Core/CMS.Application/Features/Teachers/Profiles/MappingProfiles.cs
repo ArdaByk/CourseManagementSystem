@@ -3,6 +3,7 @@ using CMS.Application.Features.Teachers.Commands.Create;
 using CMS.Application.Features.Teachers.Commands.Delete;
 using CMS.Application.Features.Teachers.Commands.Update;
 using CMS.Application.Features.Teachers.Queries.GetListTeachers;
+using CMS.Application.Features.Teachers.Queries.GetListTeachersBySpecializationId;
 using CMS.Application.Features.Teachers.Queries.GetTeacherById;
 using CMS.Domain.Entities;
 using System;
@@ -25,6 +26,8 @@ public class MappingProfiles : Profile
         CreateMap<DeleteTeacherResponse, Teacher>().ReverseMap();
         CreateMap<GetListTeacherQuery, Teacher>().ReverseMap();
         CreateMap<GetListTeacherResponse, Teacher>().ReverseMap();
+        CreateMap<GetListTeachersBySpecializationId, Teacher>().ReverseMap();
+        CreateMap<GetListTeachersBySpecializationIdResponse, Teacher>().ReverseMap();
         CreateMap<GetTeacherByIdQuery, Teacher>().ReverseMap();
         CreateMap<GetTeacherByIdResponse, Teacher>().ReverseMap();
     }

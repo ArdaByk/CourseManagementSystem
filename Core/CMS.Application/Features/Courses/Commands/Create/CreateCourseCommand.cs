@@ -16,6 +16,7 @@ public class CreateCourseCommand : IRequest<CreateCourseResponse>
     public int DurationWeeks { get; set; }
     public int WeeklyHours { get; set; }
     public char Status { get; set; }
+    public Guid SpecializationId { get; set; }
 
 
     public class CreateCourseCommandHandler : IRequestHandler<CreateCourseCommand, CreateCourseResponse>

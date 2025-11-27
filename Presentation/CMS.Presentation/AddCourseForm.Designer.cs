@@ -224,6 +224,7 @@
             MaximizeBox = false;
             Name = "AddCourseForm";
             Text = "Kurs Ekle";
+            Load += AddCourseForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

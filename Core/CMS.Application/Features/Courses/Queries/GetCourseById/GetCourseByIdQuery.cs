@@ -2,6 +2,7 @@
 using CMS.Application.Abstractions.Services;
 using CMS.Application.Common.Authorization;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,11 @@ public class GetCourseByIdQuery : IRequest<GetCourseByIdResponse>
 
         public async Task<GetCourseByIdResponse> Handle(GetCourseByIdQuery request, CancellationToken cancellationToken)
         {
-            GetCourseByIdResponse response = mapper.Map<GetCourseByIdResponse>(await courseService.GetAsync(predicate: c => c.Id == request.Id, enableTracking: false, cancellationToken: cancellationToken));
+            GetCourseByIdResponse response = mapper.Map<GetCourseByIdResponse>(await courseService.GetAsync(
+                predicate: c => c.Id == request.Id,
+                include: c => c.Include(c => c.Specialization),
+                enableTracking: true,
+                cancellationToken: cancellationToken));
 
             return response;
         }

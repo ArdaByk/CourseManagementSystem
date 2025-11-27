@@ -143,6 +143,7 @@
             courseComboBox.Size = new Size(469, 49);
             courseComboBox.StartIndex = 0;
             courseComboBox.TabIndex = 4;
+            courseComboBox.SelectedIndexChanged += courseComboBox_SelectedIndexChanged;
             // 
             // classComboBox
             // 
@@ -227,6 +228,7 @@
             groupBox1.TabIndex = 8;
             groupBox1.TabStop = false;
             groupBox1.Text = "Ders Programı";
+            groupBox1.Enter += groupBox1_Enter;
             // 
             // endTimeTxt
             // 

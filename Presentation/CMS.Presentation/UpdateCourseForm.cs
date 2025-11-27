@@ -1,5 +1,7 @@
 ﻿using CMS.Application.Features.Courses.Commands.Update;
 using CMS.Application.Features.Courses.Queries.GetTeacherById;
+using CMS.Application.Features.Specializations.Queries.GetListSpecializations;
+using CMS.Domain.Entities;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using MediatR;
@@ -80,6 +82,7 @@ namespace CMS.Presentation
             course.DurationWeeks =durationWeeks;
             course.WeeklyHours = weeklyHours;
             course.Status = courseStatusSwitch.Checked == true ? 'A' : 'P';
+            course.SpecializationId = Guid.Parse(specializationComboBox.SelectedValue.ToString());
 
             UpdateCourseResponse updatedCourse = await mediator.Send(course);
 
@@ -98,6 +101,15 @@ namespace CMS.Presentation
             durationWeekTxt.Text = course.DurationWeeks.ToString();
             weeklyHoursTxt.Text = course.WeeklyHours.ToString();
             courseStatusSwitch.Checked = course.Status == 'A' ? true : false;
+            specializationComboBox.SelectedValue = course.Specialization.Id;
+
+            var specializations = await mediator.Send(new GetListSpecializationsQuery());
+
+            specializationComboBox.Controls.Clear();
+
+            specializationComboBox.DataSource = specializations;
+            specializationComboBox.DisplayMember = "SpecializationName";
+            specializationComboBox.ValueMember = "Id";
         }
     }
 }

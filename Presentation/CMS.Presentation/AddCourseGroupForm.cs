@@ -1,7 +1,9 @@
 ﻿using CMS.Application.Features.Classes.Queries.GetListClasses;
 using CMS.Application.Features.CourseGroups.Commands.Create;
 using CMS.Application.Features.Courses.Queries.GetListTeachers;
+using CMS.Application.Features.Courses.Queries.GetTeacherById;
 using CMS.Application.Features.Teachers.Queries.GetListTeachers;
+using CMS.Application.Features.Teachers.Queries.GetListTeachersBySpecializationId;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using MediatR;
@@ -116,25 +118,46 @@ namespace CMS.Presentation
         {
             var classes = await mediator.Send(new GetListClassesQuery());
             var courses = await mediator.Send(new GetListCoursesQuery());
-            var teachers = await mediator.Send(new GetListTeacherQuery());
+
+            courseComboBox.SelectedIndexChanged -= courseComboBox_SelectedIndexChanged;
 
             courseComboBox.DataSource = courses;
             courseComboBox.DisplayMember = "CourseName";
             courseComboBox.ValueMember = "Id";
+            if (courses != null && courses.Any())
+                courseComboBox.SelectedIndex = 0;
 
             classComboBox.DataSource = classes;
             classComboBox.DisplayMember = "ClassName";
             classComboBox.ValueMember = "Id";
 
+            courseComboBox.SelectedIndexChanged += courseComboBox_SelectedIndexChanged;
+        }
+
+
+        private async void courseComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            teacherComboBox.DataSource = null;
+
+            var course = await mediator.Send(new GetCourseByIdQuery { Id = Guid.Parse(courseComboBox.SelectedValue.ToString()) });
+
+            var teachers = await mediator.Send(new GetListTeachersBySpecializationId { SpecializationId = course.Specialization.Id });
+
+
             teacherComboBox.DataSource = teachers
-                 .Select(t => new
-                 {
-                     Id = t.Id,
-                     FullName = $"{t.FirstName} {t.LastName}"
-                 })
-                .ToList();
+                .Select(t => new
+                {
+                    Id = t.Id,
+                    FullName = $"{t.FirstName} {t.LastName}"
+                })
+               .ToList();
             teacherComboBox.DisplayMember = "FullName";
             teacherComboBox.ValueMember = "Id";
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

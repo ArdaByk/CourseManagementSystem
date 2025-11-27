@@ -22,6 +22,7 @@ public class UpdateCourseCommand : IRequest<UpdateCourseResponse>
     public int DurationWeeks { get; set; }
     public int WeeklyHours { get; set; }
     public char Status { get; set; }
+    public Guid SpecializationId { get; set; }
 
     public class UpdateCourseCommandHandler : IRequestHandler<UpdateCourseCommand, UpdateCourseResponse>
     {

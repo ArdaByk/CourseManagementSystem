@@ -1,4 +1,5 @@
 ﻿using CMS.Application.Features.Courses.Commands.Create;
+using CMS.Application.Features.Specializations.Queries.GetListSpecializations;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using MediatR;
@@ -74,11 +75,12 @@ namespace CMS.Presentation
 
             CreateCourseCommand createCourseCommand = new CreateCourseCommand
             {
-               CourseName = courseNameTxt.Text,
-               Description = courseDescriptionTxt.Text,
-               DurationWeeks = durationWeeks,
-               WeeklyHours = weeklyHours,
-               Status = courseStatusSwitch.Checked ? 'A' : 'P'
+                CourseName = courseNameTxt.Text,
+                Description = courseDescriptionTxt.Text,
+                DurationWeeks = durationWeeks,
+                WeeklyHours = weeklyHours,
+                Status = courseStatusSwitch.Checked ? 'A' : 'P',
+                SpecializationId = Guid.Parse(specializationComboBox.SelectedValue.ToString())
             };
 
             CreateCourseResponse createCourseResponse = await mediator.Send(createCourseCommand);
@@ -88,6 +90,18 @@ namespace CMS.Presentation
             NewCourseAdded?.Invoke(this, EventArgs.Empty);
 
             this.Close();
+        }
+
+        private async void AddCourseForm_Load(object sender, EventArgs e)
+        {
+            var specializations = await mediator.Send(new GetListSpecializationsQuery());
+
+            specializationComboBox.Controls.Clear();
+
+            specializationComboBox.DataSource = specializations;
+            specializationComboBox.DisplayMember = "SpecializationName";
+            specializationComboBox.ValueMember = "Id";
+
         }
     }
 }
