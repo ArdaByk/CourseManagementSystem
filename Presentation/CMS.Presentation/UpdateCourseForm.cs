@@ -95,21 +95,22 @@ namespace CMS.Presentation
 
         private async void UpdateCourseForm_Load(object sender, EventArgs e)
         {
-            GetCourseByIdResponse course = await mediator.Send(new GetCourseByIdQuery { Id = CourseId });
+            var course = await mediator.Send(new GetCourseByIdQuery { Id = CourseId });
+
             courseNameTxt.Text = course.CourseName;
             courseDescriptionTxt.Text = course.Description;
             durationWeekTxt.Text = course.DurationWeeks.ToString();
             weeklyHoursTxt.Text = course.WeeklyHours.ToString();
-            courseStatusSwitch.Checked = course.Status == 'A' ? true : false;
-            specializationComboBox.SelectedValue = course.Specialization.Id;
+            courseStatusSwitch.Checked = course.Status == 'A';
 
             var specializations = await mediator.Send(new GetListSpecializationsQuery());
-
-            specializationComboBox.Controls.Clear();
 
             specializationComboBox.DataSource = specializations;
             specializationComboBox.DisplayMember = "SpecializationName";
             specializationComboBox.ValueMember = "Id";
+
+            specializationComboBox.SelectedValue = course.Specialization.Id;
         }
+
     }
 }
