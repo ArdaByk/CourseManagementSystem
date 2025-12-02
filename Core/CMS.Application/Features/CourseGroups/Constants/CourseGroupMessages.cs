@@ -9,6 +9,7 @@ public static class CourseGroupMessages
     public const string StartDateRequired = "Başlangıç tarihi zorunludur.";
     public const string EndDateRequired = "Bitiş tarihi zorunludur.";
     public const string EndDateMustBeAfterStart = "Bitiş tarihi, başlangıç tarihinden sonra olmalıdır.";
+    public const string CourseDurationMinOneMonth = "Başlangıç ve bitiş tarihi arasında en az 1 ay olmalıdır.";
     public const string CourseRequired = "Ders seçimi zorunludur.";
     public const string ClassRequired = "Sınıf seçimi zorunludur.";
     public const string TeacherRequired = "Eğitmen seçimi zorunludur.";
@@ -16,4 +17,5 @@ public static class CourseGroupMessages
     public const string StartTimeRequired = "Başlangıç saati zorunludur.";
     public const string EndTimeRequired = "Bitiş saati zorunludur.";
     public const string EndTimeMustBeAfterStartTime = "Bitiş saati, başlangıç saatinden sonra olmalıdır.";
+    public const string LessonDurationMaxFortyMinutes = "Ders süresi 20 ile 40 dakika arasında olmalıdır.";
 }

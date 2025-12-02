@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,9 +47,8 @@ public class ClassesPageBuilder : IPageBuilder
         var classCapacityTextBox = CreateTextBox("classCapacityTextBox", "Sınıf Kontenjanı", new Point(270, 3));
 
         var addClassBtn = CreateButton("addClassBtn", "Sınıf Ekle", new Point(10, 57));
-        var reviewClassBtn = CreateButton("reviewClassBtn", "Sınıfı İncele", new Point(110, 57));
-        var updateClassBtn = CreateButton("updateClassBtn", "Sınıfı Güncelle", new Point(230, 57));
-        var deleteClassBtn = CreateButton("deleteClassBtn", "Sınıf Sil", new Point(375, 57), true);
+        var updateClassBtn = CreateButton("updateClassBtn", "Sınıfı Güncelle", new Point(240, 57));
+        var deleteClassBtn = CreateButton("deleteClassBtn", "Sınıf Sil", new Point(470, 57), true);
 
         deleteClassBtn.Type = MaterialButton.MaterialButtonType.Contained;
         deleteClassBtn.UseAccentColor = true;
@@ -67,10 +67,6 @@ public class ClassesPageBuilder : IPageBuilder
             addClassForm.NewClassAdded += addClassForm_NewClassAdded;
 
             addClassForm.ShowDialog();
-        };
-
-        reviewClassBtn.MouseClick += (o, e) =>
-        {
         };
 
         updateClassBtn.MouseClick += (o, e) =>
@@ -137,7 +133,6 @@ public class ClassesPageBuilder : IPageBuilder
         inputPanel.Controls.Add(classNameTextBox);
         inputPanel.Controls.Add(classCapacityTextBox);
         inputPanel.Controls.Add(addClassBtn);
-        inputPanel.Controls.Add(reviewClassBtn);
         inputPanel.Controls.Add(updateClassBtn);
         inputPanel.Controls.Add(deleteClassBtn);
 
@@ -185,6 +180,7 @@ public class ClassesPageBuilder : IPageBuilder
             Name = name,
             Text = text,
             Location = location,
+            Width = 180,
             UseAccentColor = useAccent
         };
     }

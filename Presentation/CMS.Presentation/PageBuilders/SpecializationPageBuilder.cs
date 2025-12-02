@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,9 +46,8 @@ public class SpecializationPageBuilder : IPageBuilder
         var specializationNameTextBox = CreateTextBox("specializationNameTextBox", "Uzmanlık Alanı Adı", new Point(8, 3));
 
         var addSpecializationBtn = CreateButton("addSpecializationBtn", "Uzmanlık Alanı Ekle", new Point(10, 57));
-        var reviewSpecializationBtn = CreateButton("reviewSpecializationBtn", "Uzmanlık Alanını İncele", new Point(200, 57));
-        var updateSpecializationBtn = CreateButton("updateSpecializationBtn", "Uzmanlık Alanını Güncelle", new Point(420, 57));
-        var deleteSpecializationBtn = CreateButton("deleteSpecializationBtn", "Uzmanlık Alanını Sil", new Point(664, 57));
+        var updateSpecializationBtn = CreateButton("updateSpecializationBtn", "Uzmanlık Alanını Güncelle", new Point(240, 57));
+        var deleteSpecializationBtn = CreateButton("deleteSpecializationBtn", "Uzmanlık Alanını Sil", new Point(470, 57));
 
 
         deleteSpecializationBtn.Type = MaterialButton.MaterialButtonType.Contained;
@@ -132,7 +132,6 @@ public class SpecializationPageBuilder : IPageBuilder
 
         inputPanel.Controls.Add(specializationNameTextBox);
         inputPanel.Controls.Add(addSpecializationBtn);
-        inputPanel.Controls.Add(reviewSpecializationBtn);
         inputPanel.Controls.Add(updateSpecializationBtn);
         inputPanel.Controls.Add(deleteSpecializationBtn);
 
@@ -176,6 +175,7 @@ public class SpecializationPageBuilder : IPageBuilder
             Name = name,
             Text = text,
             Location = location,
+            Width = 180,
             UseAccentColor = useAccent
         };
     }

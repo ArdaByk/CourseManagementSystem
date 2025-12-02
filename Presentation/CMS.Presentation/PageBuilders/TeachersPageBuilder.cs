@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,9 +48,8 @@ public class TeachersPageBuilder : IPageBuilder
         var teacherStatusComboBox = CreateComboBox("teacherStatusComboBox", "Öğretmen Durumu", 250, new List<string> { "Aktif", "Pasif" }, new Point(520, 3));
 
         var addTeacherButton = CreateButton("addTeacherButton", "Öğretmen Ekle", new Point(10, 57));
-        var reviewTeacherBtn = CreateButton("reviewTeacherBtn", "Öğretmen İncele", new Point(160, 57));
-        var updateTeacherBtn = CreateButton("updateTeacherBtn", "Öğretmen Güncelle", new Point(325, 57));
-        var deleteTeacherBtn = CreateButton("deleteTeacherBtn", "Öğretmen Sil", new Point(515, 57), true);
+        var updateTeacherBtn = CreateButton("updateTeacherBtn", "Öğretmen Güncelle", new Point(240, 57));
+        var deleteTeacherBtn = CreateButton("deleteTeacherBtn", "Öğretmen Sil", new Point(470, 57), true);
 
         deleteTeacherBtn.Type = MaterialButton.MaterialButtonType.Contained;
         deleteTeacherBtn.UseAccentColor = true;
@@ -135,7 +135,6 @@ public class TeachersPageBuilder : IPageBuilder
         inputPanel.Controls.Add(lastNameTextBox);
         inputPanel.Controls.Add(teacherStatusComboBox);
         inputPanel.Controls.Add(addTeacherButton);
-        inputPanel.Controls.Add(reviewTeacherBtn);
         inputPanel.Controls.Add(updateTeacherBtn);
         inputPanel.Controls.Add(deleteTeacherBtn);
 
@@ -204,6 +203,7 @@ public class TeachersPageBuilder : IPageBuilder
             Name = name,
             Text = text,
             Location = location,
+            Width = 180,
             UseAccentColor = useAccent
         };
     }

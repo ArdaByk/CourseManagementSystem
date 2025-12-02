@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,10 +47,9 @@ public class CoursesPageBuilder : IPageBuilder
         var courseStatusComboBox = CreateComboBox("courseStatusComboBox", "Kurs Durumu", 250, new List<string> { "Aktif", "Pasif" }, new Point(264, 3));
 
         var addCourseBtn = CreateButton("addCourseBtn", "Kurs Ekle", new Point(10, 57));
-        var reviewCourseBtn = CreateButton("reviewCourseBtn", "Kurs İncele", new Point(110, 57));
-        var showStudentsBtn = CreateButton("showStudentsBtn", "Kursa Kayıtlı Öğrencileri Göster", new Point(230, 57));
-        var updateCourseBtn = CreateButton("updateCourseBtn", "Kurs Güncelle", new Point(520, 57));
-        var deleteCourseBtn = CreateButton("deleteCourseBtn", "Kurs Sil", new Point(670, 57), true);
+        var showStudentsBtn = CreateButton("showStudentsBtn", "Kursa Kayıtlı Öğrencileri Göster", new Point(240, 57));
+        var updateCourseBtn = CreateButton("updateCourseBtn", "Kurs Güncelle", new Point(470, 57));
+        var deleteCourseBtn = CreateButton("deleteCourseBtn", "Kurs Sil", new Point(700, 57), true);
 
 
         deleteCourseBtn.Type = MaterialButton.MaterialButtonType.Contained;
@@ -142,7 +142,6 @@ public class CoursesPageBuilder : IPageBuilder
         inputPanel.Controls.Add(courseNameTextBox);
         inputPanel.Controls.Add(courseStatusComboBox);
         inputPanel.Controls.Add(addCourseBtn);
-        inputPanel.Controls.Add(reviewCourseBtn);
         inputPanel.Controls.Add(showStudentsBtn);
         inputPanel.Controls.Add(updateCourseBtn);
         inputPanel.Controls.Add(deleteCourseBtn);
@@ -207,6 +206,7 @@ public class CoursesPageBuilder : IPageBuilder
             Name = name,
             Text = text,
             Location = location,
+            Width = 180,
             UseAccentColor = useAccent
         };
     }

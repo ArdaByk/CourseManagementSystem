@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,9 +48,8 @@ public class StudentPageBuilder : IPageBuilder
         var studentStatusComboBox = CreateComboBox("studentStatusComboBox", "Öğrenci Durumu", 250, new List<string> { "Aktif", "Pasif" }, new Point(1035, 2));
 
         var addStudentBtn = CreateButton("addStudentButton", "Öğrenci Ekle", new Point(10, 57));
-        var reviewStudentBtn = CreateButton("reviewStudentBtn", "Öğrenci İncele", new Point(140, 57));
-        var updateStudentBtn = CreateButton("updateStudentBtn", "Öğrenci Güncelle", new Point(285, 57));
-        var deleteStudentBtn = CreateButton("deleteStudentBtn", "Öğrenci Sil", new Point(455, 57), true);
+        var updateStudentBtn = CreateButton("updateStudentBtn", "Öğrenci Güncelle", new Point(240, 57));
+        var deleteStudentBtn = CreateButton("deleteStudentBtn", "Öğrenci Sil", new Point(470, 57), true);
 
         deleteStudentBtn.Type = MaterialButton.MaterialButtonType.Contained;
         deleteStudentBtn.UseAccentColor = true;
@@ -138,7 +138,6 @@ public class StudentPageBuilder : IPageBuilder
         inputPanel.Controls.Add(genderComboBox);
         inputPanel.Controls.Add(studentStatusComboBox);
         inputPanel.Controls.Add(addStudentBtn);
-        inputPanel.Controls.Add(reviewStudentBtn);
         inputPanel.Controls.Add(updateStudentBtn);
         inputPanel.Controls.Add(deleteStudentBtn);
 
@@ -219,6 +218,7 @@ public class StudentPageBuilder : IPageBuilder
             Name = name,
             Text = text,
             Location = location,
+            Width = 180,
             UseAccentColor = useAccent
         };
     }

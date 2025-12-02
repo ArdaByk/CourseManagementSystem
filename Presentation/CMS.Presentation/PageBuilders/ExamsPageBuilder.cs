@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,10 +45,10 @@ public class ExamsPageBuilder : IPageBuilder
         var courseTextBox = CreateTextBox("courseTextBox", "Kurs", new Point(270, 3));
 
         var createExamBtn = CreateButton("createExamBtn", "Sınav Oluştur", new Point(10, 57));
-        var updateExamBtn = CreateButton("updateExamBtn", "Sınavı Güncelle", new Point(150, 57));
-        var deleteExamBtn = CreateButton("deleteExamBtn", "Sınavı Sil", new Point(302, 57));
-        var showExamResultsBtn = CreateButton("showExamResultsBtn", "Sınav Sonuçlarını Göster", new Point(397, 57));
-        var enterExamResultsBtn = CreateButton("enterExamResultsBtn", "Sınav Sonuçlarını Gir", new Point(628, 57));
+        var updateExamBtn = CreateButton("updateExamBtn", "Sınavı Güncelle", new Point(240, 57));
+        var deleteExamBtn = CreateButton("deleteExamBtn", "Sınavı Sil", new Point(470, 57));
+        var showExamResultsBtn = CreateButton("showExamResultsBtn", "Sınav Sonuçlarını Göster", new Point(700, 57));
+        var enterExamResultsBtn = CreateButton("enterExamResultsBtn", "Sınav Sonuçlarını Gir", new Point(930, 57));
 
         deleteExamBtn.Type = MaterialButton.MaterialButtonType.Contained;
         deleteExamBtn.UseAccentColor = true;
@@ -192,6 +193,7 @@ public class ExamsPageBuilder : IPageBuilder
             Name = name,
             Text = text,
             Location = location,
+            Width = 180,
             UseAccentColor = useAccent
         };
     }

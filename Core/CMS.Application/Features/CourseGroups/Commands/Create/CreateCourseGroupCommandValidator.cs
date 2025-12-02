@@ -18,6 +18,9 @@ public class CreateCourseGroupCommandValidator : AbstractValidator<CreateCourseG
         RuleFor(x => x.EndedDate)
             .NotEmpty().WithMessage(CourseGroupMessages.EndDateRequired)
             .GreaterThan(x => x.StartedDate).WithMessage(CourseGroupMessages.EndDateMustBeAfterStart);
+        RuleFor(x => x.EndedDate)
+            .Must((cmd, endDate) => endDate >= cmd.StartedDate.AddMonths(1))
+            .WithMessage(CourseGroupMessages.CourseDurationMinOneMonth);
         RuleFor(x => x.CourseId)
             .NotEmpty().WithMessage(CourseGroupMessages.CourseRequired);
         RuleFor(x => x.ClassId)
@@ -33,5 +36,13 @@ public class CreateCourseGroupCommandValidator : AbstractValidator<CreateCourseG
             .NotEmpty().WithMessage(CourseGroupMessages.EndTimeRequired)
             .Must((cmd, endTime) => endTime > cmd.StartTime)
             .WithMessage(CourseGroupMessages.EndTimeMustBeAfterStartTime);
+
+        RuleFor(x => x)
+            .Must(cmd =>
+            {
+                var duration = cmd.EndTime - cmd.StartTime;
+                return duration >= TimeSpan.FromMinutes(20) && duration <= TimeSpan.FromMinutes(40);
+            })
+            .WithMessage(CourseGroupMessages.LessonDurationMaxFortyMinutes);
     }
 }

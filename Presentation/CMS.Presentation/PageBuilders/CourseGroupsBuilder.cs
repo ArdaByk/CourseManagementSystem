@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,13 +47,12 @@ public class CourseGroupsBuilder : IPageBuilder
         var courseNameTextBox = CreateTextBox("courseNameTextBox", "Kurs Adı", new Point(530, 3));
 
         var addCourseGroupBtn = CreateButton("addCourseGroupBtn", "Grup Ekle", new Point(10, 57));
-        var reviewCourseGroupBtn = CreateButton("reviewCourseGroupBtn", "Grup İncele", new Point(113, 57));
-        var updateCourseGroupBtn = CreateButton("updateCourseGroupBtn", "Grup Güncelle", new Point(230, 57));
-        var deleteCourseGroupBtn = CreateButton("deleteCourseGroupBtn", "Grup Sil", new Point(375, 57), true);
-        var showStudentsBtn = CreateButton("showStudentsBtn", "Gruba Kayıtlı Öğrencileri Göster", new Point(465, 57));
-        var takeAttendanceBtn = CreateButton("takeAttendanceBtn", "Yoklama Al", new Point(750, 57));
-        var showAttendanceBtn = CreateButton("showAttendanceBtn", "Yoklama Göster", new Point(873, 57));
-        var registerStudentBtn = CreateButton("registerStudentBtn", "Öğrenci Kaydı Yap", new Point(1035, 57));
+        var updateCourseGroupBtn = CreateButton("updateCourseGroupBtn", "Grup Güncelle", new Point(240, 57));
+        var deleteCourseGroupBtn = CreateButton("deleteCourseGroupBtn", "Grup Sil", new Point(470, 57), true);
+        var showStudentsBtn = CreateButton("showStudentsBtn", "Gruba Kayıtlı Öğrencileri Göster", new Point(700, 57));
+        var takeAttendanceBtn = CreateButton("takeAttendanceBtn", "Yoklama Al", new Point(930, 57));
+        var showAttendanceBtn = CreateButton("showAttendanceBtn", "Yoklama Göster", new Point(1160, 57));
+        var registerStudentBtn = CreateButton("registerStudentBtn", "Öğrenci Kaydı Yap", new Point(1390, 57));
 
         deleteCourseGroupBtn.Type = MaterialButton.MaterialButtonType.Contained;
         deleteCourseGroupBtn.UseAccentColor = true;
@@ -167,7 +167,6 @@ public class CourseGroupsBuilder : IPageBuilder
         inputPanel.Controls.Add(courseGroupQuotaTextBox);
         inputPanel.Controls.Add(courseNameTextBox);
         inputPanel.Controls.Add(addCourseGroupBtn);
-        inputPanel.Controls.Add(reviewCourseGroupBtn);
         inputPanel.Controls.Add(updateCourseGroupBtn);
         inputPanel.Controls.Add(deleteCourseGroupBtn);
         inputPanel.Controls.Add(showStudentsBtn);
@@ -223,6 +222,7 @@ public class CourseGroupsBuilder : IPageBuilder
             Name = name,
             Text = text,
             Location = location,
+            Width = 180,
             UseAccentColor = useAccent
         };
     }

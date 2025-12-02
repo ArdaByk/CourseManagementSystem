@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,9 +49,8 @@ public class UsersPageBuilder : IPageBuilder
         var rolesComboBox = CreateComboBox("rolesComboBox", "Rolü", 250, new List<string> { "Aktif", "Pasif" }, new Point(524, 3));
 
         var addUserBtn = CreateButton("addUserBtn", "Kullanıcı Ekle", new Point(10, 57));
-        var reviewUserBtn = CreateButton("reviewUserBtn", "Kullanıcı İncele", new Point(155, 57));
-        var updateUserBtn = CreateButton("updateUserBtn", "Kullanıcı Güncelle", new Point(318, 57));
-        var deleteUserBtn = CreateButton("deleteUserBtn", "Kullanıcı Sil", new Point(500, 57));
+        var updateUserBtn = CreateButton("updateUserBtn", "Kullanıcı Güncelle", new Point(240, 57));
+        var deleteUserBtn = CreateButton("deleteUserBtn", "Kullanıcı Sil", new Point(470, 57));
 
 
         deleteUserBtn.Type = MaterialButton.MaterialButtonType.Contained;
@@ -72,12 +72,6 @@ public class UsersPageBuilder : IPageBuilder
             addUserForm.NewUserAdded += addUserForm_NewUserAdded;
 
             addUserForm.ShowDialog();
-        };
-
-        reviewUserBtn.MouseClick += (o, e) =>
-        {
-            ShowCourseStudentsForm showCourseStudentsForm = serviceProvider.GetRequiredService<ShowCourseStudentsForm>();
-            showCourseStudentsForm.Show();
         };
 
         updateUserBtn.MouseClick += (o, e) =>
@@ -143,7 +137,6 @@ public class UsersPageBuilder : IPageBuilder
         inputPanel.Controls.Add(fullNameTextBox);
         inputPanel.Controls.Add(rolesComboBox);
         inputPanel.Controls.Add(addUserBtn);
-        inputPanel.Controls.Add(reviewUserBtn);
         inputPanel.Controls.Add(updateUserBtn);
         inputPanel.Controls.Add(deleteUserBtn);
 
@@ -212,6 +205,7 @@ public class UsersPageBuilder : IPageBuilder
             Name = name,
             Text = text,
             Location = location,
+            Width = 180,
             UseAccentColor = useAccent
         };
     }

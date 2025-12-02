@@ -48,9 +48,19 @@ namespace CMS.Application.Features.CourseGroups.Rules
         {
             if (end <= start) throw new Exception("Bitiş tarihi, başlangıç tarihinden sonra olmalı.");
         }
+        public void EnsureCourseDurationAtLeastOneMonth(DateTime start, DateTime end)
+        {
+            if (end < start.AddMonths(1)) throw new Exception("Başlangıç ve bitiş tarihi arasında en az 1 ay olmalıdır.");
+        }
         public void EnsureQuotaInLimits(int quota)
         {
             if (quota < 1 || quota > 100) throw new Exception("Kota 1-100 arasında olmalıdır.");
+        }
+        public void EnsureLessonDurationMaxFortyMinutes(TimeSpan start, TimeSpan end)
+        {
+            var durationMinutes = (end - start).TotalMinutes;
+            if (durationMinutes < 20 || durationMinutes > 40)
+                throw new Exception("Ders süresi 20 ile 40 dakika arasında olmalıdır.");
         }
     }
 }
