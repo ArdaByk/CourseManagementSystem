@@ -1,16 +1,18 @@
-﻿using CMS.Application.Features.Classes.Queries.GetListClasses;
+﻿using ClosedXML.Excel;
 using CMS.Application.Features.Courses.Commands.Delete;
 using CMS.Application.Features.Courses.Queries.GetListTeachers;
-using CMS.Domain.Entities;
+using CMS.Application.Features.StudentCourses.Queries.GetListStudentsByCourseId;
 using MaterialSkin.Controls;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CMS.Presentation.PageBuilders;
 
@@ -47,9 +49,10 @@ public class CoursesPageBuilder : IPageBuilder
         var courseStatusComboBox = CreateComboBox("courseStatusComboBox", "Kurs Durumu", 250, new List<string> { "Aktif", "Pasif" }, new Point(264, 3));
 
         var addCourseBtn = CreateButton("addCourseBtn", "Kurs Ekle", new Point(10, 57));
-        var showStudentsBtn = CreateButton("showStudentsBtn", "Kursa Kayıtlı Öğrencileri Göster", new Point(240, 57));
-        var updateCourseBtn = CreateButton("updateCourseBtn", "Kurs Güncelle", new Point(470, 57));
-        var deleteCourseBtn = CreateButton("deleteCourseBtn", "Kurs Sil", new Point(700, 57), true);
+        var showStudentsBtn = CreateButton("showStudentsBtn", "Kursa Kayıtlı Öğrencileri Göster", new Point(115, 57));
+        var updateCourseBtn = CreateButton("updateCourseBtn", "Kurs Güncelle", new Point(400, 57));
+        var deleteCourseBtn = CreateButton("deleteCourseBtn", "Kurs Sil", new Point(540, 57), true);
+        var exportStudentListBtn = CreateButton("exportStudentListBtn", "Öğrenci Listesi Çıkart", new Point(630, 57));
 
 
         deleteCourseBtn.Type = MaterialButton.MaterialButtonType.Contained;
@@ -135,6 +138,64 @@ public class CoursesPageBuilder : IPageBuilder
             showCourseStudentsForm.Show();
         };
 
+        exportStudentListBtn.MouseClick += async (o, e) =>
+        {
+            var courseId = coursesDataGridView.CurrentRow;
+
+            var students = await mediator.Send(new GetListStudentsByCourseIdQuery
+            {
+                Id = Guid.Parse(courseId.Cells["Id"].Value.ToString())
+            });
+
+            using (var workbook = new XLWorkbook())
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter ="Excel Dosyası (*.xlsx)|*.xlsx| Tüm Dosyalar (*.*)|*.*";
+                saveFileDialog.FilterIndex = 1;
+                saveFileDialog.RestoreDirectory = true;
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = saveFileDialog.FileName;
+
+                    var worksheet = workbook.Worksheets.Add("data");
+
+                    worksheet.Cell("A1").Style
+                        .Font.SetFontSize(10)
+                        .Font.SetFontName("Arial")
+                        .Fill.BackgroundColor = XLColor.LightGray;
+                    worksheet.Cell("B1").Style
+                        .Font.SetFontSize(10)
+                        .Font.SetFontName("Arial")
+                        .Fill.BackgroundColor = XLColor.LightGray;
+                    worksheet.Cell("C1").Style
+                        .Font.SetFontSize(10)
+                        .Font.SetFontName("Arial")
+                        .Fill.BackgroundColor = XLColor.LightGray;
+
+                    worksheet.Cell(1, 1).Value = "TC Kimlik NO";
+                    worksheet.Cell(1, 2).Value = "Adı";
+                    worksheet.Cell(1, 3).Value = "Soyadı";
+
+                    var i = 2;
+
+                    foreach (var student in students)
+                    {
+                        worksheet.Cell(i, 1).Value = student.NationalId;
+                        worksheet.Cell(i, 2).Value = student.FirstName;
+                        worksheet.Cell(i, 3).Value = student.LastName;
+
+                        i++;
+                    }
+
+                    worksheet.Columns().AdjustToContents();
+
+                    workbook.SaveAs(filePath);
+                }
+            }
+
+        };
+
         coursesDataGridView = CreateCoursesDataGridView(courses);
 
         coursesPanel.Controls.Add(coursesDataGridView);
@@ -145,6 +206,7 @@ public class CoursesPageBuilder : IPageBuilder
         inputPanel.Controls.Add(showStudentsBtn);
         inputPanel.Controls.Add(updateCourseBtn);
         inputPanel.Controls.Add(deleteCourseBtn);
+        inputPanel.Controls.Add(exportStudentListBtn);
 
         mainPanel.Controls.Add(coursesPanel);
         mainPanel.Controls.Add(inputPanel);

@@ -49,8 +49,8 @@ public class UsersPageBuilder : IPageBuilder
         var rolesComboBox = CreateComboBox("rolesComboBox", "Rolü", 250, new List<string> { "Aktif", "Pasif" }, new Point(524, 3));
 
         var addUserBtn = CreateButton("addUserBtn", "Kullanıcı Ekle", new Point(10, 57));
-        var updateUserBtn = CreateButton("updateUserBtn", "Kullanıcı Güncelle", new Point(240, 57));
-        var deleteUserBtn = CreateButton("deleteUserBtn", "Kullanıcı Sil", new Point(470, 57));
+        var updateUserBtn = CreateButton("updateUserBtn", "Kullanıcı Güncelle", new Point(148, 57));
+        var deleteUserBtn = CreateButton("deleteUserBtn", "Kullanıcı Sil", new Point(330, 57));
 
 
         deleteUserBtn.Type = MaterialButton.MaterialButtonType.Contained;

@@ -47,8 +47,8 @@ public class ClassesPageBuilder : IPageBuilder
         var classCapacityTextBox = CreateTextBox("classCapacityTextBox", "Sınıf Kontenjanı", new Point(270, 3));
 
         var addClassBtn = CreateButton("addClassBtn", "Sınıf Ekle", new Point(10, 57));
-        var updateClassBtn = CreateButton("updateClassBtn", "Sınıfı Güncelle", new Point(240, 57));
-        var deleteClassBtn = CreateButton("deleteClassBtn", "Sınıf Sil", new Point(470, 57), true);
+        var updateClassBtn = CreateButton("updateClassBtn", "Sınıfı Güncelle", new Point(120, 57));
+        var deleteClassBtn = CreateButton("deleteClassBtn", "Sınıf Sil", new Point(270, 57), true);
 
         deleteClassBtn.Type = MaterialButton.MaterialButtonType.Contained;
         deleteClassBtn.UseAccentColor = true;

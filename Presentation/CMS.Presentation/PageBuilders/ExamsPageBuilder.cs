@@ -45,10 +45,10 @@ public class ExamsPageBuilder : IPageBuilder
         var courseTextBox = CreateTextBox("courseTextBox", "Kurs", new Point(270, 3));
 
         var createExamBtn = CreateButton("createExamBtn", "Sınav Oluştur", new Point(10, 57));
-        var updateExamBtn = CreateButton("updateExamBtn", "Sınavı Güncelle", new Point(240, 57));
-        var deleteExamBtn = CreateButton("deleteExamBtn", "Sınavı Sil", new Point(470, 57));
-        var showExamResultsBtn = CreateButton("showExamResultsBtn", "Sınav Sonuçlarını Göster", new Point(700, 57));
-        var enterExamResultsBtn = CreateButton("enterExamResultsBtn", "Sınav Sonuçlarını Gir", new Point(930, 57));
+        var updateExamBtn = CreateButton("updateExamBtn", "Sınavı Güncelle", new Point(150, 57));
+        var deleteExamBtn = CreateButton("deleteExamBtn", "Sınavı Sil", new Point(300, 57));
+        var showExamResultsBtn = CreateButton("showExamResultsBtn", "Sınav Sonuçlarını Göster", new Point(400, 57));
+        var enterExamResultsBtn = CreateButton("enterExamResultsBtn", "Sınav Sonuçlarını Gir", new Point(630, 57));
 
         deleteExamBtn.Type = MaterialButton.MaterialButtonType.Contained;
         deleteExamBtn.UseAccentColor = true;

@@ -48,8 +48,8 @@ public class StudentPageBuilder : IPageBuilder
         var studentStatusComboBox = CreateComboBox("studentStatusComboBox", "Öğrenci Durumu", 250, new List<string> { "Aktif", "Pasif" }, new Point(1035, 2));
 
         var addStudentBtn = CreateButton("addStudentButton", "Öğrenci Ekle", new Point(10, 57));
-        var updateStudentBtn = CreateButton("updateStudentBtn", "Öğrenci Güncelle", new Point(240, 57));
-        var deleteStudentBtn = CreateButton("deleteStudentBtn", "Öğrenci Sil", new Point(470, 57), true);
+        var updateStudentBtn = CreateButton("updateStudentBtn", "Öğrenci Güncelle", new Point(145, 57));
+        var deleteStudentBtn = CreateButton("deleteStudentBtn", "Öğrenci Sil", new Point(320, 57), true);
 
         deleteStudentBtn.Type = MaterialButton.MaterialButtonType.Contained;
         deleteStudentBtn.UseAccentColor = true;

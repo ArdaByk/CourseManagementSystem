@@ -46,8 +46,8 @@ public class SpecializationPageBuilder : IPageBuilder
         var specializationNameTextBox = CreateTextBox("specializationNameTextBox", "Uzmanlık Alanı Adı", new Point(8, 3));
 
         var addSpecializationBtn = CreateButton("addSpecializationBtn", "Uzmanlık Alanı Ekle", new Point(10, 57));
-        var updateSpecializationBtn = CreateButton("updateSpecializationBtn", "Uzmanlık Alanını Güncelle", new Point(240, 57));
-        var deleteSpecializationBtn = CreateButton("deleteSpecializationBtn", "Uzmanlık Alanını Sil", new Point(470, 57));
+        var updateSpecializationBtn = CreateButton("updateSpecializationBtn", "Uzmanlık Alanını Güncelle", new Point(193, 57));
+        var deleteSpecializationBtn = CreateButton("deleteSpecializationBtn", "Uzmanlık Alanını Sil", new Point(430, 57));
 
 
         deleteSpecializationBtn.Type = MaterialButton.MaterialButtonType.Contained;
