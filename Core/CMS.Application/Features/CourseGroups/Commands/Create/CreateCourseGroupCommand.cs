@@ -48,12 +48,11 @@ public class CreateCourseGroupCommand : IRequest<CreateCourseGroupResponse>
             await _courseGroupBusinessRules.EnsureCourseExistsAsync(request.CourseId);
             await _courseGroupBusinessRules.EnsureClassExistsAsync(request.ClassId);
             await _courseGroupBusinessRules.EnsureTeacherExistsAsync(request.TeacherId);
+            await _courseGroupBusinessRules.EnsureTeachersTotalTimeIsNotBiggerThanThirty(request.TeacherId,request.StartTime, request.EndTime);
             _courseGroupBusinessRules.EnsureStartDateIsBeforeEndDate(request.StartedDate, request.EndedDate);
-                _courseGroupBusinessRules.EnsureCourseDurationAtLeastOneMonth(request.StartedDate, request.EndedDate);
             _courseGroupBusinessRules.EnsureQuotaInLimits(request.Quota);
             await _courseGroupBusinessRules.EnsureGroupNameIsUniqueInCourseAsync(request.GroupName, request.CourseId);
-
-                _courseGroupBusinessRules.EnsureLessonDurationMaxFortyMinutes(request.StartTime, request.EndTime);
+            _courseGroupBusinessRules.EnsureLessonDurationMaxFortyMinutes(request.StartTime, request.EndTime);
 
             CourseGroup courseGroup = mapper.Map<CourseGroup>(request);
             courseGroup = await courseGroupService.AddAsync(courseGroup);

@@ -1,5 +1,6 @@
 using CMS.Application.Abstractions.Services;
 using CMS.Application.Common.Business;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
@@ -48,10 +49,6 @@ namespace CMS.Application.Features.CourseGroups.Rules
         {
             if (end <= start) throw new Exception("Bitiş tarihi, başlangıç tarihinden sonra olmalı.");
         }
-        public void EnsureCourseDurationAtLeastOneMonth(DateTime start, DateTime end)
-        {
-            if (end < start.AddMonths(1)) throw new Exception("Başlangıç ve bitiş tarihi arasında en az 1 ay olmalıdır.");
-        }
         public void EnsureQuotaInLimits(int quota)
         {
             if (quota < 1 || quota > 100) throw new Exception("Kota 1-100 arasında olmalıdır.");
@@ -61,6 +58,22 @@ namespace CMS.Application.Features.CourseGroups.Rules
             var durationMinutes = (end - start).TotalMinutes;
             if (durationMinutes < 20 || durationMinutes > 40)
                 throw new Exception("Ders süresi 20 ile 40 dakika arasında olmalıdır.");
+        }
+
+        public async Task EnsureTeachersTotalTimeIsNotBiggerThanThirty(Guid teacherId, TimeSpan startTime, TimeSpan endTime)
+        {
+            double totalTime = (endTime - startTime).TotalMinutes;
+
+            var courseGroups = await _courseGroupService.GetListAsync(
+                cg => cg.TeacherId == teacherId &&
+                cg.Course.Status == 'A',
+                include: cg => cg.Include(cg => cg.Course));
+
+            foreach (var item in courseGroups)
+               totalTime += item.Course.WeeklyHours * 60;
+
+            if (totalTime > 1800)
+                throw new Exception("Eğitmenin toplam haftalık ders süresi 30 saati geçemez.");
         }
     }
 }
