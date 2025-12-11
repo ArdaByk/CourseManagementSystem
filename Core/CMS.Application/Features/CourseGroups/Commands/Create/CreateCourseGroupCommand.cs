@@ -48,7 +48,7 @@ public class CreateCourseGroupCommand : IRequest<CreateCourseGroupResponse>
             await _courseGroupBusinessRules.EnsureCourseExistsAsync(request.CourseId);
             await _courseGroupBusinessRules.EnsureClassExistsAsync(request.ClassId);
             await _courseGroupBusinessRules.EnsureTeacherExistsAsync(request.TeacherId);
-            await _courseGroupBusinessRules.EnsureTeachersTotalTimeIsNotBiggerThanThirty(request.TeacherId,request.StartTime, request.EndTime);
+            await _courseGroupBusinessRules.EnsureTeachersTotalTimeIsNotBiggerThanThirty(request.TeacherId,request.CourseId);
             _courseGroupBusinessRules.EnsureStartDateIsBeforeEndDate(request.StartedDate, request.EndedDate);
             _courseGroupBusinessRules.EnsureQuotaInLimits(request.Quota);
             await _courseGroupBusinessRules.EnsureGroupNameIsUniqueInCourseAsync(request.GroupName, request.CourseId);

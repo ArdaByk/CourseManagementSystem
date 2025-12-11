@@ -60,9 +60,11 @@ namespace CMS.Application.Features.CourseGroups.Rules
                 throw new Exception("Ders süresi 20 ile 40 dakika arasında olmalıdır.");
         }
 
-        public async Task EnsureTeachersTotalTimeIsNotBiggerThanThirty(Guid teacherId, TimeSpan startTime, TimeSpan endTime)
+        public async Task EnsureTeachersTotalTimeIsNotBiggerThanThirty(Guid teacherId, Guid courseId)
         {
-            double totalTime = (endTime - startTime).TotalMinutes;
+            var course = await _courseService.GetAsync(c => c.Id == courseId);
+
+            double totalTime = course.WeeklyHours * 60;
 
             var courseGroups = await _courseGroupService.GetListAsync(
                 cg => cg.TeacherId == teacherId &&
