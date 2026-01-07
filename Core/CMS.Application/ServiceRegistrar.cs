@@ -27,7 +27,7 @@ public static class ServiceRegistrar
             
             cfg.AddOpenBehavior(typeof(ExceptionHandlingBehavior<,>));
             cfg.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
-            cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
+            //cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             cfg.AddOpenBehavior(typeof(FluentValidationBehavior<,>));
         });
         services.AddSubClassesOfType(Assembly.GetExecutingAssembly(), typeof(BusinessRule));

@@ -13,7 +13,6 @@ public class CreateAttendanceCommandValidator : AbstractValidator<CreateAttendan
     {
         RuleFor(a => a.CourseGroupId).NotEmpty();
         RuleFor(a => a.CourseId).NotEmpty();
-        RuleFor(a => a.Status).NotEmpty();
         RuleFor(a => a.Date).NotEmpty();
         RuleFor(a => a.StudentId).NotEmpty();
     }

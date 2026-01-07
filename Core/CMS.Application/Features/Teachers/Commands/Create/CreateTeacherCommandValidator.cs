@@ -23,9 +23,6 @@ public class CreateTeacherCommandValidator : AbstractValidator<CreateTeacherComm
         RuleFor(x => x.SalaryAmount)
             .NotEmpty().WithMessage(TeacherMessages.SalaryAmountRequired)
             .GreaterThan(0).WithMessage(TeacherMessages.SalaryAmountPositive);
-        RuleFor(x => x.HiredDate)
-            .NotEmpty().WithMessage(TeacherMessages.HiredDateRequired)
-            .LessThanOrEqualTo(DateTime.Now).WithMessage("İşe giriş tarihi bugünden ileri olamaz.");
         RuleFor(x => x.Status)
             .NotEmpty().WithMessage(TeacherMessages.StatusRequired);
         RuleFor(x => x.SpecializationIds)

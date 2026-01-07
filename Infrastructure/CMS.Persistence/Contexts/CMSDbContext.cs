@@ -30,7 +30,7 @@ public class CMSDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(@"Server=DESKTOP-0TQ8MRR\SQLEXPRESS;Database=CMSDB;Trusted_Connection=true;TrustServerCertificate=True");
+        optionsBuilder.UseSqlServer(@"Server=DESKTOP-QH1HSJK\SQLEXPRESS;Database=CMSDB;Trusted_Connection=true;TrustServerCertificate=True");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
